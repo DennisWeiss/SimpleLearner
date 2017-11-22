@@ -1,4 +1,4 @@
-package SEProject;
+package SimpleLearner;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
