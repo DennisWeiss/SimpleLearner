@@ -24,6 +24,8 @@ public class SqlLogik implements ISqlLogik {
     ArrayList<String> aufgabenblöcke;
     ArrayList<String> fragen;
     ArrayList<String> antwortenTemp;
+    String loginLehrer;
+    String loginSchüler;
 
     public SqlLogik() {
         userInfo = new Properties();
@@ -32,6 +34,8 @@ public class SqlLogik implements ISqlLogik {
         aufgabenblöcke = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
+        loginLehrer = null;
+        loginSchüler = null;
     }
 
     @Override
@@ -58,6 +62,62 @@ public class SqlLogik implements ISqlLogik {
             throw exc;
         }
         return check;
+    }
+
+    @Override
+    public boolean checkLogin(String user, String password) throws SQLException {
+
+        String stringCheck = "select lid, lehrer.passwort, sid, schüler.passwort from lehrer, schüler";
+        boolean checkPassword = false;
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                Statement stmtCheck = myConn.createStatement();
+                ResultSet rsCheck = stmtCheck.executeQuery(stringCheck)) {
+            
+            while(rsCheck.next()){
+                if(rsCheck.getString("lid").equals(user)){
+                    checkPassword = rsCheck.getString("lehrer.passwort").equals(password);
+                } else if(rsCheck.getString("sid").equals(user)){
+                    checkPassword = rsCheck.getString("schüler.passwort").equals(password);
+                }
+            }
+            
+            return checkPassword;
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
+    }
+
+    @Override
+    public void loadLehrer(String lid) throws SQLException {
+        String stringLehrer = "select vorname, nachname from lehrer where lid = ?";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtLehrer = myConn.prepareStatement(stringLehrer);
+                ResultSet rsLehrer = stmtLehrer.executeQuery()) {
+
+            while (rsLehrer.next()) {
+                loginLehrer = rsLehrer.getString("vorname") + " " + rsLehrer.getString("nachname");
+            }
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
+    }
+
+    @Override
+    public void loadSchüler(String sid) throws SQLException {
+        String stringSchüler = "select vorname, nachname from schüler where sid = ?";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtSchüler = myConn.prepareStatement(stringSchüler);
+                ResultSet rsSchüler = stmtSchüler.executeQuery()) {
+
+            while (rsSchüler.next()) {
+                loginLehrer = rsSchüler.getString("vorname") + " " + rsSchüler.getString("nachname");
+            }
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
     }
 
     @Override
