@@ -42,24 +42,30 @@ public class SqlLogik implements ISqlLogik {
     public boolean checkAntwort(String blockBez, String aFrage, String aAntwort) throws SQLException {
         String stmtString = "select isTrue from antwort join aufgabe on antwort.aufgabe = aufgabe.aid"
                 + " join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ? and antwort.antworttext = ?";
+        ResultSet rsAntwort = null;
 
         boolean check = false;
 
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtAntwort = myConn.prepareStatement(stmtString);
-                ResultSet rsAntwort = stmtAntwort.executeQuery()) {
+                PreparedStatement stmtAntwort = myConn.prepareStatement(stmtString)) {
 
             stmtAntwort.setString(1, blockBez);
             stmtAntwort.setString(2, aFrage);
             stmtAntwort.setString(3, aAntwort);
+            
+            rsAntwort = stmtAntwort.executeQuery();
 
             while (rsAntwort.next()) {
-                if (rsAntwort.getBoolean("isTrue") == true) {
-                    check = false;
+                if (rsAntwort.getString("isTrue").equals("1")) {
+                    check = true;
                 }
             }
         } catch (SQLException exc) {
             throw exc;
+        } finally{
+            if(rsAntwort != null){
+                rsAntwort.close();
+            }
         }
         return check;
     }
@@ -72,15 +78,15 @@ public class SqlLogik implements ISqlLogik {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtCheck = myConn.createStatement();
                 ResultSet rsCheck = stmtCheck.executeQuery(stringCheck)) {
-            
-            while(rsCheck.next()){
-                if(rsCheck.getString("lid").equals(user)){
+
+            while (rsCheck.next()) {
+                if (rsCheck.getString("lid").equals(user)) {
                     checkPassword = rsCheck.getString("lehrer.passwort").equals(password);
-                } else if(rsCheck.getString("sid").equals(user)){
+                } else if (rsCheck.getString("sid").equals(user)) {
                     checkPassword = rsCheck.getString("schüler.passwort").equals(password);
                 }
             }
-            
+
             return checkPassword;
 
         } catch (SQLException exc) {
@@ -137,17 +143,25 @@ public class SqlLogik implements ISqlLogik {
     @Override
     public void loadFragen(String block) throws SQLException {
         String stringFrage = "select frage from aufgabe join block on aufgabe.block = block.bid where block.bid = ?";
+        ResultSet rsFrage = null;
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtFrage = myConn.prepareStatement(stringFrage);
-                ResultSet rsFrage = stmtFrage.executeQuery()) {
+                PreparedStatement stmtFrage = myConn.prepareStatement(stringFrage)) {
 
             stmtFrage.setString(1, block);
+            rsFrage = stmtFrage.executeQuery();
 
             while (rsFrage.next()) {
                 fragen.add(rsFrage.getString("frage"));
             }
+            for(int i = 0; i < fragen.size(); i++){
+                System.out.println(fragen.get(i) + " in Logik");
+            }
         } catch (SQLException exc) {
             throw exc;
+        } finally {
+            if (rsFrage != null) {
+                rsFrage.close();
+            }
         }
     }
 
@@ -155,12 +169,13 @@ public class SqlLogik implements ISqlLogik {
     public void loadAntworten(String block, String frage) throws SQLException {
         String stringAntworten = "select antworttext from antwort join aufgabe on antwort.aufgabe = aufgabe.aid "
                 + "join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ?";
+        ResultSet rsAntworten = null;
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtAntworten = myConn.prepareStatement(stringAntworten);
-                ResultSet rsAntworten = stmtAntworten.executeQuery()) {
+                PreparedStatement stmtAntworten = myConn.prepareStatement(stringAntworten)) {
 
             stmtAntworten.setString(1, block);
             stmtAntworten.setString(2, frage);
+            rsAntworten = stmtAntworten.executeQuery();
 
             antwortenTemp.clear();
 
@@ -169,6 +184,10 @@ public class SqlLogik implements ISqlLogik {
             }
         } catch (SQLException exc) {
             throw exc;
+        } finally{
+            if(rsAntworten != null){
+                rsAntworten.close();
+            }
         }
     }
 }

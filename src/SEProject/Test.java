@@ -33,10 +33,11 @@ import javafx.scene.text.Font;
 public class Test extends Application {
 
     SqlLogik sql;
-    
-    public Test(){
+
+    public Test() {
         sql = new SqlLogik();
     }
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -55,6 +56,7 @@ public class Test extends Application {
         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
         setHauptCenter();
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
+        //setScene(getHauptPane());
         buildHauptPane();
 
         primaryStage = TestStage;
@@ -109,10 +111,21 @@ public class Test extends Application {
                 System.out.println("    Passwort: " + AnmeldungPasswort.getText());
                 System.out.println("------------------------------");
 
-                setScene(getHauptPane());
-                tempStage.setScene(scene);
-                tempStage.setTitle("SimpleLearner - Aufgabenverzeichnis");
-                tempStage.show();
+                boolean check = false;
+                try {
+                    check = sql.checkLogin(AnmeldungName.getText(), AnmeldungPasswort.getText());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+
+                if (check == true) {
+                    setScene(getHauptPane());
+                    tempStage.setScene(scene);
+                    tempStage.setTitle("SimpleLearner - Aufgabenverzeichnis");
+                    tempStage.show();
+                } else {
+                    System.out.println("Falsche Eingabe");
+                }
 
             }
         });
@@ -212,7 +225,7 @@ public class Test extends Application {
                 centerListe.getChildren().setAll(); // VBox leeren
                 for (int i = 0; i < temp; i++) {
                     System.out.println("Neues Element " + i + " wird hinzugefügt");
-                    centerListe.getChildren().add(new VerzeichnisButton("String " + i).getVerzeichnisButton()); //VBox mit Buttons füllen
+                    centerListe.getChildren().add(new VerzeichnisButton("String " + i, i).getVerzeichnisButton()); //VBox mit Buttons füllen
                 }
                 //centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
             }
@@ -229,18 +242,18 @@ public class Test extends Application {
         HauptPane.setBottom(hauptBottom);
         HauptPane.setCenter(hauptCenter);
 
-        fillVerzeich(6);
+        fillVerzeich();
     }
 
-    void fillVerzeich(int zahl) { //Parameterübergabe für Anzahl der Aufgaben
-        
-        try{
-        sql.loadBlöcke();
-        } catch(SQLException exc){
+    void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
+
+        try {
+            sql.loadBlöcke();
+        } catch (SQLException exc) {
             System.out.println(exc.getMessage());
         }
         for (int i = 0; i < sql.aufgabenblöcke.size(); i++) {
-            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenblöcke.get(i)).getVerzeichnisButton()); // ersetze ("Test "+i) mit Aufgabenname
+            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenblöcke.get(i), i).getVerzeichnisButton()); // ersetze ("Test "+i) mit Aufgabenname
         }
     }
 
@@ -253,9 +266,12 @@ public class Test extends Application {
         String btnLabel;
         Button btnName;
         Button btnLöschen;
+        int aufgabenNummer;
 
-        VerzeichnisButton(String input) {
+        VerzeichnisButton(String input, int nummer) {
             btnLabel = input;
+            aufgabenNummer = nummer;
+            System.out.println(aufgabenNummer + " früher");
             btnName = new Button(input);
             btnName.setPrefWidth(scene.getWidth());
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
@@ -284,6 +300,17 @@ public class Test extends Application {
                     System.out.println("    gewählte Einheit: " + btnLabel);
                     System.out.println("------------------------------");
 
+                    aufgabenNummer = 0;
+                    try {
+                        sql.loadFragen(btnLabel);
+                    } catch (SQLException exc) {
+                        System.out.println(exc.getMessage());
+                    }
+                    setBlockPar(btnLabel);
+                    setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer)));
+                    fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
+                    aufgabeText.setText(sql.fragen.get(aufgabenNummer));
+
                     //buildAufgabenPane();// Parameter
                     setScene(getAufgabenPane());
                     tempStage.setScene(scene);
@@ -310,6 +337,8 @@ public class Test extends Application {
     }
 
 //AufgabenPane
+    String blockPar = null;
+    int nummerFragePar = 0;
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
     Label aufgabeText = new Label();
@@ -325,12 +354,20 @@ public class Test extends Application {
     Button btnBestätigen = new Button("Bestätigen");
     Button btnNächsteAufgabe = new Button("Nächste");
 
+    void setBlockPar(String par) {
+        blockPar = par;
+    }
+
+    void setFragePar(int par) {
+        nummerFragePar = par;
+    }
+
     void buildAufgabenPane() { // Variablen übergeben für verschiedene Aufgaben
         tempPane.setStyle("-fx-background-color:rgb(220,220,220)");
         tempPane.setPrefWidth(scene.getWidth() - 150);
         aufgabeText.setWrapText(true);
         aufgabeText.setFont(Font.font(16));
-        aufgabeText.setText("kbvnxfolbhoödfjbmnä<ndjpödykdmänpo");
+        aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
         tempPane.setCenter(aufgabeText);
         AufgabenPane.setLeft(tempPane);
         AufgabenPane.setRight(AntwortPane);
@@ -338,7 +375,7 @@ public class Test extends Application {
         AntwortPane.setPrefWidth(150);
         AntwortPane.setAlignment(numAufgaben, Pos.CENTER);
         AntwortPane.setTop(numAufgaben);
-        fillAntwortAuswahl();
+        //fillAntwortAuswahl();
         antwortAuswahl.setSpacing(5);
 
         //antwortAuswahl.getChildren().add(btnNeueAntwort);
@@ -353,13 +390,18 @@ public class Test extends Application {
         navigator.add(btnBestätigen, 0, 1);
     }
 
-    void fillAntwortAuswahl() {
+    void fillAntwortAuswahl(String block, String frage) {
         AntwortGroup = new ToggleGroup();
         antwortAuswahl.getChildren().setAll();
-        for (int i = 0; i < 3/*anzahl der Aufgaben*/; i++) {
+        try {
+            sql.loadAntworten(block, frage);
+        } catch (SQLException exc) {
+            System.out.println(exc.getMessage());
+        }
+        for (int i = 0; i < sql.antwortenTemp.size()/*anzahl der Antworten*/; i++) {
             // hole Aufgabenname der i.ten Aufgabeneinheit
             // Übergebe AufgabenName
-            antwortAuswahl.getChildren().add(new btnAntwort("Test " + i).getBtnAntwort());
+            antwortAuswahl.getChildren().add(new btnAntwort(sql.antwortenTemp.get(i)).getBtnAntwort());
         }
     }
 
@@ -373,15 +415,19 @@ public class Test extends Application {
                 System.out.println("    Gewählte Antwort: " + antwort);
 
                 //checkAntwort(antwort);
-                if (antwort.equals("Test 1")) {
-                    System.out.println("        >> die Antwort ist richtig");
-                    auswertungAntwort.setText("Richtig");
-                } else {
-                    System.out.println("        >> die Antwort ist falsch");
-                    auswertungAntwort.setText("Falsch");
+                System.out.println(blockPar + sql.fragen.get(nummerFragePar) + antwort);
+                try {
+                    if(sql.checkAntwort(blockPar, sql.fragen.get(nummerFragePar), antwort) == true){
+                        System.out.println("richtig");
+                        auswertungAntwort.setText("richtig");
+                    } else{
+                        System.out.println("falsch");
+                        auswertungAntwort.setText("falsch");
+                    }
+                    System.out.println("------------------------------");
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
                 }
-                System.out.println("------------------------------");
-
                 //ersetze "Bestätigen"-Button mit "Nächste"-Button
                 navigator.add(btnNächsteAufgabe, 0, 1);
 
@@ -403,9 +449,11 @@ public class Test extends Application {
                 navigator.getChildren().remove(1, 3); // btnBestätigen und btnNächsteAufgabe löschen
                 navigator.add(btnBestätigen, 0, 1); // btnBestätigen ein
                 System.out.println("    >Bestätigen-Button eingefügt");
-                aufgabeText.setText("   >Text der nächsten Aufgabe");
+                aufgabeText.setText(sql.fragen.get(nummerFragePar + 1));
+                nummerFragePar++;
                 System.out.println("    >AufgabenText geändert");
-                fillAntwortAuswahl();
+                fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
+                auswertungAntwort.setText("");
                 System.out.println("    >AntwortAuswahl erneuert");
                 System.out.println("------------------------------");
 
