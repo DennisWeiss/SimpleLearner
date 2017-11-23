@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
 
@@ -74,7 +75,7 @@ public class Test extends Application {
 
 // AnmeldungPane
     TextField AnmeldungName = new TextField();
-    TextField AnmeldungPasswort = new TextField();
+    PasswordField AnmeldungPasswort = new PasswordField();
     Button btnAnmeld = new Button("Einloggen");
     BorderPane anmeldPane = new BorderPane();
     GridPane eingabeCenter = new GridPane();
@@ -343,7 +344,6 @@ public class Test extends Application {
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
     Label aufgabeText = new Label();
     BorderPane AntwortPane = new BorderPane();
-    Label numAufgaben = new Label("Aufgabe Nr.1");
     VBox antwortAuswahl = new VBox();
     ToggleGroup AntwortGroup = new ToggleGroup();
     Button btnNeueAntwort = new Button("Neue Aufgabe");
@@ -373,8 +373,6 @@ public class Test extends Application {
         AufgabenPane.setRight(AntwortPane);
         AntwortPane.setStyle("-fx-background-color:rgb(200,150,200);");
         AntwortPane.setPrefWidth(150);
-        AntwortPane.setAlignment(numAufgaben, Pos.CENTER);
-        AntwortPane.setTop(numAufgaben);
         //fillAntwortAuswahl();
         antwortAuswahl.setSpacing(5);
 
@@ -416,6 +414,7 @@ public class Test extends Application {
 
                 //checkAntwort(antwort);
                 System.out.println(blockPar + sql.fragen.get(nummerFragePar) + antwort);
+                System.out.println(nummerFragePar);
                 try {
                     if(sql.checkAntwort(blockPar, sql.fragen.get(nummerFragePar), antwort) == true){
                         System.out.println("richtig");
@@ -429,7 +428,18 @@ public class Test extends Application {
                     System.out.println(exc.getMessage());
                 }
                 //ersetze "Bestätigen"-Button mit "Nächste"-Button
+                if(nummerFragePar < sql.fragen.size() - 1){
                 navigator.add(btnNächsteAufgabe, 0, 1);
+                } /*else {
+                    Stage stage = new Stage();
+                    Label label = new Label("Sie haben das Quiz vollständig bearbeitet.");
+                    Button b = new Button("Zurück zu den Aufgaben");
+                    VBox vb = new VBox();
+                    vb.getChildren().addAll(label, b);
+                    Scene scene = new Scene(vb);
+                    stage.setScene(scene);
+                    stage.show();
+                }*/
 
             }
         });
