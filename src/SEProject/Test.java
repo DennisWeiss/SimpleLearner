@@ -41,24 +41,25 @@ public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
+        // lade CSS-Datei(-en)  //Z.511
+            loadStyleSheets();
         // initialisiere AnmeldungPane
-        buildAnmeldPane();
-        setBtnAnmeldung(TestStage);
+            buildAnmeldPane();
+            setBtnAnmeldung(TestStage);
         // initialisere MeldungPane
-        setMeldungPane(anmeldPane);
+            setMeldungPane(anmeldPane);
         // initialisiere AufgabenPane
-        setBtnBestätigen();
-        setBtnNächsteAufgabe(TestStage);
-        buildAufgabenPane();
+            setBtnBestätigen();
+            setBtnNächsteAufgabe(TestStage);
+            buildAufgabenPane();
         //initialisiere HauptPane  
-        setBtnNeuesElement();
+            setBtnNeuesElement();
         //setHauptTop();
         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
-        setHauptCenter();
+            setHauptCenter();
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
-        buildHauptPane();
+            buildHauptPane();
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -82,11 +83,12 @@ public class Test extends Application {
 
     private void buildAnmeldPane() {
         BorderPane temp = new BorderPane();
-        temp.setStyle("-fx-background-color: rgb(255,255,255);");
+        temp.setId("anmeldPane");
+        System.out.println(temp.getStyle());
         //eingabeDisplay.setPrefHeight(150);
         //eingabeDisplay.setPrefWidth(400);
         BorderPane eingabeTop = new BorderPane();
-        eingabeTop.setStyle("-fx-background-color:rgb(100,100,100);");
+        eingabeTop.setId("eingabeTop");
         eingabeTop.setPrefHeight(20);
         eingabeTop.setLeft(new Label("Anmeldung"));
         eingabeCenter = new GridPane();
@@ -105,7 +107,7 @@ public class Test extends Application {
     void setBtnAnmeldung(Stage tempStage) {
         btnAnmeld.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent e) {
+            public void handle(ActionEvent e){
                 System.out.println("------------------------------");
                 System.out.println("Benutzer wird eingeloggt");
                 System.out.println("    Name: " + AnmeldungName.getText());
@@ -148,13 +150,15 @@ public class Test extends Application {
     FlowPane meldungPane = new FlowPane();
 
     void setMeldungPane() {
-        meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
+        meldungPane.setId("meldungPane");
+        //meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
         meldungPane.setAlignment(Pos.CENTER);
         meldungPane.getChildren().add(new BorderPane());
     }
 
     void setMeldungPane(BorderPane temp) {
-        meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
+        meldungPane.setId("meldungPane");        
+        //meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
         meldungPane.setAlignment(Pos.CENTER);
         meldungPane.getChildren().setAll(temp);
     }
@@ -177,8 +181,10 @@ public class Test extends Application {
     StackPane root = new StackPane();
     boolean isStudent = false;
 
+    // Funktion auskommentiert
     void setHauptTop() {
-        hauptTop.setStyle("-fx-background-color: rgb(100,100,100);");
+        hauptTop.setId("hauptTop");
+        //hauptTop.setStyle("-fx-background-color: rgb(100,100,100);");
         hauptTop.setPrefHeight(30);
         Button temp = new Button("Schüler");
         hauptTop.setCenter(label);
@@ -197,16 +203,19 @@ public class Test extends Application {
         });
     }
 
+    // Funktion auskommentiert
     void setHauptLeft() {
         hauptLeft.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptLeft.setPrefWidth(50);
     }
 
+    // Funktion auskommentiert
     void setHauptRight() {
         hauptRight.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptRight.setPrefWidth(50);
     }
 
+    // Funktion auskommentiert
     void setHauptBottom() {
         hauptBottom.setStyle("-fx-background-color: rgb(100,100,100);");
         hauptBottom.setPrefHeight(50);
@@ -219,6 +228,7 @@ public class Test extends Application {
     }
 
     void setBtnNeuesElement() {
+        btnNeuesElement.setId("BtnNeuesElement");
         btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -274,6 +284,7 @@ public class Test extends Application {
             aufgabenNummer = nummer;
             System.out.println(aufgabenNummer + " früher");
             btnName = new Button(input);
+            btnName.getStyleClass().add("VerzeichnisButton");
             btnName.setPrefWidth(scene.getWidth());
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
             setBtnName(TestStage);
@@ -505,6 +516,11 @@ public class Test extends Application {
     // getHauptPane();
     // getAufgabenPane();
     Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
+    
+    void loadStyleSheets(){
+        scene.getStylesheets().add("SEProject/test.css");    
+    }
+
 
     void setScene(StackPane temp) {
         scene = new Scene(temp, 600, 600);
