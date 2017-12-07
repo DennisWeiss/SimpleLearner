@@ -61,6 +61,8 @@ public class Test extends Application {
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
             buildHauptPane();
+            
+            
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -155,14 +157,12 @@ public class Test extends Application {
 
     void setMeldungPane() {
         meldungPane.setId("meldungPane");
-        //meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
         meldungPane.setAlignment(Pos.CENTER);
         meldungPane.getChildren().add(new BorderPane());
     }
 
     void setMeldungPane(BorderPane temp) {
         meldungPane.setId("meldungPane");        
-        //meldungPane.setStyle("-fx-background-color:rgba(0,0,0,0.5);");
         meldungPane.setAlignment(Pos.CENTER);
         meldungPane.getChildren().setAll(temp);
     }
@@ -210,14 +210,12 @@ public class Test extends Application {
     // Funktion auskommentiert
     void setHauptLeft() {
         hauptLeft.setId("hauptLeft");
-        hauptLeft.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptLeft.setPrefWidth(50);
     }
 
     // Funktion auskommentiert
     void setHauptRight() {
         hauptRight.setId("hauptRight");
-        hauptRight.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptRight.setPrefWidth(50);
     }
 
@@ -236,17 +234,25 @@ public class Test extends Application {
     }
 
     void setBtnNeuesElement() {
-        btnNeuesElement.setId("BtnNeuesElement");
+        btnNeuesElement.setId("btnNeuesElement");
         btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                //DislogFenster für Namenseingabe
+                //
+                
+                /*
                 int temp = centerListe.getChildren().size();
-                centerListe.getChildren().setAll(); // VBox leeren
+                // VBox leeren
+                centerListe.getChildren().setAll(); 
+                // VBox füllen
                 for (int i = 0; i < temp; i++) {
                     System.out.println("Neues Element " + i + " wird hinzugefügt");
                     centerListe.getChildren().add(new VerzeichnisButton("String " + i, i).getVerzeichnisButton()); //VBox mit Buttons füllen
                 }
-                //centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
+                */
+                
+                centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
             }
         });
     }
@@ -265,7 +271,10 @@ public class Test extends Application {
     }
 
     void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
-
+                            // -> Anzahl aus Datenbank
+        // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
+        centerListe.getChildren().setAll();
+                            
         try {
             sql.loadBlöcke();
         } catch (SQLException exc) {
@@ -287,12 +296,12 @@ public class Test extends Application {
         Button btnLöschen;
         int aufgabenNummer;
 
-        VerzeichnisButton(String input, int nummer) {
+        VerzeichnisButton(String input, int nummer) {  
             btnLabel = input;
             aufgabenNummer = nummer;
             System.out.println(aufgabenNummer + " früher");
             btnName = new Button(input);
-                btnName.getStyleClass().add("button1");
+                btnName.getStyleClass().add("VerzeichnisButton");
                 System.out.println(btnName.getStyleClass());
                 btnName.setPrefWidth(scene.getWidth());
                 btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
@@ -385,7 +394,9 @@ public class Test extends Application {
     }
 
     void buildAufgabenPane() { 
-        tempPane.setStyle("-fx-background-color:rgb(220,220,220)");
+        tempPane.setId("aufgabePane");
+        AntwortPane.setId("antwortPane");
+         
         tempPane.setPrefWidth(scene.getWidth() - 150);
         
         aufgabeText.setWrapText(true);
@@ -395,7 +406,8 @@ public class Test extends Application {
         
         AufgabenPane.setLeft(tempPane);
         AufgabenPane.setRight(AntwortPane);
-        AntwortPane.setStyle("-fx-background-color:rgb(200,150,200);");
+
+        //AntwortPane.setStyle("-fx-background-color:rgb(200,200,200);");
         AntwortPane.setPrefWidth(150);
         //fillAntwortAuswahl();
         antwortAuswahl.setSpacing(5);
@@ -540,6 +552,7 @@ public class Test extends Application {
  
     void setScene(BorderPane temp) {
         scene = new Scene(temp, 600, 600);
+        loadStyleSheets();
     }
 
     
