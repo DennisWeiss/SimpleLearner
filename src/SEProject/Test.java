@@ -42,6 +42,7 @@ public class Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         // lade CSS-Datei(-en)  //Z.511
+        // CSS-Referenz für Panes: https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
             loadStyleSheets();
         // initialisiere AnmeldungPane
             buildAnmeldPane();
@@ -84,13 +85,15 @@ public class Test extends Application {
     private void buildAnmeldPane() {
         BorderPane temp = new BorderPane();
         temp.setId("anmeldPane");
-        System.out.println(temp.getStyle());
+        
         //eingabeDisplay.setPrefHeight(150);
         //eingabeDisplay.setPrefWidth(400);
+        
         BorderPane eingabeTop = new BorderPane();
         eingabeTop.setId("eingabeTop");
         eingabeTop.setPrefHeight(20);
         eingabeTop.setLeft(new Label("Anmeldung"));
+        
         eingabeCenter = new GridPane();
         eingabeCenter.setHgap(5.0);
         eingabeCenter.setVgap(5.0);
@@ -99,6 +102,7 @@ public class Test extends Application {
         eingabeCenter.add(new Label("Passwort: "), 0, 1);
         eingabeCenter.add(this.AnmeldungPasswort, 1, 1);
         eingabeCenter.add(this.btnAnmeld, 1, 2);
+        
         temp.setTop(eingabeTop);
         temp.setCenter(eingabeCenter);
         anmeldPane = temp;
@@ -205,23 +209,27 @@ public class Test extends Application {
 
     // Funktion auskommentiert
     void setHauptLeft() {
+        hauptLeft.setId("hauptLeft");
         hauptLeft.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptLeft.setPrefWidth(50);
     }
 
     // Funktion auskommentiert
     void setHauptRight() {
+        hauptRight.setId("hauptRight");
         hauptRight.setStyle("-fx-background-color: rgb(200,200,200);");
         hauptRight.setPrefWidth(50);
     }
 
     // Funktion auskommentiert
     void setHauptBottom() {
+        hauptBottom.setId("hauptBottom");
         hauptBottom.setStyle("-fx-background-color: rgb(100,100,100);");
         hauptBottom.setPrefHeight(50);
     }
 
     void setHauptCenter() {
+        hauptCenter.setId("hauptCenter");
         centerListe.setSpacing(5);
         //centerListe.getChildren().add(btnNeuesElement);
         hauptCenter.setCenter(centerListe);
@@ -284,10 +292,12 @@ public class Test extends Application {
             aufgabenNummer = nummer;
             System.out.println(aufgabenNummer + " früher");
             btnName = new Button(input);
-            btnName.getStyleClass().add("VerzeichnisButton");
-            btnName.setPrefWidth(scene.getWidth());
-            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
-            setBtnName(TestStage);
+                btnName.getStyleClass().add("button1");
+                System.out.println(btnName.getStyleClass());
+                btnName.setPrefWidth(scene.getWidth());
+                btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
+                setBtnName(TestStage);
+            
             //btnLöschen = new Button("Löschen");
             //btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
             //btnLöschen.setPrefWidth(100);
@@ -301,7 +311,7 @@ public class Test extends Application {
                     //
                 }
             });
-             */
+            */
         }
 
         void setBtnName(Stage tempStage) {
@@ -351,19 +361,20 @@ public class Test extends Application {
 //AufgabenPane
     String blockPar = null;
     int nummerFragePar = 0;
+    
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
     Label aufgabeText = new Label();
     BorderPane AntwortPane = new BorderPane();
-    VBox antwortAuswahl = new VBox();
-    ToggleGroup AntwortGroup = new ToggleGroup();
-    Button btnNeueAntwort = new Button("Neue Aufgabe");
-    GridPane navigator = new GridPane();
-    //Button btnZurück = new Button("Zurück");
-    //Button btnNächste = new Button("Nächste");
-    Label auswertungAntwort = new Label();
-    Button btnBestätigen = new Button("Bestätigen");
-    Button btnNächsteAufgabe = new Button("Nächste");
+        VBox antwortAuswahl = new VBox();
+            ToggleGroup AntwortGroup = new ToggleGroup();
+            Button btnNeueAntwort = new Button("Neue Aufgabe");
+            GridPane navigator = new GridPane();
+            //Button btnZurück = new Button("Zurück");
+            //Button btnNächste = new Button("Nächste");
+            Label auswertungAntwort = new Label();
+            Button btnBestätigen = new Button("Bestätigen");
+            Button btnNächsteAufgabe = new Button("Nächste");
 
     void setBlockPar(String par) {
         blockPar = par;
@@ -373,13 +384,15 @@ public class Test extends Application {
         nummerFragePar = par;
     }
 
-    void buildAufgabenPane() { // Variablen übergeben für verschiedene Aufgaben
+    void buildAufgabenPane() { 
         tempPane.setStyle("-fx-background-color:rgb(220,220,220)");
         tempPane.setPrefWidth(scene.getWidth() - 150);
+        
         aufgabeText.setWrapText(true);
         aufgabeText.setFont(Font.font(16));
         aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
         tempPane.setCenter(aufgabeText);
+        
         AufgabenPane.setLeft(tempPane);
         AufgabenPane.setRight(AntwortPane);
         AntwortPane.setStyle("-fx-background-color:rgb(200,150,200);");
@@ -521,18 +534,16 @@ public class Test extends Application {
         scene.getStylesheets().add("SEProject/test.css");    
     }
 
-
     void setScene(StackPane temp) {
         scene = new Scene(temp, 600, 600);
     }
-
-    ; 
+ 
     void setScene(BorderPane temp) {
         scene = new Scene(temp, 600, 600);
     }
-    ;
-    Stage TestStage = new Stage();
 
+    
+    Stage TestStage = new Stage();
     void setPrimaryStage() {
         TestStage.setScene(scene);
     }

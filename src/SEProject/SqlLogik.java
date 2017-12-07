@@ -30,7 +30,7 @@ public class SqlLogik implements ISqlLogik {
     public SqlLogik() {
         userInfo = new Properties();
         userInfo.put("user", "root");
-        userInfo.put("password", "databasemarcel");
+        userInfo.put("password", "stefan");
         aufgabenblöcke = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
