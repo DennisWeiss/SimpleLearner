@@ -173,16 +173,16 @@ public class Test extends Application {
     }
 
 // HauptPane
-    BorderPane hauptTop = new BorderPane();
     Label label = new Label("Test");
+    BorderPane hauptTop = new BorderPane();
     Pane hauptLeft = new Pane();
     BorderPane hauptRight = new BorderPane();
     BorderPane hauptBottom = new BorderPane();
     BorderPane hauptCenter = new BorderPane();
-    VBox centerListe = new VBox();
-    Button btnNeuesElement = new Button("Neues Element");
+        VBox centerListe = new VBox();
+        Button btnNeuesElement = new Button("Neues Element");
     BorderPane HauptPane = new BorderPane();
-    StackPane root = new StackPane();
+    StackPane root = new StackPane();   // benötigt?
     boolean isStudent = false;
 
     // Funktion auskommentiert
@@ -239,18 +239,9 @@ public class Test extends Application {
             @Override
             public void handle(ActionEvent e) {
                 //DislogFenster für Namenseingabe
-                //
-                
-                /*
-                int temp = centerListe.getChildren().size();
-                // VBox leeren
-                centerListe.getChildren().setAll(); 
-                // VBox füllen
-                for (int i = 0; i < temp; i++) {
-                    System.out.println("Neues Element " + i + " wird hinzugefügt");
-                    centerListe.getChildren().add(new VerzeichnisButton("String " + i, i).getVerzeichnisButton()); //VBox mit Buttons füllen
-                }
-                */
+                //-> Erstellung einer neuen Aufgabe
+
+                fillVerzeich();
                 
                 centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
             }
