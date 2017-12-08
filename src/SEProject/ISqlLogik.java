@@ -15,7 +15,7 @@ public interface ISqlLogik {
     
     public boolean checkAntwort(String blockBez, String aFrage, String aAntwort) throws SQLException;
     
-    public boolean checkLogin(String user, String password) throws SQLException;
+    public boolean[] checkLogin(String user, String password) throws SQLException;
     
     public void loadLehrer(String lid) throws SQLException;
     

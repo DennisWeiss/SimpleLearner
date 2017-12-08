@@ -43,26 +43,24 @@ public class Test extends Application {
     public void start(Stage primaryStage) {
         // lade CSS-Datei(-en)  //Z.511
         // CSS-Referenz für Panes: https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
-            loadStyleSheets();
+        loadStyleSheets();
         // initialisiere AnmeldungPane
-            buildAnmeldPane();
-            setBtnAnmeldung(TestStage);
+        buildAnmeldPane();
+        setBtnAnmeldung(TestStage);
         // initialisere MeldungPane
-            setMeldungPane(anmeldPane);
+        setMeldungPane(anmeldPane);
         // initialisiere AufgabenPane
-            setBtnBestätigen();
-            setBtnNächsteAufgabe(TestStage);
-            buildAufgabenPane();
+        setBtnBestätigen();
+        setBtnNächsteAufgabe(TestStage);
+        buildAufgabenPane();
         //initialisiere HauptPane  
-            setBtnNeuesElement();
+        setBtnNeuesElement();
         //setHauptTop();
         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
-            setHauptCenter();
+        setHauptCenter();
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
-            buildHauptPane();
-            
-            
+        buildHauptPane();
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -83,19 +81,20 @@ public class Test extends Application {
     Button btnAnmeld = new Button("Einloggen");
     BorderPane anmeldPane = new BorderPane();
     GridPane eingabeCenter = new GridPane();
+    boolean istStudent;
+    String currentUser = null;
 
     private void buildAnmeldPane() {
         BorderPane temp = new BorderPane();
         temp.setId("anmeldPane");
-        
+
         //eingabeDisplay.setPrefHeight(150);
         //eingabeDisplay.setPrefWidth(400);
-        
         BorderPane eingabeTop = new BorderPane();
         eingabeTop.setId("eingabeTop");
         eingabeTop.setPrefHeight(20);
         eingabeTop.setLeft(new Label("Anmeldung"));
-        
+
         eingabeCenter = new GridPane();
         eingabeCenter.setHgap(5.0);
         eingabeCenter.setVgap(5.0);
@@ -104,7 +103,7 @@ public class Test extends Application {
         eingabeCenter.add(new Label("Passwort: "), 0, 1);
         eingabeCenter.add(this.AnmeldungPasswort, 1, 1);
         eingabeCenter.add(this.btnAnmeld, 1, 2);
-        
+
         temp.setTop(eingabeTop);
         temp.setCenter(eingabeCenter);
         anmeldPane = temp;
@@ -113,27 +112,33 @@ public class Test extends Application {
     void setBtnAnmeldung(Stage tempStage) {
         btnAnmeld.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent e){
+            public void handle(ActionEvent e) {
                 System.out.println("------------------------------");
                 System.out.println("Benutzer wird eingeloggt");
                 System.out.println("    Name: " + AnmeldungName.getText());
                 System.out.println("    Passwort: " + AnmeldungPasswort.getText());
                 System.out.println("------------------------------");
 
-                boolean check = false;
+                boolean[] check = new boolean[2];
                 try {
                     check = sql.checkLogin(AnmeldungName.getText(), AnmeldungPasswort.getText());
+                    if (check[0] == true) {
+                        if (check[1] == true) {//LehrerPane erstellen
+                            istStudent = check[1];
+                        } else if (check[1] == false) { //SchülerPane erstellen
+                            istStudent = check[1];
+                        }
+                        currentUser = sql.getCurrentUser();
+                        System.out.println(currentUser);
+                        setScene(getHauptPane());
+                        tempStage.setScene(scene);
+                        tempStage.setTitle("SimpleLearner - Aufgabenverzeichnis");
+                        tempStage.show();
+                    } else {
+                        System.out.println("Falsche Eingabe");
+                    }
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
-                }
-
-                if (check == true) {
-                    setScene(getHauptPane());
-                    tempStage.setScene(scene);
-                    tempStage.setTitle("SimpleLearner - Aufgabenverzeichnis");
-                    tempStage.show();
-                } else {
-                    System.out.println("Falsche Eingabe");
                 }
 
             }
@@ -162,7 +167,7 @@ public class Test extends Application {
     }
 
     void setMeldungPane(BorderPane temp) {
-        meldungPane.setId("meldungPane");        
+        meldungPane.setId("meldungPane");
         meldungPane.setAlignment(Pos.CENTER);
         meldungPane.getChildren().setAll(temp);
     }
@@ -240,7 +245,7 @@ public class Test extends Application {
             public void handle(ActionEvent e) {
                 //DislogFenster für Namenseingabe
                 //
-                
+
                 /*
                 int temp = centerListe.getChildren().size();
                 // VBox leeren
@@ -250,8 +255,7 @@ public class Test extends Application {
                     System.out.println("Neues Element " + i + " wird hinzugefügt");
                     centerListe.getChildren().add(new VerzeichnisButton("String " + i, i).getVerzeichnisButton()); //VBox mit Buttons füllen
                 }
-                */
-                
+                 */
                 centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
             }
         });
@@ -271,10 +275,10 @@ public class Test extends Application {
     }
 
     void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
-                            // -> Anzahl aus Datenbank
+        // -> Anzahl aus Datenbank
         // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
         centerListe.getChildren().setAll();
-                            
+
         try {
             sql.loadBlöcke();
         } catch (SQLException exc) {
@@ -296,17 +300,17 @@ public class Test extends Application {
         Button btnLöschen;
         int aufgabenNummer;
 
-        VerzeichnisButton(String input, int nummer) {  
+        VerzeichnisButton(String input, int nummer) {
             btnLabel = input;
             aufgabenNummer = nummer;
             System.out.println(aufgabenNummer + " früher");
             btnName = new Button(input);
-                btnName.getStyleClass().add("VerzeichnisButton");
-                System.out.println(btnName.getStyleClass());
-                btnName.setPrefWidth(scene.getWidth());
-                btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
-                setBtnName(TestStage);
-            
+            btnName.getStyleClass().add("VerzeichnisButton");
+            System.out.println(btnName.getStyleClass());
+            btnName.setPrefWidth(scene.getWidth());
+            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
+            setBtnName(TestStage);
+
             //btnLöschen = new Button("Löschen");
             //btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
             //btnLöschen.setPrefWidth(100);
@@ -320,7 +324,7 @@ public class Test extends Application {
                     //
                 }
             });
-            */
+             */
         }
 
         void setBtnName(Stage tempStage) {
@@ -370,20 +374,20 @@ public class Test extends Application {
 //AufgabenPane
     String blockPar = null;
     int nummerFragePar = 0;
-    
+
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
     Label aufgabeText = new Label();
     BorderPane AntwortPane = new BorderPane();
-        VBox antwortAuswahl = new VBox();
-            ToggleGroup AntwortGroup = new ToggleGroup();
-            Button btnNeueAntwort = new Button("Neue Aufgabe");
-            GridPane navigator = new GridPane();
-            //Button btnZurück = new Button("Zurück");
-            //Button btnNächste = new Button("Nächste");
-            Label auswertungAntwort = new Label();
-            Button btnBestätigen = new Button("Bestätigen");
-            Button btnNächsteAufgabe = new Button("Nächste");
+    VBox antwortAuswahl = new VBox();
+    ToggleGroup AntwortGroup = new ToggleGroup();
+    Button btnNeueAntwort = new Button("Neue Aufgabe");
+    GridPane navigator = new GridPane();
+    //Button btnZurück = new Button("Zurück");
+    //Button btnNächste = new Button("Nächste");
+    Label auswertungAntwort = new Label();
+    Button btnBestätigen = new Button("Bestätigen");
+    Button btnNächsteAufgabe = new Button("Nächste");
 
     void setBlockPar(String par) {
         blockPar = par;
@@ -393,17 +397,17 @@ public class Test extends Application {
         nummerFragePar = par;
     }
 
-    void buildAufgabenPane() { 
+    void buildAufgabenPane() {
         tempPane.setId("aufgabePane");
         AntwortPane.setId("antwortPane");
-         
+
         tempPane.setPrefWidth(scene.getWidth() - 150);
-        
+
         aufgabeText.setWrapText(true);
         aufgabeText.setFont(Font.font(16));
         aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
         tempPane.setCenter(aufgabeText);
-        
+
         AufgabenPane.setLeft(tempPane);
         AufgabenPane.setRight(AntwortPane);
 
@@ -452,10 +456,10 @@ public class Test extends Application {
                 System.out.println(blockPar + sql.fragen.get(nummerFragePar) + antwort);
                 System.out.println(nummerFragePar);
                 try {
-                    if(sql.checkAntwort(blockPar, sql.fragen.get(nummerFragePar), antwort) == true){
+                    if (sql.checkAntwort(blockPar, sql.fragen.get(nummerFragePar), antwort) == true) {
                         System.out.println("richtig");
                         auswertungAntwort.setText("richtig");
-                    } else{
+                    } else {
                         System.out.println("falsch");
                         auswertungAntwort.setText("falsch");
                     }
@@ -464,9 +468,10 @@ public class Test extends Application {
                     System.out.println(exc.getMessage());
                 }
                 //ersetze "Bestätigen"-Button mit "Nächste"-Button
-                if(nummerFragePar < sql.fragen.size() - 1){
-                navigator.add(btnNächsteAufgabe, 0, 1);
-                } /*else {
+                if (nummerFragePar < sql.fragen.size() - 1) {
+                    navigator.add(btnNächsteAufgabe, 0, 1);
+                }
+                /*else {
                     Stage stage = new Stage();
                     Label label = new Label("Sie haben das Quiz vollständig bearbeitet.");
                     Button b = new Button("Zurück zu den Aufgaben");
@@ -541,22 +546,22 @@ public class Test extends Application {
     // getHauptPane();
     // getAufgabenPane();
     Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
-    
-    void loadStyleSheets(){
-        scene.getStylesheets().add("SEProject/test.css");    
+
+    void loadStyleSheets() {
+        scene.getStylesheets().add("SEProject/test.css");
     }
 
     void setScene(StackPane temp) {
         scene = new Scene(temp, 600, 600);
     }
- 
+
     void setScene(BorderPane temp) {
         scene = new Scene(temp, 600, 600);
         loadStyleSheets();
     }
 
-    
     Stage TestStage = new Stage();
+
     void setPrimaryStage() {
         TestStage.setScene(scene);
     }

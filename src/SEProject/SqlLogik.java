@@ -26,6 +26,15 @@ public class SqlLogik implements ISqlLogik {
     ArrayList<String> antwortenTemp;
     String loginLehrer;
     String loginSchüler;
+    private String  currentUser;
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
 
     public SqlLogik() {
         userInfo = new Properties();
@@ -36,6 +45,7 @@ public class SqlLogik implements ISqlLogik {
         antwortenTemp = new ArrayList<>();
         loginLehrer = null;
         loginSchüler = null;
+        currentUser = null;
     }
 
     @Override
@@ -71,19 +81,27 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public boolean checkLogin(String user, String password) throws SQLException {
+    public boolean[] checkLogin(String user, String password) throws SQLException {
 
-        String stringCheck = "select lid, lehrer.passwort, sid, schüler.passwort from lehrer, schüler";
-        boolean checkPassword = false;
+        String stringCheck = "select * from lehrer, schüler";
+        boolean[] checkPassword = new boolean[2];
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtCheck = myConn.createStatement();
                 ResultSet rsCheck = stmtCheck.executeQuery(stringCheck)) {
 
             while (rsCheck.next()) {
                 if (rsCheck.getString("lid").equals(user)) {
-                    checkPassword = rsCheck.getString("lehrer.passwort").equals(password);
+                    checkPassword[0] = rsCheck.getString("lehrer.passwort").equals(password);
+                    if(checkPassword[0] == true){
+                        checkPassword[1] = true; //1 für Lehrer
+                        currentUser = rsCheck.getString("lehrer.vorname") + " " + rsCheck.getString("lehrer.nachname");
+                    }
                 } else if (rsCheck.getString("sid").equals(user)) {
-                    checkPassword = rsCheck.getString("schüler.passwort").equals(password);
+                    checkPassword[0] = rsCheck.getString("schüler.passwort").equals(password);
+                    if(checkPassword[0] == true){
+                        checkPassword[1] = false;//0 für Schüler
+                        currentUser = rsCheck.getString("schüler.vorname") + " " + rsCheck.getString("schüler.nachname");
+                    }
                 }
             }
 
