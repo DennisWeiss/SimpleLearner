@@ -1,0 +1,39 @@
+.button{
+    -fx-text-fill:rgb(50,100,150);
+}
+.VerzeichnisButton{
+    -fx-background-color: rgb(255,255,255);
+}
+#btnNeuesElement{
+    -fx-background-color: rgb(150,255,150);
+}
+#anmeldPane{
+    -fx-background-color: rgb(255,255,255);
+}
+#eingabeTop{
+    -fx-background-color:rgb(100,100,100);
+}
+#meldungPane{
+    -fx-background-color:rgba(0,0,0,0.5);
+}
+#hauptTop{
+    -fx-background-color: rgb(100,100,100);
+}
+#hauptLeft{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptRight{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(150,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(100,100,100);
+}
+#aufgabePane{
+    -fx-background-color:rgb(220,220,220);
+}
+#antwortPane{
+    -fx-background-color:rgb(200,150,200);
+}
