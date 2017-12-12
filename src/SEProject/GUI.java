@@ -209,7 +209,7 @@ public class GUI extends Application{
                         System.out.println("Neues Element "+i+" wird hinzugefügt");
                         centerListe.getChildren().add(new VerzeichnisButton(i,isStudent).getVerzeichnisButton()); //VBox mit Buttons füllen
                     }
-                    centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
+                    centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhaengen
                 }
             }); 
             centerListe.setSpacing(5);
