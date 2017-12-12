@@ -31,11 +31,11 @@ import javafx.scene.text.Font;
  *
  * @author stefan
  */
-public class GUI extends Application {
+public class SimpleLearnerGUI extends Application {
 
     SqlLogik sql;
 
-    public GUI() {
+    public SimpleLearnerGUI() {
         sql = new SqlLogik();
     }
 
@@ -277,7 +277,7 @@ public class GUI extends Application {
             System.out.println(exc.getMessage());
         }
         for (int i = 0; i < sql.aufgabenblöcke.size(); i++) {
-            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenblöcke.get(i), i).getVerzeichnisButton()); // ersetze ("GUI "+i) mit Aufgabenname
+            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenblöcke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
         }
     }
 
@@ -540,7 +540,7 @@ public class GUI extends Application {
     Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
 
     void loadStyleSheets() {
-        scene.getStylesheets().add("SEProject/test.css");
+        scene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
     }
 
     void setScene(StackPane temp) {
