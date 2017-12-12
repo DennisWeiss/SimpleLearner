@@ -50,8 +50,8 @@ public class GUI extends Application {
         // initialisere MeldungPane
         setMeldungPane(anmeldPane);
         // initialisiere AufgabenPane
-        setBtnBestätigen();
-        setBtnNächsteAufgabe(TestStage);
+        setBtnBestaetigen();
+        setBtnNaechsteAufgabe(TestStage);
         buildAufgabenPane();
         //initialisiere HauptPane  
         setBtnNeuesElement();
@@ -303,7 +303,7 @@ public class GUI extends Application {
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
             setBtnName(TestStage);
 
-            //btnLöschen = new Button("Löschen");
+            //btnLöschen = new Button("Loeschen");
             //btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
             //btnLöschen.setPrefWidth(100);
 
@@ -378,8 +378,8 @@ public class GUI extends Application {
     //Button btnZurück = new Button("Zurück");
     //Button btnNächste = new Button("Nächste");
     Label auswertungAntwort = new Label();
-    Button btnBestätigen = new Button("Bestätigen");
-    Button btnNächsteAufgabe = new Button("Nächste");
+    Button btnBestaetigen = new Button("Bestätigen");
+    Button btnNaechsteAufgabe = new Button("Nächste");
 
     void setBlockPar(String par) {
         blockPar = par;
@@ -417,7 +417,7 @@ public class GUI extends Application {
         AntwortPane.setBottom(navigator);
         auswertungAntwort.setFont(Font.font(20));
         navigator.add(auswertungAntwort, 0, 0);
-        navigator.add(btnBestätigen, 0, 1);
+        navigator.add(btnBestaetigen, 0, 1);
     }
 
     void fillAntwortAuswahl(String block, String frage) {
@@ -435,9 +435,9 @@ public class GUI extends Application {
         }
     }
 
-    void setBtnBestätigen() {//wertet den bewählte Button aus und gibt diese aus
-        btnBestätigen.setPrefWidth(75);
-        btnBestätigen.setOnAction(new EventHandler<ActionEvent>() {
+    void setBtnBestaetigen() {//wertet den bewählte Button aus und gibt diese aus
+        btnBestaetigen.setPrefWidth(75);
+        btnBestaetigen.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 String antwort = AntwortGroup.getSelectedToggle().getUserData().toString();
@@ -461,7 +461,7 @@ public class GUI extends Application {
                 }
                 //ersetze "Bestätigen"-Button mit "Nächste"-Button
                 if (nummerFragePar < sql.fragen.size() - 1) {
-                    navigator.add(btnNächsteAufgabe, 0, 1);
+                    navigator.add(btnNaechsteAufgabe, 0, 1);
                 }
                 /*else {
                     Stage stage = new Stage();
@@ -478,9 +478,9 @@ public class GUI extends Application {
         });
     }
 
-    void setBtnNächsteAufgabe(Stage tempStage) {//öffnet nächste Aufgabe
-        btnNächsteAufgabe.setPrefWidth(75);
-        btnNächsteAufgabe.setOnAction(new EventHandler<ActionEvent>() {
+    void setBtnNaechsteAufgabe(Stage tempStage) {//öffnet nächste Aufgabe
+        btnNaechsteAufgabe.setPrefWidth(75);
+        btnNaechsteAufgabe.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("Nächste Aufgabe wird geöffnet");
@@ -490,7 +490,7 @@ public class GUI extends Application {
                 // exception durch erneutes Einfügen von btnBestätigen
                 // -> btnBestätigen löschen und erneut einfügen
                 navigator.getChildren().remove(1, 3); // btnBestätigen und btnNächsteAufgabe löschen
-                navigator.add(btnBestätigen, 0, 1); // btnBestätigen ein
+                navigator.add(btnBestaetigen, 0, 1); // btnBestätigen ein
                 System.out.println("    >Bestätigen-Button eingefügt");
                 aufgabeText.setText(sql.fragen.get(nummerFragePar + 1));
                 nummerFragePar++;
