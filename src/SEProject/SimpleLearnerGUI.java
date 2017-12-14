@@ -6,6 +6,8 @@ package SEProject;
  * and open the template in the editor.
  */
 import java.sql.SQLException;
+
+
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -21,8 +23,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
@@ -66,6 +70,22 @@ public class SimpleLearnerGUI extends Application {
         primaryStage.setTitle("SimpleTest - Anmeldung");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // FULLSCREEN 
+        primaryStage = TestStage;
+        primaryStage.setTitle("SimpleTest - Anmeldung");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+        
+        // FULLSCREEN - end
     }
 
     /**
@@ -76,8 +96,8 @@ public class SimpleLearnerGUI extends Application {
     }
 
 // AnmeldungPane
-    TextField AnmeldungName = new TextField();
-    PasswordField AnmeldungPasswort = new PasswordField();
+    TextField anmeldungName = new TextField();
+    PasswordField anmeldungPasswort = new PasswordField();
     Button btnAnmeld = new Button("Einloggen");
     BorderPane anmeldPane = new BorderPane();
     GridPane eingabeCenter = new GridPane();
@@ -91,17 +111,28 @@ public class SimpleLearnerGUI extends Application {
         //eingabeDisplay.setPrefHeight(150);
         //eingabeDisplay.setPrefWidth(400);
         BorderPane eingabeTop = new BorderPane();
+        Label anmeldungLabel = new Label("Anmeldung");
+        anmeldungLabel.setId("anmeldungLabel");
+        
         eingabeTop.setId("eingabeTop");
         eingabeTop.setPrefHeight(20);
-        eingabeTop.setLeft(new Label("Anmeldung"));
+        eingabeTop.setCenter(anmeldungLabel);
+        
+        btnAnmeld.setId("btnAnmeld");
+        
+        anmeldungName.setId("anmeldungName");
+        anmeldungName.setPromptText("Name");
+        
+        anmeldungPasswort.setId("anmeldungPasswort");
+        anmeldungPasswort.setPromptText("Passwort");
 
         eingabeCenter = new GridPane();
-        eingabeCenter.setHgap(5.0);
-        eingabeCenter.setVgap(5.0);
+        eingabeCenter.setHgap(10.0);
+        eingabeCenter.setVgap(10.0);
         eingabeCenter.add(new Label("Name: "), 0, 0);
-        eingabeCenter.add(this.AnmeldungName, 1, 0);
+        eingabeCenter.add(this.anmeldungName, 1, 0);
         eingabeCenter.add(new Label("Passwort: "), 0, 1);
-        eingabeCenter.add(this.AnmeldungPasswort, 1, 1);
+        eingabeCenter.add(this.anmeldungPasswort, 1, 1);
         eingabeCenter.add(this.btnAnmeld, 1, 2);
 
         temp.setTop(eingabeTop);
@@ -115,13 +146,13 @@ public class SimpleLearnerGUI extends Application {
             public void handle(ActionEvent e) {
                 System.out.println("------------------------------");
                 System.out.println("Benutzer wird eingeloggt");
-                System.out.println("    Name: " + AnmeldungName.getText());
-                System.out.println("    Passwort: " + AnmeldungPasswort.getText());
+                System.out.println("    Name: " + anmeldungName.getText());
+                System.out.println("    Passwort: " + anmeldungPasswort.getText());
                 System.out.println("------------------------------");
 
                 boolean[] check = new boolean[2];
                 try {
-                    check = sql.checkLogin(AnmeldungName.getText(), AnmeldungPasswort.getText());
+                    check = sql.checkLogin(anmeldungName.getText(), anmeldungPasswort.getText());
                     if (check[0] == true) {
                         if (check[1] == true) {//LehrerPane erstellen
                             istStudent = check[1];
@@ -146,11 +177,11 @@ public class SimpleLearnerGUI extends Application {
     }
 
     String getName() {
-        return AnmeldungName.getText();
+        return anmeldungName.getText();
     }
 
     String getPasswort() {
-        return AnmeldungPasswort.getText();
+        return anmeldungPasswort.getText();
     }
 
     BorderPane getAnmeldPane() {
@@ -272,12 +303,12 @@ public class SimpleLearnerGUI extends Application {
         centerListe.getChildren().setAll();
 
         try {
-            sql.loadBlöcke();
+            sql.loadBloecke();
         } catch (SQLException exc) {
             System.out.println(exc.getMessage());
         }
-        for (int i = 0; i < sql.aufgabenblöcke.size(); i++) {
-            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenblöcke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
+        for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
+            centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
         }
     }
 
@@ -289,7 +320,7 @@ public class SimpleLearnerGUI extends Application {
 
         String btnLabel;
         Button btnName;
-        Button btnLöschen;
+        Button btnLoeschen;
         int aufgabenNummer;
 
         VerzeichnisButton(String input, int nummer) {

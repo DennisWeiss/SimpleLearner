@@ -21,11 +21,11 @@ import java.util.Properties;
 public class SqlLogik implements ISqlLogik {
 
     Properties userInfo;
-    ArrayList<String> aufgabenblöcke;
+    ArrayList<String> aufgabenbloecke;
     ArrayList<String> fragen;
     ArrayList<String> antwortenTemp;
     String loginLehrer;
-    String loginSchüler;
+    String loginSchueler;
     private String  currentUser;
 
     public String getCurrentUser() {
@@ -40,11 +40,11 @@ public class SqlLogik implements ISqlLogik {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
         userInfo.put("password", "stefan"); //"stefan" für stefan
-        aufgabenblöcke = new ArrayList<>();
+        aufgabenbloecke = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
         loginLehrer = null;
-        loginSchüler = null;
+        loginSchueler = null;
         currentUser = null;
     }
 
@@ -129,14 +129,14 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public void loadSchüler(String sid) throws SQLException {
-        String stringSchüler = "select vorname, nachname from schüler where sid = ?";
+    public void loadSchueler(String sid) throws SQLException {
+        String stringSchueler = "select vorname, nachname from schüler where sid = ?";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtSchüler = myConn.prepareStatement(stringSchüler);
-                ResultSet rsSchüler = stmtSchüler.executeQuery()) {
+                PreparedStatement stmtSchueler = myConn.prepareStatement(stringSchueler);
+                ResultSet rsSchueler = stmtSchueler.executeQuery()) {
 
-            while (rsSchüler.next()) {
-                loginLehrer = rsSchüler.getString("vorname") + " " + rsSchüler.getString("nachname");
+            while (rsSchueler.next()) {
+                loginLehrer = rsSchueler.getString("vorname") + " " + rsSchueler.getString("nachname");
             }
 
         } catch (SQLException exc) {
@@ -145,13 +145,13 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public void loadBlöcke() throws SQLException {
+    public void loadBloecke() throws SQLException {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtAufgaben = myConn.createStatement();
                 ResultSet rsAufgaben = stmtAufgaben.executeQuery("select bid from block")) {
 
             while (rsAufgaben.next()) {
-                aufgabenblöcke.add(rsAufgaben.getString("bid"));
+                aufgabenbloecke.add(rsAufgaben.getString("bid"));
             }
         } catch (SQLException exc) {
             throw exc;
