@@ -4,6 +4,9 @@
 .VerzeichnisButton{
     -fx-background-color: rgb(255,255,255);
 }
+.ModulButton{
+    -fx-background-color: rgb(150,200,100);
+}
 #btnNeuesElement{
     -fx-background-color: rgb(150,255,150);
 }
