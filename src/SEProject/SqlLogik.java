@@ -21,11 +21,11 @@ import java.util.Properties;
 public class SqlLogik implements ISqlLogik {
 
     Properties userInfo;
-    ArrayList<String> aufgabenblöcke;
+    ArrayList<String> aufgabenbloecke;
     ArrayList<String> fragen;
     ArrayList<String> antwortenTemp;
     String loginLehrer;
-    String loginSchüler;
+    String loginSchueler;
     private String  currentUser;
 
     public String getCurrentUser() {
@@ -40,11 +40,11 @@ public class SqlLogik implements ISqlLogik {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
         userInfo.put("password", "databasemarcel"); //"stefan" für stefan
-        aufgabenblöcke = new ArrayList<>();
+        aufgabenbloecke = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
         loginLehrer = null;
-        loginSchüler = null;
+        loginSchueler = null;
         currentUser = null;
     }
 
@@ -83,7 +83,7 @@ public class SqlLogik implements ISqlLogik {
     @Override
     public boolean[] checkLogin(String user, String password) throws SQLException {
 
-        String stringCheck = "select * from lehrer, schüler";
+        String stringCheck = "select * from lehrer, schueler";
         boolean[] checkPassword = new boolean[2];
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtCheck = myConn.createStatement();
@@ -97,10 +97,10 @@ public class SqlLogik implements ISqlLogik {
                         currentUser = rsCheck.getString("lehrer.vorname") + " " + rsCheck.getString("lehrer.nachname");
                     }
                 } else if (rsCheck.getString("sid").equals(user)) {
-                    checkPassword[0] = rsCheck.getString("schüler.passwort").equals(password);
+                    checkPassword[0] = rsCheck.getString("schueler.passwort").equals(password);
                     if(checkPassword[0] == true){
                         checkPassword[1] = false;//0 für Schüler
-                        currentUser = rsCheck.getString("schüler.vorname") + " " + rsCheck.getString("schüler.nachname");
+                        currentUser = rsCheck.getString("schueler.vorname") + " " + rsCheck.getString("schueler.nachname");
                     }
                 }
             }
@@ -129,14 +129,14 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public void loadSchüler(String sid) throws SQLException {
-        String stringSchüler = "select vorname, nachname from schüler where sid = ?";
+    public void loadSchueler(String sid) throws SQLException {
+        String stringSchüler = "select vorname, nachname from schueler where sid = ?";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtSchüler = myConn.prepareStatement(stringSchüler);
-                ResultSet rsSchüler = stmtSchüler.executeQuery()) {
+                PreparedStatement stmtSchueler = myConn.prepareStatement(stringSchüler);
+                ResultSet rsSchueler = stmtSchueler.executeQuery()) {
 
-            while (rsSchüler.next()) {
-                loginLehrer = rsSchüler.getString("vorname") + " " + rsSchüler.getString("nachname");
+            while (rsSchueler.next()) {
+                loginLehrer = rsSchueler.getString("vorname") + " " + rsSchueler.getString("nachname");
             }
 
         } catch (SQLException exc) {
@@ -145,13 +145,13 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public void loadBlöcke() throws SQLException {
+    public void loadBloecke() throws SQLException {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtAufgaben = myConn.createStatement();
                 ResultSet rsAufgaben = stmtAufgaben.executeQuery("select bid from block")) {
 
             while (rsAufgaben.next()) {
-                aufgabenblöcke.add(rsAufgaben.getString("bid"));
+                aufgabenbloecke.add(rsAufgaben.getString("bid"));
             }
         } catch (SQLException exc) {
             throw exc;
