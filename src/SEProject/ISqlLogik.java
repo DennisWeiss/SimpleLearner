@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public interface ISqlLogik {
     
-    public boolean checkAntwort(String blockBez, String aFrage, String aAntwort) throws SQLException;
+    public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException;
     
     public boolean[] checkLogin(String user, String password) throws SQLException;
     

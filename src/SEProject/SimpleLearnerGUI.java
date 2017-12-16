@@ -561,8 +561,9 @@ public class SimpleLearnerGUI extends Application {
                 //checkAntwort(antwort);
                 System.out.println(blockPar + sql.fragen.get(nummerFragePar) + antwort);
                 System.out.println(nummerFragePar);
+                System.out.println(AnmeldungName.getText());
                 try {
-                    if (sql.checkAntwort(blockPar, sql.fragen.get(nummerFragePar), antwort) == true) {
+                    if (sql.checkAntwort(blockPar, AnmeldungName.getText(), sql.fragen.get(nummerFragePar), antwort) == true) {
                         System.out.println("richtig");
                         auswertungAntwort.setText("richtig");
                     } else {

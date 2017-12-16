@@ -26,7 +26,7 @@ public class SqlLogik implements ISqlLogik {
     ArrayList<String> antwortenTemp;
     String loginLehrer;
     String loginSchueler;
-    private String  currentUser;
+    private String currentUser;
 
     public String getCurrentUser() {
         return currentUser;
@@ -49,31 +49,51 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public boolean checkAntwort(String blockBez, String aFrage, String aAntwort) throws SQLException {
-        String stmtString = "select isTrue from antwort join aufgabe on antwort.aufgabe = aufgabe.aid"
-                + " join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ? and antwort.antworttext = ?";
+    public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException {
+
+        String antwortString = "update schuelerloestaufgabe set antwortS = ? "
+                + "where aufgabe = (select aid from aufgabe where frage = ?) "
+                + "and aktBlock = (select slbid from schuelerloestblock where block = ? and schueler = ?);";
+
+        String stmtString = "select schuelerloestaufgabe.antwortS , antwort.isTrue from schuelerloestaufgabe "
+                + "join schuelerloestblock on schuelerloestaufgabe.aktBlock = schuelerloestblock.SLBID "
+                + "join aufgabe on schuelerloestaufgabe.Aufgabe = aufgabe.aid "
+                + "join antwort on aufgabe.aid = antwort.aufgabe "
+                + "where aufgabe.frage = ?"
+                + "and schuelerloestBlock.schueler = ? "
+                + "and antwort.antworttext = ?;";
+
+        /*"select isTrue from antwort join aufgabe on antwort.aufgabe = aufgabe.aid"
+                + " join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ? and antwort.antworttext = ?";*/
         ResultSet rsAntwort = null;
 
         boolean check = false;
 
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement setAntwort = myConn.prepareStatement(antwortString);
                 PreparedStatement stmtAntwort = myConn.prepareStatement(stmtString)) {
 
-            stmtAntwort.setString(1, blockBez);
-            stmtAntwort.setString(2, aFrage);
+            setAntwort.setString(1, aAntwort);
+            setAntwort.setString(2, aFrage);
+            setAntwort.setString(3, blockBez);
+            setAntwort.setString(4, aSchueler);
+            setAntwort.execute();
+
+            stmtAntwort.setString(1, aFrage);
+            stmtAntwort.setString(2, aSchueler);
             stmtAntwort.setString(3, aAntwort);
-            
             rsAntwort = stmtAntwort.executeQuery();
 
             while (rsAntwort.next()) {
-                if (rsAntwort.getString("isTrue").equals("1")) {
+                if (rsAntwort.getString("antwort.isTrue").equals("1")) {
+                    System.out.println(rsAntwort.getString("antwort.isTrue"));
                     check = true;
                 }
             }
         } catch (SQLException exc) {
             throw exc;
-        } finally{
-            if(rsAntwort != null){
+        } finally {
+            if (rsAntwort != null) {
                 rsAntwort.close();
             }
         }
@@ -92,13 +112,13 @@ public class SqlLogik implements ISqlLogik {
             while (rsCheck.next()) {
                 if (rsCheck.getString("lid").equals(user)) {
                     checkPassword[0] = rsCheck.getString("lehrer.passwort").equals(password);
-                    if(checkPassword[0] == true){
+                    if (checkPassword[0] == true) {
                         checkPassword[1] = true; //1 für Lehrer
                         currentUser = rsCheck.getString("lehrer.vorname") + " " + rsCheck.getString("lehrer.nachname");
                     }
                 } else if (rsCheck.getString("sid").equals(user)) {
                     checkPassword[0] = rsCheck.getString("schueler.passwort").equals(password);
-                    if(checkPassword[0] == true){
+                    if (checkPassword[0] == true) {
                         checkPassword[1] = false;//0 für Schüler
                         currentUser = rsCheck.getString("schueler.vorname") + " " + rsCheck.getString("schueler.nachname");
                     }
@@ -136,7 +156,7 @@ public class SqlLogik implements ISqlLogik {
                 ResultSet rsSchueler = stmtSchueler.executeQuery()) {
 
             while (rsSchueler.next()) {
-                loginLehrer = rsSchueler.getString("vorname") + " " + rsSchueler.getString("nachname");
+                loginSchueler = rsSchueler.getString("vorname") + " " + rsSchueler.getString("nachname");
             }
 
         } catch (SQLException exc) {
@@ -149,6 +169,10 @@ public class SqlLogik implements ISqlLogik {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtAufgaben = myConn.createStatement();
                 ResultSet rsAufgaben = stmtAufgaben.executeQuery("select bid from block")) {
+
+            if (aufgabenbloecke != null) {
+                aufgabenbloecke.clear();
+            }
 
             while (rsAufgaben.next()) {
                 aufgabenbloecke.add(rsAufgaben.getString("bid"));
@@ -171,7 +195,7 @@ public class SqlLogik implements ISqlLogik {
             while (rsFrage.next()) {
                 fragen.add(rsFrage.getString("frage"));
             }
-            for(int i = 0; i < fragen.size(); i++){
+            for (int i = 0; i < fragen.size(); i++) {
                 System.out.println(fragen.get(i) + " in Logik");
             }
         } catch (SQLException exc) {
@@ -202,8 +226,8 @@ public class SqlLogik implements ISqlLogik {
             }
         } catch (SQLException exc) {
             throw exc;
-        } finally{
-            if(rsAntworten != null){
+        } finally {
+            if (rsAntworten != null) {
                 rsAntworten.close();
             }
         }
