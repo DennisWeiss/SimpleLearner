@@ -42,7 +42,6 @@ public class SimpleLearnerGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         // lade CSS-Datei(-en)  //Z.511
-        // CSS-Referenz für Panes: https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
         loadStyleSheets();
         // initialisiere AnmeldungPane
         buildAnmeldPane();
