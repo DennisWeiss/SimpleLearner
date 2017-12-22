@@ -154,12 +154,11 @@ public class SimpleLearnerGUI extends Application {
                             istLehrer = check[1];
                         } else if (check[1] == false) { //SchülerPane erstellen
                             istLehrer = check[1];
-                        }                     
+                        }
 
                         currentUser = sql.getCurrentUser();
                         System.out.println(currentUser);
-                        System.out.println("Ist ein Schueler angemeldet? "+isLehrer());                        
-
+                        
                         scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
@@ -198,7 +197,6 @@ public class SimpleLearnerGUI extends Application {
         Button btnNeuesElement = new Button("Neues Element");
     BorderPane HauptPane = new BorderPane();
 
-    // Funktion auskommentiert
     void setHauptTop() {
         hauptTop.setId("hauptTop");
         hauptTop.setPrefHeight(30);
@@ -214,9 +212,6 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("Abmeldung startet");
                 System.out.println("-----------------");
 
-                System.out.println(scene.getRoot().getId());
-                scene.getProperties();
-                //Scene scene = new Scene(getAnmeldPane(), 600, 600);
                 scene.setRoot(getAnmeldPane());
                 
                 Stage tempStage = TestStage;
@@ -226,7 +221,7 @@ public class SimpleLearnerGUI extends Application {
             }
         });
     }
-
+/*
     // Funktion auskommentiert
     void setHauptLeft() {
         hauptLeft.setId("hauptLeft");
@@ -245,23 +240,29 @@ public class SimpleLearnerGUI extends Application {
         hauptBottom.setStyle("-fx-background-color: rgb(100,100,100);");
         hauptBottom.setPrefHeight(50);
     }
-
+*/
     void setHauptCenter() {
         hauptCenter.setId("hauptCenter");
         centerListe.setSpacing(5);
-        //centerListe.getChildren().add(btnNeuesElement);
         hauptCenter.setCenter(centerListe);
     }
 
     void setBtnNeuesElement() {
         btnNeuesElement.setId("btnNeuesElement");
+        btnNeuesElement.setPrefWidth(scene.getWidth());
         btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 //DislogFenster für Namenseingabe
                 //-> Erstellung einer neuen Aufgabe
-
+                
+        System.out.println(scene.getWidth());
+        
                 fillKategorie();
+                //fillModul();
+                //fillVerzeich();
+                
+                System.out.println("Neues Element wird erstellt");
                 
                 centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
             }
@@ -283,18 +284,24 @@ public class SimpleLearnerGUI extends Application {
     void fillKategorie(){
         //tempStage.setTitle("SimpleLearner - Kategorienverzeichnis");
         
+
+        
         // Liste leeren
         centerListe.getChildren().setAll();
 
         // Liste füllen
         centerListe.getChildren().add(new KategorieButton("Kategorie 0",0).getKategorieButton());
         centerListe.getChildren().add(new KategorieButton("Kategorie 1",1).getKategorieButton());
-        centerListe.getChildren().add(new KategorieButton("Kategorie 2",2).getKategorieButton());       
+        centerListe.getChildren().add(new KategorieButton("Kategorie 2",2).getKategorieButton());  
+        
+        centerListe.getChildren().add(btnNeuesElement);
     }
 
     void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
         // -> Anzahl aus Datenbank
         // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
+
+        
         centerListe.getChildren().setAll();
 
         try {
@@ -305,11 +312,14 @@ public class SimpleLearnerGUI extends Application {
         for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
             centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
         }
+        
     }
     
     void fillModul() { //Parameterübergabe für Anzahl der Aufgaben
         // -> Anzahl aus Datenbank
         // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
+
+        
         centerListe.getChildren().setAll();
         
         centerListe.getChildren().add(new ModulButton("Modul 0",0).getModulButton());
@@ -412,7 +422,7 @@ public class SimpleLearnerGUI extends Application {
 
         String btnLabel;
         Button btnName;
-        Button btnLöschen;
+        Button btnLoeschen;
         int aufgabenNummer;
 
         KategorieButton(String input, int nummer) {
@@ -423,24 +433,25 @@ public class SimpleLearnerGUI extends Application {
             btnName = new Button(input);
             btnName.getStyleClass().add("KategorieButton");
             System.out.println(btnName.getStyleClass());
-            btnName.setPrefWidth(scene.getWidth());
+            btnName.setPrefWidth(scene.getWidth()-100);
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
             setBtnName(TestStage);
 
-            btnLöschen = new Button("Loeschen");
-            btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
-            btnLöschen.setPrefWidth(100);
-
- 
-            btnLöschen.setOnAction(new EventHandler<ActionEvent>() {
+            btnLoeschen = new Button("Loeschen");
+            btnLoeschen.setStyle("-fx-background-color:rgb(255,50,50)");
+            btnLoeschen.setPrefWidth(100);
+            setBtnLoeschen(TestStage);           
+        }
+        
+        void setBtnLoeschen(Stage tempStage){
+            btnLoeschen.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e){
                     //
-                    System.out.println("Element wird gelöscht");
+                    System.out.println("Element \""+btnLabel+"\" wird gelöscht");
                     //
                 }
-            });
-
+            });        
         }
         
         void setBtnName(Stage tempStage) {
@@ -465,10 +476,13 @@ public class SimpleLearnerGUI extends Application {
             temp.setLeft(btnName);
            
             if(isLehrer()){
+                btnName.setPrefWidth(scene.getWidth());
                 temp.setLeft(btnName);
             }else{
+                btnName.setPrefWidth(scene.getWidth()-100);
                 temp.setLeft(btnName);
-                temp.setRight(btnLöschen);
+                btnLoeschen.setPrefWidth(100);
+                temp.setRight(btnLoeschen);
             }
 
             return temp;
