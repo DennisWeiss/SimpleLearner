@@ -142,8 +142,6 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("    Passwort: " + AnmeldungPasswort.getText());
                 //System.out.println("------------------------------");
                 
-                fillKategorie();
-
                 boolean[] check = new boolean[2];
                 try {
                     check = sql.checkLogin(AnmeldungName.getText(), AnmeldungPasswort.getText());
@@ -172,7 +170,9 @@ public class SimpleLearnerGUI extends Application {
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
-
+                
+                fillKategorie();
+                
                 System.out.println("------------------------------");
                 
 
