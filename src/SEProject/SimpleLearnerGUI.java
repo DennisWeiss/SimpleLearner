@@ -47,7 +47,6 @@ public class SimpleLearnerGUI extends Application {
         buildAnmeldPane();
         setBtnAnmeldung(TestStage);
         // initialisere MeldungPane
-    //setMeldungPane(anmeldPane);
         // initialisiere AufgabenPane
         setBtnBestaetigen();
         setBtnNaechsteAufgabe(TestStage);
@@ -60,7 +59,6 @@ public class SimpleLearnerGUI extends Application {
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
         buildHauptPane();
-        
         
         scene.setRoot(getAnmeldPane());
 
@@ -115,10 +113,22 @@ public class SimpleLearnerGUI extends Application {
         temp.setTop(eingabeTop);
         temp.setCenter(eingabeCenter);
         
-        Pane a = new Pane();
-        a.setPrefHeight((scene.getHeight()-temp.getHeight())/2);
-        System.out.println(temp.getHeight());
-        tempMain.setTop(a);
+        Pane a1 = new Pane();
+        a1.setPrefHeight((scene.getHeight()  /* -temp.getHeight() */   )/2.5);
+        
+        Pane a2 = new Pane();
+        a2.setPrefHeight((scene.getHeight()  /* -temp.getHeight() */   )/2.5);
+        
+        Pane b1 = new Pane();
+        b1.setPrefWidth(150);    
+        
+        Pane b2 = new Pane();
+        b2.setPrefWidth(150);
+        
+        tempMain.setTop(a1);
+        tempMain.setBottom(a2);
+        tempMain.setLeft(b1);
+        tempMain.setRight(b2);
         tempMain.setCenter(temp);
         anmeldPane = tempMain;
     }
@@ -133,7 +143,7 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("    Passwort: " + AnmeldungPasswort.getText());
                 System.out.println("------------------------------");
                 
-                fillKategorie();                
+                fillKategorie();
 
                 boolean[] check = new boolean[2];
                 try {
@@ -150,9 +160,9 @@ public class SimpleLearnerGUI extends Application {
                         System.out.println(currentUser);
                         System.out.println("Ist ein Schueler angemeldet? "+isLehrer());                        
 
-                        setScene(getHauptPane());
+                        scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
-                        tempStage.setTitle("SimpleLearner - Aufgabenverzeichnis");
+                        tempStage.setTitle("SimpleLearner - Kategorie");
                         tempStage.show();
                     } else {
                         System.out.println("Falsche Eingabe");
@@ -176,27 +186,6 @@ public class SimpleLearnerGUI extends Application {
     BorderPane getAnmeldPane() {
         return anmeldPane;
     }
-/*
-//meldungPane
-    FlowPane meldungPane = new FlowPane();
-
-    void setMeldungPane() {
-        meldungPane.setId("meldungPane");
-        meldungPane.setAlignment(Pos.CENTER);
-        meldungPane.getChildren().add(new BorderPane());
-    }
-
-    void setMeldungPane(BorderPane temp) {
-        meldungPane.setId("meldungPane");
-        meldungPane.setAlignment(Pos.CENTER);
-        meldungPane.getChildren().setAll(temp);
-    }
-
-    FlowPane changeMeldungPane(BorderPane temp) {
-        setMeldungPane(temp);
-        return meldungPane;
-    }
-*/
     
 // HauptPane
     Label label = new Label("Test");
@@ -208,7 +197,6 @@ public class SimpleLearnerGUI extends Application {
         VBox centerListe = new VBox();
         Button btnNeuesElement = new Button("Neues Element");
     BorderPane HauptPane = new BorderPane();
-    StackPane root = new StackPane();   // benötigt?
 
     // Funktion auskommentiert
     void setHauptTop() {
@@ -222,16 +210,19 @@ public class SimpleLearnerGUI extends Application {
             public void handle(ActionEvent e) {
                 //DislogFenster für Namenseingabe
                 //-> Erstellung einer neuen Aufgabe
-
+                System.out.println("-----------------");
                 System.out.println("Abmeldung startet");
-                
-                //Scene scene = new Scene(getAnmeldPane()), 600, 600);
+                System.out.println("-----------------");
+
+                System.out.println(scene.getRoot().getId());
+                scene.getProperties();
+                //Scene scene = new Scene(getAnmeldPane(), 600, 600);
+                scene.setRoot(getAnmeldPane());
                 
                 Stage tempStage = TestStage;
                 tempStage.setTitle("SimpleTest - Anmeldung");
                 tempStage.setScene(scene);
-                tempStage.show();              
-                
+                tempStage.show();                 
             }
         });
     }
@@ -388,9 +379,9 @@ public class SimpleLearnerGUI extends Application {
                     aufgabeText.setText(sql.fragen.get(aufgabenNummer));
 
                     //buildAufgabenPane();// Parameter
-                    setScene(getAufgabenPane());
+                    scene.setRoot(getAufgabenPane());
                     tempStage.setScene(scene);
-                    tempStage.setTitle("SimpleLearner - Aufgabe");
+                    tempStage.setTitle("SimpleLearner - Aufgabe-Nr. " + "***");
                     tempStage.show();
 
                 }
@@ -436,20 +427,20 @@ public class SimpleLearnerGUI extends Application {
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
             setBtnName(TestStage);
 
-            //btnLöschen = new Button("Loeschen");
-            //btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
-            //btnLöschen.setPrefWidth(100);
+            btnLöschen = new Button("Loeschen");
+            btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
+            btnLöschen.setPrefWidth(100);
 
-            /*
+ 
             btnLöschen.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e){
                     //
-                    
+                    System.out.println("Element wird gelöscht");
                     //
                 }
             });
-             */
+
         }
         
         void setBtnName(Stage tempStage) {
@@ -461,26 +452,9 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println("------------------------------");
 
                     aufgabenNummer = 0;
-                    /*
-                    try {
-                        sql.loadFragen(btnLabel);
-                    } catch (SQLException exc) {
-                        System.out.println(exc.getMessage());
-                    }
-
-                    
-                    setBlockPar(btnLabel);
-                    setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer))); //aufgabenNummer -> modulNummer
-                    fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
-                    aufgabeText.setText(sql.fragen.get(aufgabenNummer));
-                    */                    
-
-                    //buildAufgabenPane();// Parameter
                     
                     fillModul();
-                    //setScene(getAufgabenPane());
-                    //tempStage.setScene(scene);
-                    tempStage.setTitle("SimpleLearner - Aufgabe");
+                    tempStage.setTitle("SimpleLearner - Modul - " + "***");
                     tempStage.show();
                 }
             });
@@ -489,14 +463,14 @@ public class SimpleLearnerGUI extends Application {
         BorderPane getKategorieButton() {
             BorderPane temp = new BorderPane();
             temp.setLeft(btnName);
-            /*
-            if(isStudent){
+           
+            if(isLehrer()){
                 temp.setLeft(btnName);
             }else{
                 temp.setLeft(btnName);
                 temp.setRight(btnLöschen);
             }
-             */
+
             return temp;
         }
     }
@@ -771,15 +745,6 @@ public class SimpleLearnerGUI extends Application {
     
     void loadStyleSheets() {
         scene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
-    }
-
-    void setScene(StackPane temp) {
-        scene = new Scene(temp, 600, 600);
-    }
-
-    void setScene(BorderPane temp) {
-        scene = new Scene(temp, 600, 600);
-        loadStyleSheets();
     }
 
     Stage TestStage = new Stage();
