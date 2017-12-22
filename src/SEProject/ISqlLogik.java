@@ -21,9 +21,20 @@ public interface ISqlLogik {
     
     public void loadSchueler(String sid) throws SQLException;
     
-    public void loadBloecke() throws SQLException;
+    public void loadFaecher(String lehrer) throws SQLException;
+    
+    public void loadFaecher() throws SQLException;
+    
+    public void loadKategorien(String fach) throws SQLException;
+    
+    public void loadBloecke(String kategorie, String lehrer) throws SQLException;
+    
+    public void loadBloecke(String kategorie) throws SQLException;
     
     public void loadFragen(String block) throws SQLException;
     
     public void loadAntworten(String block, String frage) throws SQLException;
+    
+    //public void safeNewKategorie(String fach, String katName) throws SQLException;
+    
 }

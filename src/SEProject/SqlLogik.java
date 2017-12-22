@@ -21,6 +21,8 @@ import java.util.Properties;
 public class SqlLogik implements ISqlLogik {
 
     Properties userInfo;
+    ArrayList<String> faecher;
+    ArrayList<String> kategorien;
     ArrayList<String> aufgabenbloecke;
     ArrayList<String> fragen;
     ArrayList<String> antwortenTemp;
@@ -39,7 +41,9 @@ public class SqlLogik implements ISqlLogik {
     public SqlLogik() {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
-        userInfo.put("password", "stefan"); //"stefan" für stefan
+        userInfo.put("password", "databasemarcel"); //"stefan" für stefan
+        faecher = new ArrayList<>();
+        kategorien = new ArrayList<>();
         aufgabenbloecke = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
@@ -165,20 +169,122 @@ public class SqlLogik implements ISqlLogik {
     }
 
     @Override
-    public void loadBloecke() throws SQLException {
+    public void loadFaecher() throws SQLException {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                Statement stmtAufgaben = myConn.createStatement();
-                ResultSet rsAufgaben = stmtAufgaben.executeQuery("select bid from block")) {
+                Statement stmtFach = myConn.createStatement();
+                ResultSet rsFach = stmtFach.executeQuery("select fid from fach;")) {
 
+            if (faecher != null) {
+                faecher.clear();
+            }
+
+            while (rsFach.next()) {
+                faecher.add(rsFach.getString("fid"));
+            }
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
+    }
+
+    @Override
+    public void loadFaecher(String lehrer) throws SQLException {
+        String faecherString = "select fach from lehrerunterrichtet where lehrer = ?";
+        ResultSet rsFach = null;
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtFach = myConn.prepareStatement(faecherString)) {
+
+            stmtFach.setString(1, lehrer);
+            rsFach = stmtFach.executeQuery();
+
+            if (faecher != null) {
+                faecher.clear();
+            }
+
+            while (rsFach.next()) {
+                faecher.add(rsFach.getString("fach"));
+            }
+
+        } catch (SQLException exc) {
+            throw exc;
+        } finally {
+            if (rsFach != null) {
+                rsFach.close();
+            }
+        }
+    }
+
+    @Override
+    public void loadKategorien(String fach) throws SQLException {
+        String kategorieString = "select kid from kategorie where fach = ?";
+        ResultSet rsFach = null;
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtFach = myConn.prepareStatement(kategorieString)) {
+
+            stmtFach.setString(1, fach);
+            rsFach = stmtFach.executeQuery();
+
+            if (kategorien != null) {
+                kategorien.clear();
+            }
+
+            while (rsFach.next()) {
+                kategorien.add(rsFach.getString("kid"));
+            }
+
+        } catch (SQLException exc) {
+            throw exc;
+        } finally {
+            if (rsFach != null) {
+                rsFach.close();
+            }
+        }
+    }
+
+    @Override
+    public void loadBloecke(String kategorie, String lehrer) throws SQLException {
+        String blockString = "select bid from block where kategorie = ? and lehrer = ?;";
+        ResultSet rsBlock = null;
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtBlock = myConn.prepareStatement(blockString)) {
+
+            stmtBlock.setString(1, kategorie);
+            stmtBlock.setString(2, lehrer);
+            rsBlock = stmtBlock.executeQuery();
             if (aufgabenbloecke != null) {
                 aufgabenbloecke.clear();
             }
 
-            while (rsAufgaben.next()) {
-                aufgabenbloecke.add(rsAufgaben.getString("bid"));
+            while (rsBlock.next()) {
+                aufgabenbloecke.add(rsBlock.getString("bid"));
             }
         } catch (SQLException exc) {
             throw exc;
+        } finally{
+            if(rsBlock != null) rsBlock.close();
+        }
+    }
+
+    @Override
+    public void loadBloecke(String kategorie) throws SQLException {
+        String blockString = "select bid from block where kategorie = ?";
+        ResultSet rsBlock = null;
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtBlock = myConn.prepareStatement(blockString)) {
+
+            stmtBlock.setString(1, kategorie);
+            rsBlock = stmtBlock.executeQuery();
+            if (aufgabenbloecke != null) {
+                aufgabenbloecke.clear();
+            }
+
+            while (rsBlock.next()) {
+                aufgabenbloecke.add(rsBlock.getString("bid"));
+            }
+        } catch (SQLException exc) {
+            throw exc;
+        } finally{
+            if(rsBlock != null) rsBlock.close();
         }
     }
 
