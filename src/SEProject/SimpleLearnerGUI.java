@@ -54,7 +54,8 @@ public class SimpleLearnerGUI extends Application {
         buildAufgabenPane();
         //initialisiere HauptPane  
         setBtnNeuesElement();
-        //setHauptTop(); setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
+        setHauptTop(); 
+        //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
         setHauptCenter();
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
@@ -122,16 +123,17 @@ public class SimpleLearnerGUI extends Application {
                 boolean[] check = new boolean[2];
                 try {
                     check = sql.checkLogin(AnmeldungName.getText(), AnmeldungPasswort.getText());
+                    System.out.println(check[1]);
                     if (check[0] == true) {
                         if (check[1] == true) {//LehrerPane erstellen
                             istStudent = check[1];
                         } else if (check[1] == false) { //SchülerPane erstellen
                             istStudent = check[1];
-                        }
-                        
-                        System.out.println("Ist ein Schueler angemeldet? "+isStudent);
+                        }                     
+
                         currentUser = sql.getCurrentUser();
                         System.out.println(currentUser);
+                        System.out.println("Ist ein Schueler angemeldet? "+istStudent);                        
 
                         setScene(getHauptPane());
                         tempStage.setScene(scene);
@@ -191,26 +193,29 @@ public class SimpleLearnerGUI extends Application {
         Button btnNeuesElement = new Button("Neues Element");
     BorderPane HauptPane = new BorderPane();
     StackPane root = new StackPane();   // benötigt?
-    boolean isStudent = false;
 
     // Funktion auskommentiert
     void setHauptTop() {
         hauptTop.setId("hauptTop");
-        //hauptTop.setStyle("-fx-background-color: rgb(100,100,100);");
         hauptTop.setPrefHeight(30);
-        Button temp = new Button("Schüler");
+        Button temp = new Button("Abmelden");
         hauptTop.setCenter(label);
         hauptTop.setRight(temp);
         temp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                if (!isStudent) {
-                    temp.setText("Schüler");
-                    isStudent = true;
-                } else {
-                    temp.setText("Lehrer");
-                    isStudent = false;
-                }
+                //DislogFenster für Namenseingabe
+                //-> Erstellung einer neuen Aufgabe
+
+                System.out.println("Abmeldung startet");
+                
+                Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
+                
+                Stage tempStage = TestStage;
+                tempStage.setTitle("SimpleTest - Anmeldung");
+                tempStage.setScene(scene);
+                tempStage.show();              
+                
             }
         });
     }
@@ -310,6 +315,9 @@ public class SimpleLearnerGUI extends Application {
     }
 
 // Verzeichnis-Element
+//
+//
+//
     class VerzeichnisButton {
 
         String btnLabel;
@@ -388,7 +396,11 @@ public class SimpleLearnerGUI extends Application {
             return temp;
         }
     }
+    
 //Modul-Element
+//
+//
+//
     class KategorieButton {
 
         String btnLabel;
@@ -471,7 +483,11 @@ public class SimpleLearnerGUI extends Application {
             return temp;
         }
     }
+
 // Kategorie-Element    
+//
+//
+//
     class ModulButton {
 
         String btnLabel;
