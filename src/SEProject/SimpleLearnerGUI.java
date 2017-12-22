@@ -52,7 +52,6 @@ public class SimpleLearnerGUI extends Application {
         setBtnNaechsteAufgabe(TestStage);
         buildAufgabenPane();
         //initialisiere HauptPane  
-        setBtnNeuesElement();
         setHauptTop(); 
         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
         setHauptCenter();
@@ -61,6 +60,7 @@ public class SimpleLearnerGUI extends Application {
         buildHauptPane();
         
         scene.setRoot(getAnmeldPane());
+        System.out.println(currentDir);
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -84,6 +84,7 @@ public class SimpleLearnerGUI extends Application {
     GridPane eingabeCenter = new GridPane();
     boolean istLehrer;
     String currentUser = null;
+    String currentDir = null;
     
     boolean isLehrer(){
         return istLehrer;
@@ -159,6 +160,8 @@ public class SimpleLearnerGUI extends Application {
                         currentUser = sql.getCurrentUser();
                         System.out.println(currentUser);
                         
+                        currentDir = "Kategorie";
+                        
                         scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
@@ -183,6 +186,7 @@ public class SimpleLearnerGUI extends Application {
     }
 
     BorderPane getAnmeldPane() {
+        currentDir = "Anmeldung";
         return anmeldPane;
     }
     
@@ -247,31 +251,54 @@ public class SimpleLearnerGUI extends Application {
         hauptCenter.setCenter(centerListe);
     }
 
-    void setBtnNeuesElement() {
-        btnNeuesElement.setId("btnNeuesElement");
-        btnNeuesElement.setPrefWidth(scene.getWidth());
-        btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                //DislogFenster für Namenseingabe
-                //-> Erstellung einer neuen Aufgabe
-                
-        System.out.println(scene.getWidth());
+    class BtnNeuesElement{
+        Button btnNeuesElement;
         
-                fillKategorie();
-                //fillModul();
-                //fillVerzeich();
+        BtnNeuesElement(String input){
+            btnNeuesElement = new Button();
+            setBtnNeuesElement(input);
+        }
+        
+        void setBtnNeuesElement(String input) {
+            btnNeuesElement.setPrefWidth(scene.getWidth());
+            btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    //DislogFenster für Namenseingabe
+                    //-> Erstellung einer neuen Aufgabe
                 
-                System.out.println("Neues Element wird erstellt");
-                
-                centerListe.getChildren().add(btnNeuesElement); //btnNeuesElement anhängen
-            }
-        });
+                    System.out.println(scene.getWidth());
+                    
+                    if(input.equals("Kategorie")){
+                        fillKategorie();        
+                        System.out.println(">>> "+input);
+                        btnNeuesElement.setText("Neue Kategorie");
+                    }
+                    else if(input.equals("Modul")){
+                        fillModul();        
+                        System.out.println(">>> "+input);
+                        btnNeuesElement.setText("Neues Modul");
+                    }
+                    else if(input.equals("Verzeich")){
+                        fillVerzeich();        
+                        System.out.println(">>> "+input);
+                        btnNeuesElement.setText("Neues Verzeich");
+                    }
+        
+
+                    //fillVerzeich();
+                    
+                    System.out.println("Neues Element wird erstellt");
+                }
+            });
+        }
+        
+        Button getBtnNeuesElement(){
+                return btnNeuesElement;
+        }
     }
 
-    //void changeHauptCenter(BorderPane temp){
-    //    hauptCenter = temp;
-    //};
+
     void buildHauptPane() {
         HauptPane.setTop(hauptTop);
         HauptPane.setLeft(hauptLeft);
@@ -281,11 +308,10 @@ public class SimpleLearnerGUI extends Application {
 
         fillKategorie();
     }
+    
     void fillKategorie(){
         //tempStage.setTitle("SimpleLearner - Kategorienverzeichnis");
-        
-
-        
+ 
         // Liste leeren
         centerListe.getChildren().setAll();
 
@@ -294,7 +320,7 @@ public class SimpleLearnerGUI extends Application {
         centerListe.getChildren().add(new KategorieButton("Kategorie 1",1).getKategorieButton());
         centerListe.getChildren().add(new KategorieButton("Kategorie 2",2).getKategorieButton());  
         
-        centerListe.getChildren().add(btnNeuesElement);
+        centerListe.getChildren().add(new BtnNeuesElement("Kategorie").getBtnNeuesElement());
     }
 
     void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
@@ -313,6 +339,8 @@ public class SimpleLearnerGUI extends Application {
             centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
         }
         
+        centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());  
+        
     }
     
     void fillModul() { //Parameterübergabe für Anzahl der Aufgaben
@@ -325,6 +353,8 @@ public class SimpleLearnerGUI extends Application {
         centerListe.getChildren().add(new ModulButton("Modul 0",0).getModulButton());
         centerListe.getChildren().add(new ModulButton("Modul 1",1).getModulButton());
         centerListe.getChildren().add(new ModulButton("Modul 2",2).getModulButton());
+        
+        centerListe.getChildren().add(new BtnNeuesElement("Modul").getBtnNeuesElement());        
     }
 
     BorderPane getHauptPane() {
