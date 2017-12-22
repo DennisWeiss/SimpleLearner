@@ -60,7 +60,6 @@ public class SimpleLearnerGUI extends Application {
         buildHauptPane();
         
         scene.setRoot(getAnmeldPane());
-        System.out.println(currentDir);
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -84,7 +83,6 @@ public class SimpleLearnerGUI extends Application {
     GridPane eingabeCenter = new GridPane();
     boolean istLehrer;
     String currentUser = null;
-    String currentDir = null;
     
     boolean isLehrer(){
         return istLehrer;
@@ -142,7 +140,7 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("Benutzer wird eingeloggt");
                 System.out.println("    Name: " + AnmeldungName.getText());
                 System.out.println("    Passwort: " + AnmeldungPasswort.getText());
-                System.out.println("------------------------------");
+                //System.out.println("------------------------------");
                 
                 fillKategorie();
 
@@ -153,15 +151,17 @@ public class SimpleLearnerGUI extends Application {
                     if (check[0] == true) {
                         if (check[1] == true) {//LehrerPane erstellen
                             istLehrer = check[1];
+                            System.out.println("Anmeldung Lehrer >>> true");
                         } else if (check[1] == false) { //SchülerPane erstellen
                             istLehrer = check[1];
+                            System.out.println("Anmeldung Lehrer >>> false");
                         }
 
                         currentUser = sql.getCurrentUser();
                         System.out.println(currentUser);
                         
-                        currentDir = "Kategorie";
-                        
+                System.out.println("    Lehrer: " + isLehrer());     
+                
                         scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
@@ -172,6 +172,9 @@ public class SimpleLearnerGUI extends Application {
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
+
+                System.out.println("------------------------------");
+                
 
             }
         });
@@ -186,7 +189,6 @@ public class SimpleLearnerGUI extends Application {
     }
 
     BorderPane getAnmeldPane() {
-        currentDir = "Anmeldung";
         return anmeldPane;
     }
     
@@ -327,7 +329,6 @@ public class SimpleLearnerGUI extends Application {
         // -> Anzahl aus Datenbank
         // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
 
-        
         centerListe.getChildren().setAll();
 
         try {
@@ -449,7 +450,6 @@ public class SimpleLearnerGUI extends Application {
 //
 //
     class KategorieButton {
-
         String btnLabel;
         Button btnName;
         Button btnLoeschen;
@@ -463,13 +463,11 @@ public class SimpleLearnerGUI extends Application {
             btnName = new Button(input);
             btnName.getStyleClass().add("KategorieButton");
             System.out.println(btnName.getStyleClass());
-            btnName.setPrefWidth(scene.getWidth()-100);
-            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
             setBtnName(TestStage);
 
             btnLoeschen = new Button("Loeschen");
             btnLoeschen.setStyle("-fx-background-color:rgb(255,50,50)");
-            btnLoeschen.setPrefWidth(100);
+            //btnLoeschen.setPrefWidth(100);
             setBtnLoeschen(TestStage);           
         }
         
@@ -503,18 +501,19 @@ public class SimpleLearnerGUI extends Application {
 
         BorderPane getKategorieButton() {
             BorderPane temp = new BorderPane();
-            temp.setLeft(btnName);
+            //temp.setLeft(btnName);
            
-            if(isLehrer()){
+            if(!isLehrer()){
                 btnName.setPrefWidth(scene.getWidth());
                 temp.setLeft(btnName);
-            }else{
+            }else if(isLehrer()){
                 btnName.setPrefWidth(scene.getWidth()-100);
                 temp.setLeft(btnName);
                 btnLoeschen.setPrefWidth(100);
                 temp.setRight(btnLoeschen);
+            }else{
+                System.out.println("?????");
             }
-
             return temp;
         }
     }
