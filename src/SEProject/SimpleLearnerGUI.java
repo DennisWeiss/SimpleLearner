@@ -47,7 +47,7 @@ public class SimpleLearnerGUI extends Application {
         buildAnmeldPane();
         setBtnAnmeldung(TestStage);
         // initialisere MeldungPane
-        setMeldungPane(anmeldPane);
+    //setMeldungPane(anmeldPane);
         // initialisiere AufgabenPane
         setBtnBestaetigen();
         setBtnNaechsteAufgabe(TestStage);
@@ -60,6 +60,9 @@ public class SimpleLearnerGUI extends Application {
         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
         //setScene(getHauptPane());
         buildHauptPane();
+        
+        
+        scene.setRoot(getAnmeldPane());
 
         primaryStage = TestStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
@@ -79,16 +82,22 @@ public class SimpleLearnerGUI extends Application {
     PasswordField AnmeldungPasswort = new PasswordField();
     Button btnAnmeld = new Button("Einloggen");
     BorderPane anmeldPane = new BorderPane();
+    BorderPane anmeldFenster = new BorderPane();
     GridPane eingabeCenter = new GridPane();
-    boolean istStudent;
+    boolean istLehrer;
     String currentUser = null;
+    
+    boolean isLehrer(){
+        return istLehrer;
+    }
 
     private void buildAnmeldPane() {
+        BorderPane tempMain = new BorderPane();
+        //tempMain.setId("anmeldFenster");
+        
         BorderPane temp = new BorderPane();
         temp.setId("anmeldPane");
 
-        //eingabeDisplay.setPrefHeight(150);
-        //eingabeDisplay.setPrefWidth(400);
         BorderPane eingabeTop = new BorderPane();
         eingabeTop.setId("eingabeTop");
         eingabeTop.setPrefHeight(20);
@@ -105,7 +114,13 @@ public class SimpleLearnerGUI extends Application {
 
         temp.setTop(eingabeTop);
         temp.setCenter(eingabeCenter);
-        anmeldPane = temp;
+        
+        Pane a = new Pane();
+        a.setPrefHeight((scene.getHeight()-temp.getHeight())/2);
+        System.out.println(temp.getHeight());
+        tempMain.setTop(a);
+        tempMain.setCenter(temp);
+        anmeldPane = tempMain;
     }
 
     void setBtnAnmeldung(Stage tempStage) {
@@ -126,14 +141,14 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println(check[1]);
                     if (check[0] == true) {
                         if (check[1] == true) {//LehrerPane erstellen
-                            istStudent = check[1];
+                            istLehrer = check[1];
                         } else if (check[1] == false) { //SchülerPane erstellen
-                            istStudent = check[1];
+                            istLehrer = check[1];
                         }                     
 
                         currentUser = sql.getCurrentUser();
                         System.out.println(currentUser);
-                        System.out.println("Ist ein Schueler angemeldet? "+istStudent);                        
+                        System.out.println("Ist ein Schueler angemeldet? "+isLehrer());                        
 
                         setScene(getHauptPane());
                         tempStage.setScene(scene);
@@ -161,7 +176,7 @@ public class SimpleLearnerGUI extends Application {
     BorderPane getAnmeldPane() {
         return anmeldPane;
     }
-
+/*
 //meldungPane
     FlowPane meldungPane = new FlowPane();
 
@@ -181,7 +196,8 @@ public class SimpleLearnerGUI extends Application {
         setMeldungPane(temp);
         return meldungPane;
     }
-
+*/
+    
 // HauptPane
     Label label = new Label("Test");
     BorderPane hauptTop = new BorderPane();
@@ -209,7 +225,7 @@ public class SimpleLearnerGUI extends Application {
 
                 System.out.println("Abmeldung startet");
                 
-                Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
+                //Scene scene = new Scene(getAnmeldPane()), 600, 600);
                 
                 Stage tempStage = TestStage;
                 tempStage.setTitle("SimpleTest - Anmeldung");
@@ -319,13 +335,13 @@ public class SimpleLearnerGUI extends Application {
 //
 //
     class VerzeichnisButton {
-
         String btnLabel;
         Button btnName;
         Button btnLöschen;
         int aufgabenNummer;
 
         VerzeichnisButton(String input, int nummer) {
+            System.out.println("Verzeichnis: Lehrer angemeldet? " + isLehrer());
             btnLabel = input;
             aufgabenNummer = nummer;
             System.out.println("Aufgabennummer " + aufgabenNummer);
@@ -397,7 +413,7 @@ public class SimpleLearnerGUI extends Application {
         }
     }
     
-//Modul-Element
+//Kategorie-Element
 //
 //
 //
@@ -409,11 +425,12 @@ public class SimpleLearnerGUI extends Application {
         int aufgabenNummer;
 
         KategorieButton(String input, int nummer) {
+            System.out.println("Modul: Lehrer angemeldet? " + isLehrer());
             btnLabel = input;
             aufgabenNummer = nummer;
-            System.out.println("Modulummer " + aufgabenNummer);
+            System.out.println("Kategorie " + aufgabenNummer);
             btnName = new Button(input);
-            btnName.getStyleClass().add("ModulButton");
+            btnName.getStyleClass().add("KategorieButton");
             System.out.println(btnName.getStyleClass());
             btnName.setPrefWidth(scene.getWidth());
             btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
@@ -572,6 +589,9 @@ public class SimpleLearnerGUI extends Application {
     }
 
 //AufgabenPane
+//
+//
+//
     String blockPar = null;
     int nummerFragePar = 0;
 
@@ -746,8 +766,9 @@ public class SimpleLearnerGUI extends Application {
 // Scene    
     // getHauptPane();
     // getAufgabenPane();
-    Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
-
+    //Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
+    Scene scene = new Scene(getAnmeldPane(), 600, 600);
+    
     void loadStyleSheets() {
         scene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
     }
