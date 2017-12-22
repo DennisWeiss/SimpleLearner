@@ -476,7 +476,7 @@ public class SimpleLearnerGUI extends Application {
         BorderPane getVerzeichnisButton() {
             BorderPane temp = new BorderPane();
             //temp.setLeft(btnName);
-            System.out.println(isLehrer() + "sdjkgknigukshf");
+            System.out.println(isLehrer() + "sdjkgknigukshf" + scene.getWidth()); 
             if (isLehrer()) {
                 btnName.setPrefWidth(scene.getWidth() - 100);
                 temp.setLeft(btnName);
