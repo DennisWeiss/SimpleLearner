@@ -7,6 +7,9 @@
 .ModulButton{
     -fx-background-color: rgb(150,200,100);
 }
+.KategorieButton{
+    -fx-background-color: rgb(200,100,150);
+}
 #btnNeuesElement{
     -fx-background-color: rgb(150,255,150);
 }
@@ -20,7 +23,7 @@
     -fx-background-color:rgba(0,0,0,0.5);
 }
 #hauptTop{
-    -fx-background-color: rgb(100,100,100);
+    -fx-background-color: rgb(150,150,200);
 }
 #hauptLeft{
     -fx-background-color: rgb(200,200,200);
