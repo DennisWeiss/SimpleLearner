@@ -1,6 +1,4 @@
-/*.button{
-    -fx-text-fill:rgb(50,100,150);
-}
+/*
 .VerzeichnisButton{
     -fx-background-color: rgb(255,255,255);
 }
@@ -18,9 +16,6 @@
 }
 #eingabeTop{
     -fx-background-color:rgb(100,100,100);
-}
-#meldungPane{
-    -fx-background-color:rgba(0,0,0,0.5);
 }
 #hauptTop{
     -fx-background-color: rgb(150,150,200);
@@ -82,7 +77,7 @@
 	 
 }
 #MeldungPane{
-    -fx-background-color: 	rgb(216,216,216);
+    -fx-background-color: rgb(216,216,216);
 }
 #hauptTop{
     -fx-background-color: rgb(100,100,100);

@@ -41,7 +41,7 @@ public class SqlLogik implements ISqlLogik {
     public SqlLogik() {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
-        userInfo.put("password", "databasemarcel"); //"stefan" für stefan
+        userInfo.put("password", "stefan"); //"stefan" für stefan
         faecher = new ArrayList<>();
         kategorien = new ArrayList<>();
         aufgabenbloecke = new ArrayList<>();
