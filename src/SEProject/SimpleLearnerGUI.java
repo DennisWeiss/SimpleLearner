@@ -363,7 +363,6 @@ public class SimpleLearnerGUI extends Application {
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
                 centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
-            centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());
         } else {
             try {
                 sql.loadBloecke(getGName());
@@ -373,8 +372,8 @@ public class SimpleLearnerGUI extends Application {
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
                 centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
-            centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());
         }
+        centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());
 
     }
 
@@ -476,9 +475,8 @@ public class SimpleLearnerGUI extends Application {
         BorderPane getVerzeichnisButton() {
             BorderPane temp = new BorderPane();
             //temp.setLeft(btnName);
-            System.out.println(isLehrer() + "sdjkgknigukshf" + scene.getWidth()); 
             if (isLehrer()) {
-                btnName.setPrefWidth(scene.getWidth() - 100);
+                btnName.setPrefWidth(scene.getWidth()-100);
                 temp.setLeft(btnName);
                 btnLoeschen.setPrefWidth(100);
                 temp.setRight(btnLoeschen);
@@ -486,6 +484,8 @@ public class SimpleLearnerGUI extends Application {
                 btnName.setPrefWidth(scene.getWidth());
                 temp.setLeft(btnName);
             }
+            
+            //temp.setLeft(btnName);
             /*
             if(isStudent){
                 temp.setLeft(btnName);
