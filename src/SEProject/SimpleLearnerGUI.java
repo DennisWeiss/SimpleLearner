@@ -822,8 +822,13 @@ public class SimpleLearnerGUI extends Application {
             Anweisungen hier
             */
             
+            // Auslesen aller TextFelder
+            for(int i=0; i<vBox.getChildren().size(); i++){
+                System.out.println(vBox.getChildren().toString());
+            }
+            
+            
             // vergleiche toggles mit gewählten toggle zur feststellung der wie vielte er ist.            
-            boolean success = false;
             int nrSelectedToggle = -1;
             
             for(int i=0; i<tempToggleGroup.getToggles().size(); i++){
