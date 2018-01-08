@@ -1,2 +1,6 @@
 Referenz für CSS-Eigsnschaften für Panes und Buttons:
 https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
+
+AufgabenPane:
+>> btnAufgabeText: Hoehe, Breite und Farbe anpassen
+>> btnAntwortAuswahl: 
