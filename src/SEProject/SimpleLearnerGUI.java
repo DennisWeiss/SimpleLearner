@@ -15,10 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -824,7 +822,14 @@ public class SimpleLearnerGUI extends Application {
             
             // Auslesen aller TextFelder
             for(int i=0; i<vBox.getChildren().size(); i++){
-                System.out.println(vBox.getChildren().toString());
+                HBox hb = (HBox)vBox.getChildren().get(i);
+                for(int j = 0; j<hb.getChildren().size(); j++){
+                    if(hb.getChildren().get(j) instanceof TextField){
+                        TextField tf = (TextField)hb.getChildren().get(j);
+                        String ausgabeString = tf.getText();
+                        System.out.println(ausgabeString);
+                    }
+                }
             }
             
             

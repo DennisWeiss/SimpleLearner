@@ -41,7 +41,7 @@ public class SqlLogik implements ISqlLogik {
     public SqlLogik() {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
-        userInfo.put("password", "stefan"); //"stefan" für stefan
+        userInfo.put("password", "databasemarcel"); //"stefan" für stefan
         faecher = new ArrayList<>();
         kategorien = new ArrayList<>();
         aufgabenbloecke = new ArrayList<>();
@@ -338,4 +338,58 @@ public class SqlLogik implements ISqlLogik {
             }
         }
     }
+    
+    public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
+        String loeschenString = "delete from block where blockname = ? and lehrer = ? and kategorie = ?;";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
+
+            stmtLoeschen.setString(1, blockname);
+            stmtLoeschen.setString(2, lehrer);
+            stmtLoeschen.setString(3, kategorie);
+
+            stmtLoeschen.executeUpdate();
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
+    }
+
+    public void deleteAufgabe(String blockname, String frage) throws SQLException {
+        String loeschenString = "delete from aufgabe where block = ? and frage = ?;";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
+            
+            stmtLoeschen.setString(1, blockname);
+            stmtLoeschen.setString(2, frage);
+            
+            stmtLoeschen.executeUpdate();
+
+        } catch (SQLException exc) {
+            throw exc;
+        }
+    }
+    
+    public void updateAntworttext(String block, String frage, String alteAntwort, String neueAntwort) throws SQLException {
+        String updateString = "update antwort set antworttext = ? "
+                + "join aufgabe on antwort.aufgabe = aufgabe.aid"
+                + "join block on aufgabe.block = block.bid"
+                + "where aufgabe.frage = ? and antwort.antworttext = ?";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtUpdate = myConn.prepareStatement(updateString)) {
+            
+            stmtUpdate.setString(1, neueAntwort);
+            stmtUpdate.setString(2, frage);
+            stmtUpdate.setString(3, alteAntwort);
+            
+            stmtUpdate.executeUpdate();
+        }
+    }
+    /*TODO: 
+    Lehrer muessen ihre Aufgaben loeschen koennen
+    Lehrer muessen Schueler sehen koennen, die ihre Bloecke geloest haben mit Anzahl richtig geloester Fragen
+    Lehrer muss seine Bloecke veraendern koennen (loeschen und aendern der Aufgaben)
+    Lehrer muessen Bloecke erstellen koennen
+    Adminoberflaeche mit Nutzernamen und Passwoertern
+     */
 }
