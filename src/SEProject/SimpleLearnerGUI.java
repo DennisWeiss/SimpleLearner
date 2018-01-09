@@ -51,8 +51,8 @@ public class SimpleLearnerGUI extends Application {
         setBtnBestaetigen();
         setBtnNaechsteAufgabe(TestStage);
         buildAufgabenPane();
-            setBtnAufgabeText();
-            setBtnAntwortenAuswahl();
+        setBtnAufgabeText();
+        setBtnAntwortenAuswahl();
         //initialisiere HauptPane  
         setHauptTop();
         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
@@ -433,16 +433,15 @@ public class SimpleLearnerGUI extends Application {
             btnLoeschen.setStyle("-fx-background-color:rgb(255,50,50)");
             //btnLoeschen.setPrefWidth(100);
 
-            
             btnLoeschen.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
-                public void handle(ActionEvent e){
+                public void handle(ActionEvent e) {
                     //
-                     System.out.println("Element \"" + btnLabel + "\" wird gelöscht");
+                    System.out.println("Element \"" + btnLabel + "\" wird gelöscht");
                     //
                 }
             });
-             
+
         }
 
         void setBtnName(Stage tempStage) {
@@ -478,7 +477,7 @@ public class SimpleLearnerGUI extends Application {
             BorderPane temp = new BorderPane();
             //temp.setLeft(btnName);
             if (isLehrer()) {
-                btnName.setPrefWidth(scene.getWidth()-100);
+                btnName.setPrefWidth(scene.getWidth() - 100);
                 temp.setLeft(btnName);
                 btnLoeschen.setPrefWidth(100);
                 temp.setRight(btnLoeschen);
@@ -486,7 +485,7 @@ public class SimpleLearnerGUI extends Application {
                 btnName.setPrefWidth(scene.getWidth());
                 temp.setLeft(btnName);
             }
-            
+
             //temp.setLeft(btnName);
             /*
             if(isStudent){
@@ -565,8 +564,8 @@ public class SimpleLearnerGUI extends Application {
                 btnLoeschen.setPrefWidth(100);
                 temp.setRight(btnLoeschen);
             } else {*/
-                btnName.setPrefWidth(scene.getWidth());
-                temp.setLeft(btnName);
+            btnName.setPrefWidth(scene.getWidth());
+            temp.setLeft(btnName);
             //}
             return temp;
         }
@@ -673,12 +672,12 @@ public class SimpleLearnerGUI extends Application {
 
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
-        Label aufgabeText = new Label();
-        Button btnAufgabeText = new Button("Aufgabentext hier");
-    
+    Label aufgabeText = new Label();
+    Button btnAufgabeText = new Button("Aufgabentext hier");
+
     BorderPane AntwortPane = new BorderPane();
     VBox antwortAuswahl = new VBox();
-        Button btnAntwortenAuswahl = new Button("Antwortenauswahl hier");
+    Button btnAntwortenAuswahl = new Button("Antwortenauswahl hier");
     ToggleGroup AntwortGroup = new ToggleGroup();
     Button btnNeueAntwort = new Button("Neue Aufgabe");
     GridPane navigator = new GridPane();
@@ -717,9 +716,9 @@ public class SimpleLearnerGUI extends Application {
 
         //antwortAuswahl.getChildren().add(btnNeueAntwort);
         AntwortPane.setAlignment(antwortAuswahl, Pos.CENTER);
-            VBox antworten = new VBox();
-            antworten.getChildren().add(antwortAuswahl);
-            antworten.getChildren().add(btnAntwortenAuswahl);
+        VBox antworten = new VBox();
+        antworten.getChildren().add(antwortAuswahl);
+        antworten.getChildren().add(btnAntwortenAuswahl);
         AntwortPane.setCenter(antworten);//antwortAuswahl
         //setBtnNeueAufgabe();    //Funktion auskommentiert (Z.338)
         //antwortAuswahl.setBottom(btnNeueAntwort);
@@ -744,175 +743,173 @@ public class SimpleLearnerGUI extends Application {
             antwortAuswahl.getChildren().add(new btnAntwort(sql.antwortenTemp.get(i)).getBtnAntwort());
         }
     }
-    
-    void setBtnAntwortenAuswahl(){
-        
+
+    void setBtnAntwortenAuswahl() {
+
         btnAntwortenAuswahl.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-        System.out.println("Neue Antwortauswahl");
+            @Override
+            public void handle(ActionEvent e) {
 
-        Stage tempStage = new Stage();
-            tempStage.setTitle("Neuer Aufgabentext");
-        
-        ToggleGroup tempToggleGroup = new ToggleGroup();
-        VBox vBox = new VBox();
-        HBox hBox = new HBox();
-            Button btnAbbr = new Button("Abbrechen");
-            Button btnBestaet = new Button("Bestätigen");
-            // vBox füllen
-        //HBox h1 = new HBox();
-        //    h1.getChildren().add(new Button());
-        //    h1.getChildren().add(new TextField());
-        //    vBox.getChildren().add(h1);
-        VBox vBox2 = new VBox();
-            Button btnNeueAnwort = new Button("Neue Antwort");
-            vBox2.getChildren().add(vBox);
-            vBox2.getChildren().add(btnNeueAntwort);
-        
-        hBox.getChildren().add(btnAbbr);
-        hBox.getChildren().add(btnBestaet);
-        
-        BorderPane tempPane = new BorderPane();
-        tempPane.setCenter(vBox2);
-        tempPane.setBottom(hBox);
-        
-        Scene tempScene = new Scene(tempPane, 300,300);
-        
-        tempStage.setScene(tempScene);
-        tempStage.show();    
+                System.out.println("Neue Antwortauswahl");
 
-        // btnNeueAntwort definieren
-        btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {                   
-            System.out.println("Neue Antwort wird erstellt");
-            
-            RadioButton radioBtn = new RadioButton();
-                radioBtn.setToggleGroup(tempToggleGroup);
-            
-            HBox h = new HBox();
-            h.getChildren().add(radioBtn);
-            h.getChildren().add(new TextField());
-            vBox.getChildren().add(h);
-            
-            }
-        });
-        
-        // btnAbbr definieren
-        btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-            System.out.println("Eingabe abgebrochen");
-            tempStage.close();
-            }
-        });
-        
-        btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-            System.out.println("Eingabe wird gespeichert");
-            
-            /*
-            Anweisungen hier
-            */
-            
-            // Auslesen aller TextFelder
-            for(int i=0; i<vBox.getChildren().size(); i++){
-                HBox hb = (HBox)vBox.getChildren().get(i);
-                for(int j = 0; j<hb.getChildren().size(); j++){
-                    if(hb.getChildren().get(j) instanceof TextField){
-                        TextField tf = (TextField)hb.getChildren().get(j);
-                        String ausgabeString = tf.getText();
-                        System.out.println(ausgabeString);
+                Stage tempStage = new Stage();
+                tempStage.setTitle("Neuer Aufgabentext");
+
+                ToggleGroup tempToggleGroup = new ToggleGroup();
+                VBox vBox = new VBox();
+                HBox hBox = new HBox();
+                Button btnAbbr = new Button("Abbrechen");
+                Button btnBestaet = new Button("Bestätigen");
+                // vBox füllen
+                //HBox h1 = new HBox();
+                //    h1.getChildren().add(new Button());
+                //    h1.getChildren().add(new TextField());
+                //    vBox.getChildren().add(h1);
+                VBox vBox2 = new VBox();
+                Button btnNeueAnwort = new Button("Neue Antwort");
+                vBox2.getChildren().add(vBox);
+                vBox2.getChildren().add(btnNeueAntwort);
+
+                hBox.getChildren().add(btnAbbr);
+                hBox.getChildren().add(btnBestaet);
+
+                BorderPane tempPane = new BorderPane();
+                tempPane.setCenter(vBox2);
+                tempPane.setBottom(hBox);
+
+                Scene tempScene = new Scene(tempPane, 300, 300);
+
+                tempStage.setScene(tempScene);
+                tempStage.show();
+
+                // btnNeueAntwort definieren
+                btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        System.out.println("Neue Antwort wird erstellt");
+
+                        RadioButton radioBtn = new RadioButton();
+                        radioBtn.setToggleGroup(tempToggleGroup);
+
+                        HBox h = new HBox();
+                        h.getChildren().add(radioBtn);
+                        h.getChildren().add(new TextField());
+                        vBox.getChildren().add(h);
+
                     }
-                }
-            }
-            
-            
-            // vergleiche toggles mit gewählten toggle zur feststellung der wie vielte er ist.            
-            int nrSelectedToggle = -1;
-            
-            for(int i=0; i<tempToggleGroup.getToggles().size(); i++){
-                if(tempToggleGroup.getSelectedToggle().equals(tempToggleGroup.getToggles().get(i))){
-                    nrSelectedToggle = i;
-                    break;
-                }
-            }
-            System.out.println(nrSelectedToggle);
-            
-            //Antworten neuladen und Fenster schliessen
-                //btnLabel und aufgabenNummer sind unbekannt 
-                //fillAntwortAuswahl(*btnLabel*, sql.fragen.get(*aufgabenNummer*));
-            tempStage.close();
-            }
-        });          
-        
+                });
+
+                // btnAbbr definieren
+                btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+
+                        System.out.println("Eingabe abgebrochen");
+                        tempStage.close();
+                    }
+                });
+
+                btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+
+                        System.out.println("Eingabe wird gespeichert");
+
+                        /*
+            Anweisungen hier
+                         */
+                        // Auslesen aller TextFelder
+                        for (int i = 0; i < vBox.getChildren().size(); i++) {
+                            HBox hb = (HBox) vBox.getChildren().get(i);
+                            for (int j = 0; j < hb.getChildren().size(); j++) {
+                                if (hb.getChildren().get(j) instanceof TextField) {
+                                    TextField tf = (TextField) hb.getChildren().get(j);
+                                    String ausgabeString = tf.getText();
+                                    System.out.println(ausgabeString);
+                                }
+                            }
+                        }
+
+                        // vergleiche toggles mit gewählten toggle zur feststellung der wie vielte er ist.            
+                        int nrSelectedToggle = -1;
+
+                        for (int i = 0; i < tempToggleGroup.getToggles().size(); i++) {
+                            if (tempToggleGroup.getSelectedToggle().equals(tempToggleGroup.getToggles().get(i))) {
+                                nrSelectedToggle = i;
+                                break;
+                            }
+                        }
+                        System.out.println(nrSelectedToggle);
+
+                        //Antworten neuladen und Fenster schliessen
+                        //btnLabel und aufgabenNummer sind unbekannt 
+                        //fillAntwortAuswahl(*btnLabel*, sql.fragen.get(*aufgabenNummer*));
+                        tempStage.close();
+                    }
+                });
+
             }
         });
     }
-    
-    void setBtnAufgabeText(){
-        
-        btnAufgabeText.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-        System.out.println("Neuer Aufgabentext");
 
-        Stage tempStage = new Stage();
-            tempStage.setTitle("Neuer Aufgabentext");
-        
-        HBox hBox = new HBox();
-            Button btnAbbr = new Button("Abbrechen");
-            Button btnBestaet = new Button("Bestätigen");
-            hBox.getChildren().add(btnAbbr);
-            hBox.getChildren().add(btnBestaet);
-            
-        TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
-            tempTextArea.setMinWidth(300);
-            tempTextArea.setMinHeight(250);
-            tempTextArea.setWrapText(true);
-        
-        BorderPane tempPane = new BorderPane();
-            tempPane.setCenter(tempTextArea);
-            tempPane.setBottom(hBox);
-        
-        Scene tempScene = new Scene(tempPane, 300,300);
-        
-        tempStage.setScene(tempScene);
-        tempStage.show();
-        
-        // btnAbbr definieren
-        btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-            System.out.println("Eingabe abgebrochen");
-            tempStage.close();
-            }
-        });
-        
-        btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    
-            System.out.println("Eingabe wird gespeichert");
-            
-            /*
+    void setBtnAufgabeText() {
+
+        btnAufgabeText.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                System.out.println("Neuer Aufgabentext");
+
+                Stage tempStage = new Stage();
+                tempStage.setTitle("Neuer Aufgabentext");
+
+                HBox hBox = new HBox();
+                Button btnAbbr = new Button("Abbrechen");
+                Button btnBestaet = new Button("Bestätigen");
+                hBox.getChildren().add(btnAbbr);
+                hBox.getChildren().add(btnBestaet);
+
+                TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
+                tempTextArea.setMinWidth(300);
+                tempTextArea.setMinHeight(250);
+                tempTextArea.setWrapText(true);
+
+                BorderPane tempPane = new BorderPane();
+                tempPane.setCenter(tempTextArea);
+                tempPane.setBottom(hBox);
+
+                Scene tempScene = new Scene(tempPane, 300, 300);
+
+                tempStage.setScene(tempScene);
+                tempStage.show();
+
+                // btnAbbr definieren
+                btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+
+                        System.out.println("Eingabe abgebrochen");
+                        tempStage.close();
+                    }
+                });
+
+                btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+
+                        System.out.println("Eingabe wird gespeichert");
+
+                        /*
             Anweisungen hier
                 - TextArea auslesen
                 - String übergeben
-            */
-            System.out.println(">> String-Ausgabe >> " + tempTextArea.getText());
-            btnAufgabeText.setText(tempTextArea.getText());
-            
-            tempStage.close();
-            }
-        });        
+                         */
+                        System.out.println(">> String-Ausgabe >> " + tempTextArea.getText());
+                        btnAufgabeText.setText(tempTextArea.getText());
+
+                        tempStage.close();
+                    }
+                });
 
             }
         });
@@ -932,6 +929,9 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println(nummerFragePar);
                 System.out.println(AnmeldungName.getText());
                 try {
+                    if (!sql.isFertig) {
+                        sql.startAufgabe(blockPar, AnmeldungName.getText(), false); //am Ende dann noch true setzen bei der letzten Aufgabe
+                    }
                     if (sql.checkAntwort(blockPar, AnmeldungName.getText(), sql.fragen.get(nummerFragePar), antwort) == true) {
                         System.out.println("richtig");
                         auswertungAntwort.setText("richtig");

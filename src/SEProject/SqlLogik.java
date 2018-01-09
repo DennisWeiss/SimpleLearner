@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -29,6 +33,7 @@ public class SqlLogik implements ISqlLogik {
     String loginLehrer;
     String loginSchueler;
     private String currentUser;
+    boolean isFertig;
 
     public String getCurrentUser() {
         return currentUser;
@@ -52,12 +57,31 @@ public class SqlLogik implements ISqlLogik {
         currentUser = null;
     }
 
+    public void startAufgabe(String blockBez, String aSchueler, boolean fertig) throws SQLException{
+        String startString = "insert into schuelerloestblock(schueler, block, fertig) values(?, ?, ?);";
+        
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtStart = myConn.prepareStatement(startString)){
+            
+            stmtStart.setString(1, aSchueler);
+            stmtStart.setString(2, blockBez);
+            stmtStart.setBoolean(3, false);
+            
+            stmtStart.executeUpdate();
+            
+            this.isFertig = true;
+        }
+    }
+    
+    public void endAufgabe(){
+        this.isFertig = false;
+    }
+    
     @Override
     public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException {
 
-        String antwortString = "update schuelerloestaufgabe set antwortS = ? "
-                + "where aufgabe = (select aid from aufgabe where frage = ?) "
-                + "and aktBlock = (select slbid from schuelerloestblock where block = ? and schueler = ?);";
+        String antwortString = "insert into schuelerloestaufgabe(aufgabe, aktBlock, antwortS) values((select aufgabe.aid from aufgabe "
+                + "where aufgabe.block = ? and aufgabe.frage = ?), (select slbid from schuelerloestblock where schuelerloestblock.block = ? and schuelerloestblock.schueler = ?), ?);";
 
         String stmtString = "select schuelerloestaufgabe.antwortS , antwort.isTrue from schuelerloestaufgabe "
                 + "join schuelerloestblock on schuelerloestaufgabe.aktBlock = schuelerloestblock.SLBID "
@@ -77,10 +101,11 @@ public class SqlLogik implements ISqlLogik {
                 PreparedStatement setAntwort = myConn.prepareStatement(antwortString);
                 PreparedStatement stmtAntwort = myConn.prepareStatement(stmtString)) {
 
-            setAntwort.setString(1, aAntwort);
+            setAntwort.setString(1, blockBez);
             setAntwort.setString(2, aFrage);
             setAntwort.setString(3, blockBez);
             setAntwort.setString(4, aSchueler);
+            setAntwort.setString(5, aAntwort);
             setAntwort.execute();
 
             stmtAntwort.setString(1, aFrage);
@@ -339,7 +364,7 @@ public class SqlLogik implements ISqlLogik {
         }
     }
     
-    public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
+    /*public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
         String loeschenString = "delete from block where blockname = ? and lehrer = ? and kategorie = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
@@ -353,9 +378,9 @@ public class SqlLogik implements ISqlLogik {
         } catch (SQLException exc) {
             throw exc;
         }
-    }
+    }*/
 
-    public void deleteAufgabe(String blockname, String frage) throws SQLException {
+    /*public void deleteAufgabe(String blockname, String frage) throws SQLException {
         String loeschenString = "delete from aufgabe where block = ? and frage = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
@@ -368,7 +393,7 @@ public class SqlLogik implements ISqlLogik {
         } catch (SQLException exc) {
             throw exc;
         }
-    }
+    }*/
     
     public void updateAntworttext(String block, String frage, String alteAntwort, String neueAntwort) throws SQLException {
         String updateString = "update antwort set antworttext = ? "
@@ -384,6 +409,71 @@ public class SqlLogik implements ISqlLogik {
             
             stmtUpdate.executeUpdate();
         }
+    }
+    
+    public void createBlock(String block, String lehrer, String kategorie) throws SQLException{
+        String createString = "insert into block(bid, lehrer, kategorie) values(?, ?, ?);";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtUpdate = myConn.prepareStatement(createString)) {
+            
+            stmtUpdate.setString(1, block);
+            stmtUpdate.setString(2, lehrer);
+            stmtUpdate.setString(3, kategorie);
+            
+            stmtUpdate.executeUpdate();
+            
+        }
+        
+    }
+    
+    public void createAufgabeInBlock(String block, String frage, VBox vb) throws SQLException{
+        String insertString = "insert into aufabe(block, frage) values(?, ?);";
+        
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtNewAufgabe = myConn.prepareStatement(insertString)) {
+            
+            stmtNewAufgabe.setString(1, block);
+            stmtNewAufgabe.setString(2, frage);
+            
+            stmtNewAufgabe.executeUpdate();
+            
+            
+            
+        }
+        
+    }
+    
+    private void createAntwortenInAufgabe(String block, String frage, VBox vb) throws SQLException{
+        for(int i = 0; i<vb.getChildren().size(); i++){
+            HBox hb = (HBox)vb.getChildren().get(i);
+            for(int j = 0; j<hb.getChildren().size(); j++){
+                RadioButton rb = (RadioButton)hb.getChildren().get(j);
+                j++;
+                TextField tf = (TextField)hb.getChildren().get(j);
+                if(rb.isSelected()){
+                    createAntwort(tf.getText(), true, block, frage);
+                } else{
+                    createAntwort(tf.getText(), false, block, frage);
+                }
+            }
+        }
+    }
+    
+    private void createAntwort(String antworttext, boolean isRichtig, String block, String frage) throws SQLException{
+        String insertAntwort = "insert into antwort(antworttext, istrue, aufgabe) values(?, ?, (select aufgabe.aid where "
+                + "aufgabe.block = ? and aufgabe.frage = ?));";
+        
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtNewAntwort = myConn.prepareStatement(insertAntwort)) {
+            
+            stmtNewAntwort.setString(1, antworttext);
+            stmtNewAntwort.setBoolean(2, isRichtig);
+            stmtNewAntwort.setString(3, block);
+            stmtNewAntwort.setString(4, frage);
+            
+            stmtNewAntwort.executeUpdate();
+        }
+        
     }
     /*TODO: 
     Lehrer muessen ihre Aufgaben loeschen koennen
