@@ -177,7 +177,7 @@ public class SimpleLearnerGUI extends Application {
                         System.out.println(currentUser);
 
                         System.out.println("    Lehrer: " + isLehrer());
-
+                        hString = "Kategorie";
                         scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
@@ -230,6 +230,15 @@ public class SimpleLearnerGUI extends Application {
         hauptTop.setId("hauptTop");
         filter.setPromptText("Filter");
         filter.setFocusTraversable(false);
+        filter.setOnKeyReleased(e -> {
+            if (hString.equals("Kategorie")) {
+                fillKategorie();
+            } else if (hString.equals("Modul")) {
+                fillModul(kategorieString);
+            } else if (hString.equals("Verzeichnis")) {
+                fillVerzeich();
+            }
+        });
         Button btnAbmelden = new Button("Abmelden");
         Button btnZurueck = new Button("Zurueck");
         btnZurueck.setId("hZurueck");
@@ -353,19 +362,35 @@ public class SimpleLearnerGUI extends Application {
 
         // Liste füllen
         if (istLehrer) {
-            try {
-                sql.loadFaecher(getName());
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
+            if (filter.getText().isEmpty()) {
+                try {
+                    sql.loadFaecher(getName());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            } else {
+                try {
+                    sql.loadFilteredFaecher(getName(), filter.getText());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
             }
             for (int i = 0; i < sql.faecher.size(); i++) {
                 centerListe.getChildren().add(new KategorieButton(sql.faecher.get(i), i).getKategorieButton());
             }
         } else {
-            try {
-                sql.loadFaecher();
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
+            if (this.filter.getText().isEmpty()) {
+                try {
+                    sql.loadFaecher();
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            } else {
+                try {
+                    sql.loadFilteredFaecher(filter.getText());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
             }
             for (int i = 0; i < sql.faecher.size(); i++) {
                 centerListe.getChildren().add(new KategorieButton(sql.faecher.get(i), i).getKategorieButton());
@@ -383,19 +408,35 @@ public class SimpleLearnerGUI extends Application {
         centerListe.getChildren().setAll();
 
         if (istLehrer) {
-            try {
-                sql.loadBloecke(getGName(), getName());
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
+            if (filter.getText().isEmpty()) {
+                try {
+                    sql.loadBloecke(getGName(), getName());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            } else {
+                try {
+                    sql.loadFilteredBloecke(getGName(), getName(), filter.getText());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
             }
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
                 centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
         } else {
-            try {
-                sql.loadBloecke(getGName());
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
+            if (filter.getText().isEmpty()) {
+                try {
+                    sql.loadBloecke(getGName());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            } else{
+                try {
+                    sql.loadFilteredBloecke(getGName(), filter.getText());
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
             }
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
                 centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
@@ -411,11 +452,20 @@ public class SimpleLearnerGUI extends Application {
 
         centerListe.getChildren().setAll();
 
-        try {
-            sql.loadKategorien(kategorieString);
-            System.out.println(getGName() + "adsgonj " + kategorieString);
-        } catch (SQLException exc) {
-            System.out.println(exc.getMessage());
+        if (filter.getText().isEmpty()) {
+            try {
+                sql.loadKategorien(kategorieString);
+                System.out.println(getGName() + "adsgonj " + kategorieString);
+            } catch (SQLException exc) {
+                System.out.println(exc.getMessage());
+            }
+        } else {
+            try {
+                sql.loadFilteredKategorien(kategorieString, filter.getText());
+                System.out.println(getGName() + "adsgonj " + kategorieString);
+            } catch (SQLException exc) {
+                System.out.println(exc.getMessage());
+            }
         }
         for (int i = 0; i < sql.kategorien.size(); i++) {
             System.out.println("sdgvhsklgga" + sql.kategorien.get(i) + " " + i);
@@ -430,6 +480,7 @@ public class SimpleLearnerGUI extends Application {
 
     BorderPane getHauptPane() {
         return HauptPane;
+
     }
 
 // Verzeichnis-Element
@@ -923,7 +974,7 @@ public class SimpleLearnerGUI extends Application {
             tf.setPromptText("Hier Blocknamen eintragen");
             Button btnAbbrechen = new Button("Abbrechen");
             Button btnBestaetigen = new Button("Bestaetigen");
-            
+
             btnAbbrechen.setOnAction(e2 -> {
                 tempStage.close();
             });
@@ -942,7 +993,7 @@ public class SimpleLearnerGUI extends Application {
         });
     }
 
-     void setBtnBlockZurueck(Stage tempStage) {//öffnet nächste Aufgabe
+    void setBtnBlockZurueck(Stage tempStage) {//öffnet nächste Aufgabe
         btnBlockZurueck.setOnAction((ActionEvent e) -> {
             System.out.println("aufgabe beendet");
             sql.endAufgabe();
@@ -953,6 +1004,7 @@ public class SimpleLearnerGUI extends Application {
             tempStage.show();
         });
     }
+
     void setBtnAufgabeText() {
 
         btnAufgabeText.setOnAction(new EventHandler<ActionEvent>() {
@@ -1109,6 +1161,7 @@ public class SimpleLearnerGUI extends Application {
 
     BorderPane getAufgabenPane() {
         return AufgabenPane;
+
     }
 
     class btnAntwort {
@@ -1137,9 +1190,9 @@ public class SimpleLearnerGUI extends Application {
         }
     }
 // Scene    
-    // getHauptPane();
-    // getAufgabenPane();
-    //Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
+// getHauptPane();
+// getAufgabenPane();
+//Scene scene = new Scene(changeMeldungPane(getAnmeldPane()), 600, 600);
     Scene scene = new Scene(getAnmeldPane(), 600, 600);
 
     void loadStyleSheets() {
