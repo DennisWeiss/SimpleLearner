@@ -1,6 +1,9 @@
 Referenz für CSS-Eigsnschaften für Panes und Buttons:
 https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
 
+HauptPane:
+>> zurueckButton in der Hierarchie ID = "hZurueck"
 AufgabenPane:
 >> btnAufgabeText: Hoehe, Breite und Farbe anpassen
 >> btnAntwortAuswahl: 
+
