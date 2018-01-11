@@ -407,13 +407,13 @@ public class SimpleLearnerGUI extends Application {
         if (isTeacher) {
             if (filter.getText().isEmpty()) {
                 try {
-                    sql.loadBloecke(getGName(), getName());
+                    sql.loadBloeckeLehrer(getGName(), getName());
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
             } else {
                 try {
-                    sql.loadFilteredBloecke(getGName(), getName(), filter.getText());
+                    sql.loadFilteredBloeckeLehrer(getGName(), getName(), filter.getText());
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
@@ -424,13 +424,13 @@ public class SimpleLearnerGUI extends Application {
         } else {
             if (filter.getText().isEmpty()) {
                 try {
-                    sql.loadBloecke(getGName());
+                    sql.loadBloeckeSchueler(getGName(), getName());
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
             } else{
                 try {
-                    sql.loadFilteredBloecke(getGName(), filter.getText());
+                    sql.loadFilteredBloeckeSchueler(getGName(), getName(), filter.getText());
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
@@ -993,7 +993,7 @@ public class SimpleLearnerGUI extends Application {
     void setBtnBack(Stage tempStage) {//öffnet nächste Aufgabe
         btnBlockZurueck.setOnAction((ActionEvent e) -> {
             System.out.println("aufgabe beendet");
-            sql.endAufgabe();
+            //sql.endAufgabe();
             fillVerzeich();
             scene.setRoot(getHauptPane());
             tempStage.setScene(scene);
@@ -1079,9 +1079,7 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println(nummerFragePar);
                 System.out.println(loginName.getText());
                 try {
-                    if (!sql.isFertig) {
-                        sql.startAufgabe(blockPar, loginName.getText(), false); //am Ende dann noch true setzen bei der letzten Aufgabe
-                    }
+                        sql.startBlock(blockPar, loginName.getText()); //am Ende dann noch true setzen bei der letzten Aufgabe
                     if (sql.checkAntwort(blockPar, loginName.getText(), sql.fragen.get(nummerFragePar), antwort) == true) {
                         System.out.println("richtig");
                         auswertungAntwort.setText("richtig");
@@ -1146,7 +1144,7 @@ public class SimpleLearnerGUI extends Application {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("aufgabe beendet");
-                sql.endAufgabe();
+                //sql.endAufgabe();
                 fillVerzeich();
                 scene.setRoot(getHauptPane());
                 tempStage.setScene(scene);
