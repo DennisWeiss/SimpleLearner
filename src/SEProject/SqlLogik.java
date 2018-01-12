@@ -73,8 +73,8 @@ public class SqlLogik {
 
             rsSuche = stmtSuche.executeQuery(suchString);
             while (rsSuche.next()) {
-                if(rsSuche.getString("block").equals(blockBez)){
-                    if(rsSuche.getString("schueler").equals(aSchueler)){
+                if (rsSuche.getString("block").equals(blockBez)) {
+                    if (rsSuche.getString("schueler").equals(aSchueler)) {
                         confirm = false;
                     }
                 }
@@ -108,16 +108,14 @@ public class SqlLogik {
 
     public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException {
 
-        String antwortString = "insert into schuelerloestaufgabe(aufgabe, aktBlock, antwortS) values((select aufgabe.aid from aufgabe "
+        String antwortString = "insert into schuelerloestaufgabe(aufgabe, schueler, antwortS) values((select aufgabe.aid from aufgabe "
                 + "where aufgabe.block = ? and aufgabe.frage = ?), ?, ?);";
 
-        String stmtString = "select schuelerloestaufgabe.antwortS , antwort.isTrue from schuelerloestaufgabe "
-                + "join schuelerloestblock "
-                + "join aufgabe on schuelerloestaufgabe.Aufgabe = aufgabe.aid "
+        String stmtString = "select schuelerloestaufgabe.schueler, schuelerloestaufgabe.antwortS, antwort.isTrue from schuelerloestaufgabe "
+                + "join aufgabe on schuelerloestaufgabe.aufgabe = aufgabe.aid "
+                + "join schueler on schuelerloestaufgabe.schueler = schueler.SID "
                 + "join antwort on aufgabe.aid = antwort.aufgabe "
-                + "where aufgabe.frage = ?"
-                + "and schuelerloestBlock.schueler = ? "
-                + "and antwort.antworttext = ?;";
+                + "where aufgabe.frage = ? and antwort.antworttext = schuelerloestaufgabe.antwortS and schuelerloestaufgabe.schueler = ?;";
 
         /*"select isTrue from antwort join aufgabe on antwort.aufgabe = aufgabe.aid"
                 + " join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ? and antwort.antworttext = ?";*/
@@ -131,13 +129,12 @@ public class SqlLogik {
 
             setAntwort.setString(1, blockBez);
             setAntwort.setString(2, aFrage);
-            setAntwort.setString(3, aSchueler + "-" + blockBez);
+            setAntwort.setString(3, aSchueler);
             setAntwort.setString(4, aAntwort);
             setAntwort.execute();
 
             stmtAntwort.setString(1, aFrage);
             stmtAntwort.setString(2, aSchueler);
-            stmtAntwort.setString(3, aAntwort);
             rsAntwort = stmtAntwort.executeQuery();
 
             while (rsAntwort.next()) {
@@ -541,11 +538,11 @@ public class SqlLogik {
                     }
                 }
             }
-            for(int i = 0; i< aufgabenbloecke.size(); i++){
+            for (int i = 0; i < aufgabenbloecke.size(); i++) {
                 System.out.println(aufgabenbloecke.get(i) + "in Logik ArrayList davor");
             }
             aufgabenbloecke = filterList(aufgabenbloecke, filter);
-            for(int i = 0; i< aufgabenbloecke.size(); i++){
+            for (int i = 0; i < aufgabenbloecke.size(); i++) {
                 System.out.println(aufgabenbloecke.get(i) + "in Logik ArrayList danach");
             }
 
@@ -718,11 +715,12 @@ public class SqlLogik {
         }
 
     }
-    public ArrayList<String> filterList(ArrayList<String> inputList, String filter){
+
+    public ArrayList<String> filterList(ArrayList<String> inputList, String filter) {
         ArrayList<String> outputList = new ArrayList<>();
-        for(int index = 0; index < inputList.size(); index++){
+        for (int index = 0; index < inputList.size(); index++) {
             String filteredString = inputList.get(index);
-            if(filteredString.contains(filter)){
+            if (filteredString.contains(filter)) {
                 outputList.add(filteredString);
             }
         }
