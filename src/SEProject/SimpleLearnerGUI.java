@@ -109,15 +109,18 @@ public class SimpleLearnerGUI extends Application {
     private void buildLoginPane() {
         Label loginLabel = new Label("Anmeldung");
         loginLabel.setId("loginLabel");
+        
+        btnLogin.setId("btnLogin");
         BorderPane tempMain = new BorderPane();
 
         BorderPane temp = new BorderPane();
 
         BorderPane loginTop = new BorderPane();
         loginTop.setPrefHeight(20);
-        loginTop.setLeft(loginLabel);
+        loginTop.setCenter(loginLabel);
 
         loginContainer = new GridPane();
+        loginContainer.setId("loginContainer");
         loginContainer.setHgap(5.0);
         loginContainer.setVgap(5.0);
         loginContainer.add(new Label("Name: "), 0, 0);
