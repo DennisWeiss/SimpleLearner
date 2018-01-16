@@ -13,6 +13,7 @@ import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -33,6 +34,7 @@ import javafx.scene.text.Font;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -74,7 +76,7 @@ public class SimpleLearnerGUI extends Application {
     Button btnLogin = new Button("Einloggen");
     BorderPane loginPane = new BorderPane();
     BorderPane loginWindow = new BorderPane();
-    GridPane loginContainer = new GridPane();
+    VBox loginContainer = new VBox();
     boolean isTeacher;
     String currentUser = null;
 
@@ -93,23 +95,45 @@ public class SimpleLearnerGUI extends Application {
     }
 
     private void buildLoginPane() {
+        Label loginLabel = new Label("Anmeldung");
+        loginLabel.setId("loginLabel");
+        loginLabel.setAlignment(Pos.CENTER);
+        loginLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label nameLabel = new Label("Name");
+        Label passLabel = new Label("Passwort");
+        nameLabel.setId("nameLabel");
+        passLabel.setId("passLabel");
+        
+        loginName.setId("nameTextField");
+        loginName.setPrefHeight(35);
+        loginName.setMaxWidth(220);
+        
+        loginPassword.setId("passTextField");
+        loginPassword.setMaxWidth(220);
+        loginPassword.setPrefHeight(35);
+        
+                
+        
+        btnLogin.setId("btnLogin");
+        btnLogin.setAlignment(Pos.CENTER);
+        btnLogin.setTextAlignment(TextAlignment.CENTER);
+        
         BorderPane tempMain = new BorderPane();
 
         BorderPane temp = new BorderPane();
 
         BorderPane loginTop = new BorderPane();
         loginTop.setPrefHeight(20);
-        loginTop.setLeft(new Label("Anmeldung"));
+        loginTop.setCenter(loginLabel);
 
-        loginContainer = new GridPane();
-        loginContainer.setHgap(5.0);
-        loginContainer.setVgap(5.0);
-        loginContainer.add(new Label("Name: "), 0, 0);
-        loginContainer.add(this.loginName, 1, 0);
-        loginContainer.add(new Label("Passwort: "), 0, 1);
-        loginContainer.add(this.loginPassword, 1, 1);
-        loginContainer.add(this.btnLogin, 1, 2);
-
+        loginContainer = new VBox(8);
+        loginContainer.setPadding(new Insets(10, 50, 50, 50));
+        loginContainer.setId("loginContainer");
+        loginContainer.getChildren().addAll(loginLabel, nameLabel, loginName, passLabel, loginPassword, btnLogin);
+        loginContainer.setMinSize(300, 250);
+        loginContainer.setMaxSize(300, 250);
+        
         temp.setTop(loginTop);
         temp.setCenter(loginContainer);
 

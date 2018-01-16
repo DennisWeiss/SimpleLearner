@@ -41,7 +41,7 @@
 .button{
     -fx-text-fill:rgb(50,100,150);
 }
-#btnAnmeld{
+#btnLogin{
     -fx-background-color: #d2f9d2;
     -fx-background-radius: 3,2,1;
     -fx-padding: 3 30 3 30;
@@ -58,7 +58,7 @@
     -fx-background-radius: 3,2,1;
 }
 
-#AnmeldungLabel{
+#loginLabel{
     -fx-font-size:20px;
     -fx-margin: 20px;
 }
@@ -68,9 +68,9 @@
 #btnNeuesElement{
     -fx-background-color: rgb(150,255,150);
 }
-#anmeldPane{
-    -fx-background-color: rgb(255,255,255);
-    -fx-padding: 0 30px 30px 30px;
+#loginContain{
+   -fx-background-color: rgb(255,255,255);
+   -fx-padding: 0 30px 30px 30px;
    -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.8), 20, 0, 0, 0);
 }
 #eingabeTop{
