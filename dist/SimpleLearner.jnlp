@@ -8,7 +8,19 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="SimpleLearner.jar" size="998190" download="eager" />
+    <jar href="SimpleLearner.jar" size="1004174" download="eager" />
+    <jar href="lib\itext5-itext-pdfa-5.5.12-javadoc.jar" size="441605" download="eager" />
+    <jar href="lib\itext5-itext-pdfa-5.5.12-sources.jar" size="124228" download="eager" />
+    <jar href="lib\itext5-itext-pdfa-5.5.12.jar" size="118379" download="eager" />
+    <jar href="lib\itext5-itext-xtra-5.5.12-javadoc.jar" size="335477" download="eager" />
+    <jar href="lib\itext5-itext-xtra-5.5.12-sources.jar" size="127481" download="eager" />
+    <jar href="lib\itext5-itext-xtra-5.5.12.jar" size="123949" download="eager" />
+    <jar href="lib\itext5-itextpdf-5.5.12-javadoc.jar" size="5182955" download="eager" />
+    <jar href="lib\itext5-itextpdf-5.5.12-sources.jar" size="2333781" download="eager" />
+    <jar href="lib\itext5-itextpdf-5.5.12.jar" size="2320211" download="eager" />
+    <jar href="lib\itext5-xmlworker-5.5.12-javadoc.jar" size="1071033" download="eager" />
+    <jar href="lib\itext5-xmlworker-5.5.12-sources.jar" size="364395" download="eager" />
+    <jar href="lib\itext5-xmlworker-5.5.12.jar" size="258334" download="eager" />
     <jar href="lib\mysql-connector-java-5.1.42-bin.jar" size="996444" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="SimpleLearner" >

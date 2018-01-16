@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -33,6 +31,8 @@ public class SqlLogik {
     ArrayList<String> aufgabenbloeckeTemp;
     ArrayList<String> fragen;
     ArrayList<String> antwortenTemp;
+    ArrayList<String> absolvierteSchueler;
+    ArrayList<AntwortPdfObjekt> tempAntwortenSchueler;
     String loginLehrer;
     String loginSchueler;
     private String currentUser;
@@ -56,6 +56,8 @@ public class SqlLogik {
         aufgabenbloeckeTemp = new ArrayList<>();
         fragen = new ArrayList<>();
         antwortenTemp = new ArrayList<>();
+        absolvierteSchueler = new ArrayList<>();
+        tempAntwortenSchueler = new ArrayList<>();
         loginLehrer = null;
         loginSchueler = null;
         currentUser = null;
@@ -92,6 +94,7 @@ public class SqlLogik {
         }
     }
 
+    /*
     public void endBlock(String blockBez, String aSchueler) throws SQLException {
         String endString = "update schuelerloestblock set fertig = ? where schueler = ? and block = ?;";
 
@@ -105,7 +108,7 @@ public class SqlLogik {
             stmtStart.executeUpdate();
         }
     }
-
+     */
     public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException {
 
         String antwortString = "insert into schuelerloestaufgabe(aufgabe, schueler, antwortS) values((select aufgabe.aid from aufgabe "
@@ -567,6 +570,8 @@ public class SqlLogik {
             stmtFrage.setString(1, block);
             rsFrage = stmtFrage.executeQuery();
 
+            fragen.clear();
+
             while (rsFrage.next()) {
                 fragen.add(rsFrage.getString("frage"));
             }
@@ -607,8 +612,8 @@ public class SqlLogik {
         }
     }
 
-    /*public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
-        String loeschenString = "delete from block where blockname = ? and lehrer = ? and kategorie = ?;";
+    public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
+        String loeschenString = "delete from block where bid = ? and lehrer = ? and kategorie = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
 
@@ -621,9 +626,9 @@ public class SqlLogik {
         } catch (SQLException exc) {
             throw exc;
         }
-    }*/
+    }
 
- /*public void deleteAufgabe(String blockname, String frage) throws SQLException {
+    /*public void deleteAufgabe(String blockname, String frage) throws SQLException {
         String loeschenString = "delete from aufgabe where block = ? and frage = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
@@ -691,8 +696,10 @@ public class SqlLogik {
                 j++;
                 TextField tf = (TextField) hb.getChildren().get(j);
                 if (rb.isSelected()) {
+                    System.out.println("createAntwortenInAufgabe true");
                     createAntwort(tf.getText(), true, block, frage);
                 } else {
+                    System.out.println("createAntwortenInAufgabe false");
                     createAntwort(tf.getText(), false, block, frage);
                 }
             }
@@ -700,7 +707,7 @@ public class SqlLogik {
     }
 
     private void createAntwort(String antworttext, boolean isRichtig, String block, String frage) throws SQLException {
-        String insertAntwort = "insert into antwort(antworttext, istrue, aufgabe) values(?, ?, (select aufgabe.aid where "
+        String insertAntwort = "insert into antwort(antworttext, istrue, aufgabe) values(?, ?, (select aufgabe.aid from aufgabe where "
                 + "aufgabe.block = ? and aufgabe.frage = ?));";
 
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
@@ -711,9 +718,119 @@ public class SqlLogik {
             stmtNewAntwort.setString(3, block);
             stmtNewAntwort.setString(4, frage);
 
+            System.out.println("createAntwort davor");
             stmtNewAntwort.executeUpdate();
         }
 
+    }
+
+    public void updateQuiz(String blockAlt, String lehrer, String blockNeu) throws SQLException {
+        String updateString = "update block set block.bid = ? where block.bid = ? and block.lehrer = ?;";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtNewName = myConn.prepareStatement(updateString)) {
+            stmtNewName.setString(1, blockNeu);
+            stmtNewName.setString(2, blockAlt);
+            stmtNewName.setString(3, lehrer);
+
+            stmtNewName.executeUpdate();
+        }
+    }
+
+    public void updateTask(String block, String frageAlt, String frageNeu) throws SQLException {
+        String updateString = "update aufgabe set aufgabe.frage = ? where aufgabe.block = ? and aufgabe.frage = ?;";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtNewQuestion = myConn.prepareStatement(updateString)) {
+            stmtNewQuestion.setString(1, frageNeu);
+            stmtNewQuestion.setString(2, block);
+            stmtNewQuestion.setString(3, frageAlt);
+
+            stmtNewQuestion.executeUpdate();
+        }
+    }
+
+    public void updateAnswers(String block, String frage, String lehrer, VBox neueAntworten) throws SQLException {
+        String deleteString = "delete from antwort where antwort.aufgabe = (select aufgabe.aid from aufgabe where aufgabe.frage = ? "
+                + "and aufgabe.block = (select block.bid from block where block.bid = ? and block.lehrer = ?));";
+
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtDeleteAntwort = myConn.prepareStatement(deleteString)) {
+            stmtDeleteAntwort.setString(1, frage);
+            stmtDeleteAntwort.setString(2, block);
+            stmtDeleteAntwort.setString(3, lehrer);
+
+            System.out.println("updateAnswer");
+            stmtDeleteAntwort.executeUpdate();
+
+            createAntwortenInAufgabe(block, frage, neueAntworten);
+        }
+    }
+
+    public void loadAbsolvierteSchueler(String blockName, String lehrer) throws SQLException {
+        String searchString = "select * from schueler join schuelerloestblock on schueler.sid = schuelerloestblock.schueler "
+                + "join block on schuelerloestblock.block = block.bid "
+                + "join lehrer on block.lehrer = lehrer.lid "
+                + "where block.bid = ? "
+                + "and lehrer.lid = ?;";
+        ResultSet rsSearchSchueler = null;
+
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtSearchSchueler = myConn.prepareStatement(searchString)) {
+
+            stmtSearchSchueler.setString(1, blockName);
+            stmtSearchSchueler.setString(2, lehrer);
+
+            rsSearchSchueler = stmtSearchSchueler.executeQuery();
+
+            absolvierteSchueler.clear();
+            while (rsSearchSchueler.next()) {
+                absolvierteSchueler.add(rsSearchSchueler.getString("sid"));
+            }
+        }
+    }
+
+    public void loadAbsolvierteAntworten(String block, String lehrer, String schueler) throws SQLException {
+        String loadString = "select lehrer.vorname, lehrer.nachname, schueler.vorname, schueler.nachname, aufgabe.frage, schuelerloestaufgabe.antwortS, antwort.antworttext, fach.kuerzel, fach.fid, kategorie.kid "
+                + "from schueler "
+                + "join schuelerloestaufgabe on schueler.sid = schuelerloestaufgabe.schueler "
+                + "join aufgabe on schuelerloestaufgabe.aufgabe = aufgabe.aid "
+                + "join block on aufgabe.block = block.bid "
+                + "join kategorie on block.kategorie = kategorie.kid "
+                + "join fach on kategorie.fach = fach.fid "
+                + "join lehrer on block.lehrer = lehrer.lid "
+                + "join antwort on antwort.aufgabe = aufgabe.aid "
+                + "where antwort.istrue = true "
+                + "and block.bid = ? "
+                + "and lehrer.lid = ? "
+                + "and schueler.sid = ?;";
+        ResultSet rsSearchAntworten = null;
+
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtSearchAntworten = myConn.prepareStatement(loadString)) {
+
+            stmtSearchAntworten.setString(1, block);
+            stmtSearchAntworten.setString(2, lehrer);
+            stmtSearchAntworten.setString(3, schueler);
+
+            rsSearchAntworten = stmtSearchAntworten.executeQuery();
+
+            tempAntwortenSchueler.clear();
+            while (rsSearchAntworten.next()) {
+                tempAntwortenSchueler.add(new AntwortPdfObjekt(rsSearchAntworten.getString("schueler.vorname"),
+                        rsSearchAntworten.getString("schueler.nachname"),
+                        rsSearchAntworten.getString("aufgabe.frage"),
+                        rsSearchAntworten.getString("schuelerloestaufgabe.antwortS"),
+                        rsSearchAntworten.getString("antwort.antworttext"),
+                        rsSearchAntworten.getString("fach.kuerzel"),
+                        rsSearchAntworten.getString("fach.fid"),
+                        rsSearchAntworten.getString("kategorie.kid"),
+                        rsSearchAntworten.getString("lehrer.vorname"),
+                        rsSearchAntworten.getString("lehrer.nachname")));
+            }
+        } finally {
+            if (rsSearchAntworten != null) {
+                rsSearchAntworten.close();
+            }
+        }
     }
 
     public ArrayList<String> filterList(ArrayList<String> inputList, String filter) {
