@@ -673,6 +673,18 @@ public class SqlLogik {
 
     }
 
+    public void createKategorie(String katName, String fachName) throws SQLException {
+        String createString = "insert into kategorie(kid, fach) values(?,?);";
+        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
+                PreparedStatement stmtUpdate = myConn.prepareStatement(createString)) {
+
+            stmtUpdate.setString(1, katName);
+            stmtUpdate.setString(2, fachName);
+
+            stmtUpdate.executeUpdate();
+        }
+    }
+
     public void createAufgabeInBlock(String block, String frage, VBox vb) throws SQLException {
         String insertString = "insert into aufabe(block, frage) values(?, ?);";
 
@@ -737,12 +749,22 @@ public class SqlLogik {
     }
 
     public void updateTask(String block, String frageAlt, String frageNeu) throws SQLException {
-        String updateString = "update aufgabe set aufgabe.frage = ? where aufgabe.block = ? and aufgabe.frage = ?;";
+        String updateString;
+        if (frageAlt != null) {
+            updateString = "update aufgabe set aufgabe.frage = ? where aufgabe.block = ? and aufgabe.frage = ?;";
+        } else {
+            updateString = "insert into aufgabe(block, frage) values(?, ?);";
+        }
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 PreparedStatement stmtNewQuestion = myConn.prepareStatement(updateString)) {
-            stmtNewQuestion.setString(1, frageNeu);
-            stmtNewQuestion.setString(2, block);
-            stmtNewQuestion.setString(3, frageAlt);
+            if (frageAlt != null) {
+                stmtNewQuestion.setString(1, frageNeu);
+                stmtNewQuestion.setString(2, block);
+                stmtNewQuestion.setString(3, frageAlt);
+            } else{
+                stmtNewQuestion.setString(1, block);
+                stmtNewQuestion.setString(2, frageNeu);
+            }
 
             stmtNewQuestion.executeUpdate();
         }
