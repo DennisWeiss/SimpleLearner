@@ -184,6 +184,7 @@ public class SimpleLearnerGUI extends Application {
 
                         System.out.println("    Lehrer: " + isTeacher());
                         hString = "Kategorie";
+                        System.out.println("Hierarchie: " + hString);
                         scene.setRoot(getHauptPane());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
@@ -213,6 +214,10 @@ public class SimpleLearnerGUI extends Application {
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
+                
+                // Loginfenster leeren
+                loginName.setText("");
+                loginPassword.setText("");
 
                 System.out.println("------------------------------");
             }
@@ -247,6 +252,7 @@ public class SimpleLearnerGUI extends Application {
     String kategorieString = null;
     String modulString = null;
     String hString = null;
+    String hStringName = null;
 
     void setTopMenu() {
         hauptTop.setId("hauptTop");
@@ -256,9 +262,9 @@ public class SimpleLearnerGUI extends Application {
             if (hString.equals("Kategorie")) {
                 fillKategorie();
             } else if (hString.equals("Modul")) {
-                fillModul(kategorieString);
+                fillModul(kategorieString, modulString);
             } else if (hString.equals("Verzeichnis")) {
-                fillVerzeich();
+                fillVerzeich("");
             }
         });
         Button btnAbmelden = new Button("Abmelden");
@@ -287,7 +293,7 @@ public class SimpleLearnerGUI extends Application {
             if (hString.equals("Modul")) {
                 fillKategorie();
             } else if (hString.equals("Verzeichnis")) {
-                fillModul(kategorieString);
+                fillModul(kategorieString, modulString);
                 hString = "Modul";
             } else {
                 System.out.println("ELSE " + hString);
@@ -317,6 +323,7 @@ public class SimpleLearnerGUI extends Application {
     }
      */
     void setMainContainer() {
+        hString = "Kategorie";
         hauptCenter.setId("hauptCenter");
         centerListe.setSpacing(5);
         hauptCenter.setCenter(centerListe);
@@ -325,42 +332,92 @@ public class SimpleLearnerGUI extends Application {
     class BtnNeuesElement {
 
         Button btnNeuesElement;
+        String hierarchie;
+        String hierarchieName;
 
-        BtnNeuesElement(String input) {
+        BtnNeuesElement(String hierarchie, String hierarchieName) {// string Hierarchie; string Hierarchie-Name;
+            this.hierarchie = hierarchie;
+            System.out.println("btnNeuesElement hierarchie "+this.hierarchie);
+            this.hierarchieName = hierarchieName;
+            System.out.println("btnNeuesElement hierarchieName "+this.hierarchieName);            
+            
             btnNeuesElement = new Button();
-            setBtnNeuesElement(input);
+            setBtnNeuesElement(hierarchie, hierarchieName);
         }
 
-        void setBtnNeuesElement(String input) {
+        void setBtnNeuesElement(String hierarchie, String hierarchieName) {
+            switch(hierarchie){
+                case "Kategorie": 
+                    btnNeuesElement.setText("Neue "+hierarchie);
+                    break;
+                case "Modul": 
+                    btnNeuesElement.setText("Neues "+hierarchie);
+                    break;
+                case "Verzeich": 
+                    btnNeuesElement.setText("Neues "+hierarchie+"nis");
+                    break;
+                default: btnNeuesElement.setText("TestString");
+            };
+
             btnNeuesElement.setPrefWidth(scene.getWidth());
             btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
-                    //DislogFenster für Namenseingabe
-                    //-> Erstellung einer neuen Aufgabe
-
-                    System.out.println(scene.getWidth());
-
-                    if (input.equals("Kategorie")) {
+                    //DisplayFenster für Namenseingabe
+                    createBtnNewElementNameWindow();
+                    
+                    System.out.println(">>> jetzige Hierarchie" + hierarchie + " " + hierarchieName);
+                    if (hierarchie.equals("Kategorie")) {
                         fillKategorie();
-                        System.out.println(">>> " + input);
-                        btnNeuesElement.setText("Neue Kategorie");
-                    } else if (input.equals("Modul")) {
-                        fillModul(kategorieString);
-                        System.out.println(">>> " + input);
-                        btnNeuesElement.setText("Neues Modul");
-                    } else if (input.equals("Verzeich")) {
-                        fillVerzeich();
-                        System.out.println(">>> " + input);
-                        btnNeuesElement.setText("Neues Verzeich");
+                    } else if (hierarchie.equals("Modul")) {
+                        fillModul(kategorieString, hierarchieName);
+                    } else if (hierarchie.equals("Verzeich")) {
+                        fillVerzeich(hierarchieName);
                     }
-
-                    //fillVerzeich();
-                    System.out.println("Neues Element wird erstellt");
+                    
+                    System.out.println("Neues Element wurde erstellt");
+                    System.out.println("------------------------------");
                 }
             });
         }
+        public void createBtnNewElementNameWindow(){
+            System.out.println("------------------------------");
+            System.out.println("Fenster fuer Namen des neuen Element:");
+                        
+            Stage tempStage = new Stage();
+            
+            tempStage.setTitle("Neuer Quizname");
 
+            BorderPane borderPane = new BorderPane();
+            TextField tf = new TextField();
+            tf.setPromptText("Hier Blocknamen eintragen");
+            Button btnAbbrechen = new Button("Abbrechen");
+            Button btnBestaetigen = new Button("Bestaetigen");
+
+            btnAbbrechen.setOnAction(e2 -> {
+                tempStage.close();
+            });
+            btnBestaetigen.setOnAction(e3 -> {
+                System.out.println("Name des neuen Elementes: ");   //Name des neuen Elementes
+                System.out.println("    "+tf.getText());
+                System.out.println("Stellung der Hierarchie: ");    //geoeffnette Hierarchie
+                System.out.println("    "+hierarchie);
+                System.out.println("Name der Hierarchie: ");        //Name dieser Hierarchie
+                System.out.println("    "+hierarchieName);
+                System.out.println("------------------------------");
+                            
+                tempStage.close();
+            });
+            borderPane.setTop(tf);
+            borderPane.setLeft(btnAbbrechen);
+            borderPane.setRight(btnBestaetigen);
+                                
+            Scene tempScene = new Scene(borderPane, 300, 300);
+
+            tempStage.setScene(tempScene);
+            tempStage.show();
+        }
+                    
         Button getBtnNeuesElement() {
             return btnNeuesElement;
         }
@@ -372,6 +429,9 @@ public class SimpleLearnerGUI extends Application {
         HauptPane.setRight(hauptRight);
         HauptPane.setBottom(hauptBottom);
         HauptPane.setCenter(hauptCenter);
+
+// Später löschen        
+System.out.println("buildMainPane: " + hString);
 
         fillKategorie();
     }
@@ -420,10 +480,44 @@ public class SimpleLearnerGUI extends Application {
         }
 
         //centerListe.getChildren().add(new KategorieButton("Kategorie 0", 0).getKategorieButton());
-        centerListe.getChildren().add(new BtnNeuesElement("Kategorie").getBtnNeuesElement());
+        centerListe.getChildren().add(new BtnNeuesElement("Kategorie", kategorieString).getBtnNeuesElement());
     }
+    
+    void fillModul(String kategorieString, String modulName) { //Parameterübergabe für Anzahl der Aufgaben
+        // -> Anzahl aus Datenbank
+        // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
 
-    void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
+
+        
+        centerListe.getChildren().setAll();
+
+        if (filter.getText().isEmpty()) {
+            try {
+                sql.loadKategorien(kategorieString);
+                System.out.println(getGName() + "adsgonj " + kategorieString);
+            } catch (SQLException exc) {
+                System.out.println(exc.getMessage());
+            }
+        } else {
+            try {
+                sql.loadFilteredKategorien(kategorieString, filter.getText());
+                System.out.println(getGName() + "adsgonj " + kategorieString);
+            } catch (SQLException exc) {
+                System.out.println(exc.getMessage());
+            }
+        }
+        for (int i = 0; i < sql.kategorien.size(); i++) {
+            System.out.println("sdgvhsklgga" + sql.kategorien.get(i) + " " + i);
+            centerListe.getChildren().add(new ModulButton(sql.kategorien.get(i), i).getModulButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
+        }
+        //centerListe.getChildren().add(new ModulButton("Modul 0", 0).getModulButton());
+        //centerListe.getChildren().add(new ModulButton("Modul 1", 1).getModulButton());
+        //centerListe.getChildren().add(new ModulButton("Modul 2", 2).getModulButton());
+
+        centerListe.getChildren().add(new BtnNeuesElement("Modul", modulName).getBtnNeuesElement());
+    }
+    
+    void fillVerzeich(String verzeichName) { //Parameterübergabe für Anzahl der Aufgaben
         // -> Anzahl aus Datenbank
         // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
 
@@ -464,161 +558,18 @@ public class SimpleLearnerGUI extends Application {
                 centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
         }
-        centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());
+        centerListe.getChildren().add(new BtnNeuesElement("Verzeich",verzeichName).getBtnNeuesElement());
 
     }
 
-    void fillModul(String kategorieString) { //Parameterübergabe für Anzahl der Aufgaben
-        // -> Anzahl aus Datenbank
-        // Liste leeren (Liste soll sich neu füllen, nicht erweitern)
 
-        centerListe.getChildren().setAll();
-
-        if (filter.getText().isEmpty()) {
-            try {
-                sql.loadKategorien(kategorieString);
-                System.out.println(getGName() + "adsgonj " + kategorieString);
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
-            }
-        } else {
-            try {
-                sql.loadFilteredKategorien(kategorieString, filter.getText());
-                System.out.println(getGName() + "adsgonj " + kategorieString);
-            } catch (SQLException exc) {
-                System.out.println(exc.getMessage());
-            }
-        }
-        for (int i = 0; i < sql.kategorien.size(); i++) {
-            System.out.println("sdgvhsklgga" + sql.kategorien.get(i) + " " + i);
-            centerListe.getChildren().add(new ModulButton(sql.kategorien.get(i), i).getModulButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
-        }
-        //centerListe.getChildren().add(new ModulButton("Modul 0", 0).getModulButton());
-        //centerListe.getChildren().add(new ModulButton("Modul 1", 1).getModulButton());
-        //centerListe.getChildren().add(new ModulButton("Modul 2", 2).getModulButton());
-
-        centerListe.getChildren().add(new BtnNeuesElement("Modul").getBtnNeuesElement());
-    }
 
     BorderPane getHauptPane() {
         return HauptPane;
 
     }
 
-// Verzeichnis-Element
-//
-//
-//
-    class VerzeichnisButton {
 
-        String btnLabel;
-        Button btnName;
-        Button btnLoeschen;
-        int aufgabenNummer;
-
-        VerzeichnisButton(String input, int nummer) {
-            System.out.println("Verzeichnis: Lehrer angemeldet? " + isTeacher());
-            btnLabel = input;
-            aufgabenNummer = nummer;
-            System.out.println("Aufgabennummer " + aufgabenNummer);
-            btnName = new Button(input);
-            btnName.getStyleClass().add("VerzeichnisButton");
-            System.out.println(btnName.getStyleClass());
-            btnName.setPrefWidth(scene.getWidth());
-            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
-            setBtnName(TestStage);
-        }
-
-        void setBtnName(Stage tempStage) {
-            ContextMenu cMenu = new ContextMenu();
-            MenuItem itemDelete = new MenuItem("Lösche Aufgabenblock");
-            MenuItem itemShow = new MenuItem("Zeige Schüler");
-            cMenu.getItems().addAll(itemDelete, itemShow);
-
-            itemDelete.setOnAction(ae -> {
-                try {
-                    System.out.println(btnLabel + loginName.getText() + modulString);
-                    sql.deleteBlock(btnLabel, loginName.getText(), modulString);
-                    fillVerzeich();
-                } catch (SQLException exc) {
-                    System.out.println(exc.getMessage());
-                }
-            });
-            itemShow.setOnAction(ae2 -> {
-                Stage pdfStage = new Stage();
-                BorderPane bp = new BorderPane();
-                VBox vbSchueler = new VBox();
-                bp.setCenter(vbSchueler);
-                VBox vbMehr = new VBox();
-                bp.setLeft(vbMehr);
-                try {
-                    System.out.println(btnLabel + loginName.getText());
-                    sql.loadAbsolvierteSchueler(btnLabel, loginName.getText());
-                    for (int i = 0; i < sql.absolvierteSchueler.size(); i++) {
-                        Button b = new Button(sql.absolvierteSchueler.get(i));
-                        b.setPrefWidth(100);
-                        b.setOnAction(e -> {
-                            FileChooser fc = new FileChooser();
-                            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
-                            File f = fc.showSaveDialog(new Stage());
-                            System.out.println(f);
-                            if (f != null && !f.getName().contains(".")) {
-                                f = new File(f.getAbsolutePath() + ".pdf");
-                            }
-                            if (f != null) {
-                                try {
-                                    EvaluationsPdf pdf = new EvaluationsPdf(sql, f);
-                                    pdf.createTable(btnLabel, loginName.getText(), b.getText());
-                                } catch (IOException | DocumentException | SQLException exc) {
-                                    System.out.println(exc.getMessage());
-                                }
-                            }
-                        });
-                        vbSchueler.getChildren().add(b);
-                    }
-                    Scene scene = new Scene(bp);
-                    pdfStage.setScene(scene);
-                    pdfStage.show();
-                } catch (SQLException exc) {
-                    System.out.println(exc.getMessage());
-                }
-            });
-            btnName.setOnMousePressed((MouseEvent e) -> {
-                if (isTeacher && e.isSecondaryButtonDown()) {
-                    cMenu.show(tempStage, e.getScreenX(), e.getScreenY());
-                } else {
-                    System.out.println("Aufgabeneinheit wird geöffnet:");
-                    System.out.println("    gewählte Einheit: " + btnLabel);
-                    System.out.println("------------------------------");
-                    start = System.currentTimeMillis();
-                    aufgabenNummer = 0;
-                    try {
-                        sql.loadFragen(btnLabel);
-                    } catch (SQLException exc) {
-                        System.out.println(exc.getMessage());
-                    }
-                    setBlockPar(btnLabel);
-                    setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer)));
-                    blockName.setText(btnLabel);
-                    fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
-                    aufgabeText.setText(sql.fragen.get(aufgabenNummer));
-
-                    //buildAufgabenPane();// Parameter
-                    scene.setRoot(getAufgabenPane());
-                    tempStage.setScene(scene);
-                    tempStage.setTitle("SimpleLearner - Aufgabe-Nr. " + "***");
-                    tempStage.show();
-                }
-            });
-        }
-
-        BorderPane getVerzeichnisButton() {
-            BorderPane temp = new BorderPane();
-            btnName.setPrefWidth(scene.getWidth());
-            temp.setLeft(btnName);
-            return temp;
-        }
-    }
 
 //Kategorie-Element
 //
@@ -662,8 +613,11 @@ public class SimpleLearnerGUI extends Application {
             btnName.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
-                    System.out.println("Modul wird geöffnet:");
-                    System.out.println("    gewählte Einheit: " + btnLabel);
+                    System.out.println("------------------------------");
+                    hStringName=btnLabel;
+                    System.out.println("Modul wird geoeffnet:");                    
+                    System.out.println("    "+btnLabel);
+                    System.out.println("    "+kategorieString); // leer. da höchste Hierarchie
                     System.out.println("------------------------------");
 
                     aufgabenNummer = 0;
@@ -671,8 +625,8 @@ public class SimpleLearnerGUI extends Application {
                     label.setText(btnLabel);
                     kategorieString = btnLabel;
                     hString = "Modul";
-                    fillModul(kategorieString);
-                    tempStage.setTitle("SimpleLearner - Modul - " + "***");
+                    fillModul(kategorieString, btnLabel);
+                    tempStage.setTitle("SimpleLearner - Modul");
                     tempStage.show();
                 }
             });
@@ -741,6 +695,8 @@ public class SimpleLearnerGUI extends Application {
             btnName.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
+                    hStringName = btnLabel;
+                    System.out.println("gewähltes Modul: "+btnLabel);
                     System.out.println("Modul wird geöffnet:");
                     System.out.println("    gewählte Einheit: " + btnLabel);
                     System.out.println("------------------------------");
@@ -765,7 +721,7 @@ public class SimpleLearnerGUI extends Application {
                     label.setText(btnLabel);
                     modulString = btnLabel;
                     hString = "Verzeichnis";
-                    fillVerzeich();
+                    fillVerzeich(btnLabel);
                     System.out.println("label : " + getGName());
                     //setScene(getAufgabenPane());
                     //tempStage.setScene(scene);
@@ -786,6 +742,123 @@ public class SimpleLearnerGUI extends Application {
                 btnAbmelden.setRight(btnLöschen);
             }
              */
+            return temp;
+        }
+    }
+    
+    // Verzeichnis-Element
+//
+//
+//
+    class VerzeichnisButton {
+
+        String btnLabel;
+        Button btnName;
+        Button btnLoeschen;
+        int aufgabenNummer;
+
+        VerzeichnisButton(String input, int nummer) {
+            System.out.println("Verzeichnis: Lehrer angemeldet? " + isTeacher());
+            btnLabel = input;
+            aufgabenNummer = nummer;
+            System.out.println("Aufgabennummer " + aufgabenNummer);
+            btnName = new Button(input);
+            btnName.getStyleClass().add("VerzeichnisButton");
+            System.out.println(btnName.getStyleClass());
+            btnName.setPrefWidth(scene.getWidth());
+            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
+            setBtnName(TestStage);
+        }
+
+        void setBtnName(Stage tempStage) {
+            ContextMenu cMenu = new ContextMenu();
+            MenuItem itemDelete = new MenuItem("Lösche Aufgabenblock");
+            MenuItem itemShow = new MenuItem("Zeige Schüler");
+            cMenu.getItems().addAll(itemDelete, itemShow);
+
+            itemDelete.setOnAction(ae -> {
+                try {
+                    System.out.println(btnLabel + loginName.getText() + modulString);
+                    sql.deleteBlock(btnLabel, loginName.getText(), modulString);
+                    fillVerzeich(btnLabel);
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            });
+            itemShow.setOnAction(ae2 -> {
+                Stage pdfStage = new Stage();
+                BorderPane bp = new BorderPane();
+                VBox vbSchueler = new VBox();
+                bp.setCenter(vbSchueler);
+                VBox vbMehr = new VBox();
+                bp.setLeft(vbMehr);
+                try {
+                    System.out.println(btnLabel + loginName.getText());
+                    sql.loadAbsolvierteSchueler(btnLabel, loginName.getText());
+                    for (int i = 0; i < sql.absolvierteSchueler.size(); i++) {
+                        Button b = new Button(sql.absolvierteSchueler.get(i));
+                        b.setPrefWidth(100);
+                        b.setOnAction(e -> {
+                            FileChooser fc = new FileChooser();
+                            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
+                            File f = fc.showSaveDialog(new Stage());
+                            System.out.println(f);
+                            if (f != null && !f.getName().contains(".")) {
+                                f = new File(f.getAbsolutePath() + ".pdf");
+                            }
+                            if (f != null) {
+                                try {
+                                    EvaluationsPdf pdf = new EvaluationsPdf(sql, f);
+                                    pdf.createTable(btnLabel, loginName.getText(), b.getText());
+                                } catch (IOException | DocumentException | SQLException exc) {
+                                    System.out.println(exc.getMessage());
+                                }
+                            }
+                        });
+                        vbSchueler.getChildren().add(b);
+                    }
+                    Scene scene = new Scene(bp);
+                    pdfStage.setScene(scene);
+                    pdfStage.show();
+                } catch (SQLException exc) {
+                    System.out.println(exc.getMessage());
+                }
+            });
+            btnName.setOnMousePressed((MouseEvent e) -> {
+                hStringName = btnLabel;
+                System.out.println("Ausgewähltes Verzeichnis: "+ btnLabel);
+                if (isTeacher && e.isSecondaryButtonDown()) {
+                    cMenu.show(tempStage, e.getScreenX(), e.getScreenY());
+                } else {
+                    System.out.println("Aufgabeneinheit wird geöffnet:");
+                    System.out.println("    gewählte Einheit: " + btnLabel);
+                    System.out.println("------------------------------");
+                    start = System.currentTimeMillis();
+                    aufgabenNummer = 0;
+                    try {
+                        sql.loadFragen(btnLabel);
+                    } catch (SQLException exc) {
+                        System.out.println(exc.getMessage());
+                    }
+                    setBlockPar(btnLabel);
+                    setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer)));
+                    blockName.setText(btnLabel);
+                    fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
+                    aufgabeText.setText(sql.fragen.get(aufgabenNummer));
+
+                    //buildAufgabenPane();// Parameter
+                    scene.setRoot(getAufgabenPane());
+                    tempStage.setScene(scene);
+                    tempStage.setTitle("SimpleLearner - Aufgabe-Nr. " + "***");
+                    tempStage.show();
+                }
+            });
+        }
+
+        BorderPane getVerzeichnisButton() {
+            BorderPane temp = new BorderPane();
+            btnName.setPrefWidth(scene.getWidth());
+            temp.setLeft(btnName);
             return temp;
         }
     }
@@ -1069,7 +1142,7 @@ public class SimpleLearnerGUI extends Application {
         btnBlockZurueck.setOnAction((ActionEvent e) -> {
             System.out.println("aufgabe beendet");
             //sql.endAufgabe();
-            fillVerzeich();
+            fillVerzeich(modulString);
             scene.setRoot(getHauptPane());
             tempStage.setScene(scene);
             tempStage.setTitle("SimpleLearner - Kategorie");
@@ -1239,7 +1312,7 @@ public class SimpleLearnerGUI extends Application {
                 auswertungAntwort.setText("");
                 navigator.getChildren().remove(1, 3);
                 navigator.add(btnBestaetigen, 0, 1);
-                fillVerzeich();
+                fillVerzeich(hStringName);
                 scene.setRoot(getHauptPane());
                 tempStage.setScene(scene);
                 tempStage.setTitle("SimpleLearner - Kategorie");

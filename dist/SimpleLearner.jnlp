@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="SimpleLearner.jar" size="1004860" download="eager" />
+    <jar href="SimpleLearner.jar" size="25427431" download="eager" />
     <jar href="lib\itext5-itext-pdfa-5.5.12-javadoc.jar" size="441605" download="eager" />
     <jar href="lib\itext5-itext-pdfa-5.5.12-sources.jar" size="124228" download="eager" />
     <jar href="lib\itext5-itext-pdfa-5.5.12.jar" size="118379" download="eager" />
