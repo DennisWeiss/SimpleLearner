@@ -590,7 +590,7 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println("Aufgabeneinheit wird geöffnet:");
                     System.out.println("    gewählte Einheit: " + btnLabel);
                     System.out.println("------------------------------");
-
+                    start = System.currentTimeMillis();
                     aufgabenNummer = 0;
                     try {
                         sql.loadFragen(btnLabel);
@@ -796,6 +796,8 @@ public class SimpleLearnerGUI extends Application {
 //
     String blockPar = null;
     int nummerFragePar = 0;
+    long start;
+    long end;
 
     BorderPane AufgabenKopf = new BorderPane();
     HBox hbBlockName = new HBox();
@@ -1162,6 +1164,8 @@ public class SimpleLearnerGUI extends Application {
                     if (antwort != null) {
                         try {
                             sql.startBlock(blockPar, loginName.getText());
+                            end = System.currentTimeMillis() - start;
+                            System.out.println(end); //Zeitmessen funktioniert und muss nur noch übergeben werden an checkAntwort
                             if (sql.checkAntwort(blockPar, loginName.getText(), sql.fragen.get(nummerFragePar), antwort) == true) {
                                 System.out.println("richtig");
                                 auswertungAntwort.setText("richtig");
@@ -1207,6 +1211,7 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("    Neue Aufgabe: ");
                 System.out.println("------------------------------");
 
+                start = System.currentTimeMillis();
                 // exception durch erneutes Einfügen von btnBestätigen
                 // -> btnBestätigen löschen und erneut einfügen
                 navigator.getChildren().remove(1, 3); // btnBestätigen und btnNächsteAufgabe löschen
