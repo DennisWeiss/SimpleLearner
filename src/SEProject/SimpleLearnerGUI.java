@@ -247,7 +247,7 @@ public class SimpleLearnerGUI extends Application {
     String hString = null;
 
     void setTopMenu() {
-        hauptTop.setId("hauptTop");
+        hauptTop.setId("mainTopMenu");
         filter.setPromptText("Filter");
         filter.setFocusTraversable(false);
         filter.setOnKeyReleased(e -> {
@@ -260,8 +260,9 @@ public class SimpleLearnerGUI extends Application {
             }
         });
         Button btnAbmelden = new Button("Abmelden");
+        btnAbmelden.setId("btnLogout");
         Button btnZurueck = new Button("Zurueck");
-        btnZurueck.setId("hZurueck");
+        btnZurueck.setId("btnBack");
         HBox hbButtons = new HBox();
         hbButtons.getChildren().addAll(btnZurueck, btnAbmelden);
         hauptTop.setLeft(filter);
@@ -274,6 +275,8 @@ public class SimpleLearnerGUI extends Application {
             System.out.println("Abmeldung startet");
             System.out.println("-----------------");
 
+            loginName.setText("");
+            loginPassword.setText("");
             scene.setRoot(getLoginPane());
 
             Stage tempStage = TestStage;
