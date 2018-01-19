@@ -54,10 +54,10 @@ public class SimpleLearnerGUI extends Application {
         loadStyleSheets();
         // initialisiere AnmeldungPane
         buildLoginPane();
-        setBtnLogin(TestStage);
+        setBtnLogin(mainStage);
         scene.setRoot(getLoginPane());
 
-        primaryStage = TestStage;
+        primaryStage = mainStage;
         primaryStage.setTitle("SimpleTest - Anmeldung");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -136,10 +136,10 @@ public class SimpleLearnerGUI extends Application {
         temp.setCenter(loginContainer);
 
         Pane a1 = new Pane();
-        a1.setPrefHeight((scene.getHeight() /* -btnAbmelden.getHeight() */) / 2.5);
+        a1.setPrefHeight((scene.getHeight() /* -btnLogout.getHeight() */) / 2.5);
 
         Pane a2 = new Pane();
-        a2.setPrefHeight((scene.getHeight() /* -btnAbmelden.getHeight() */) / 2.5);
+        a2.setPrefHeight((scene.getHeight() /* -btnLogout.getHeight() */) / 2.5);
 
         Pane b1 = new Pane();
         b1.setPrefWidth(150);
@@ -182,27 +182,27 @@ public class SimpleLearnerGUI extends Application {
 
                         System.out.println("    Lehrer: " + isTeacher());
                         hString = "Kategorie";
-                        scene.setRoot(getHauptPane());
+                        scene.setRoot(getMainContainer());
                         tempStage.setScene(scene);
                         tempStage.setTitle("SimpleLearner - Kategorie");
                         tempStage.show();
                         // initialisere MeldungPane
                         // initialisiere AufgabenPane
                         setBtnConfirmAnswer();
-                        setBtnNextTask(TestStage);
-                        setBtnConfirmQuiz(TestStage);
+                        setBtnNextTask(mainStage);
+                        setBtnConfirmQuiz(mainStage);
                         buildTaskPane();
                         setBtnBlockName();
-                        setBtnBack(TestStage);
+                        setBtnBack(mainStage);
                         setBtnNewQuestionText();
                         setVBoxTaskContainer();
                         setBtnLoadAnswerChoice();
-                        //initialisiere HauptPane  
+                        //initialisiere mainContainer  
                         setTopMenu();
                         //setHauptLeft(); setHauptRight(); setHauptBottom(); //zurzeit nicht beötigt
                         setMainContainer();
                         //changeHauptCenter(getAufgabenPane()); //Funktion auskommentiert (Z.214)
-                        //setScene(getHauptPane());
+                        //setScene(getMainContainer());
                         buildMainPane();
                         fillKategorie();
                     } else {
@@ -229,17 +229,17 @@ public class SimpleLearnerGUI extends Application {
         return loginPane;
     }
 
-// HauptPane
-    Label label = new Label("");
+// mainContainer
+    Label labelDirectory = new Label("");
     TextField filter = new TextField();
-    BorderPane hauptTop = new BorderPane();
+    BorderPane menuContainer = new BorderPane();
     Pane hauptLeft = new Pane();
     BorderPane hauptRight = new BorderPane();
     BorderPane hauptBottom = new BorderPane();
     BorderPane hauptCenter = new BorderPane();
     VBox centerListe = new VBox();
     Button btnNeuesElement = new Button("Neues Element");
-    BorderPane HauptPane = new BorderPane();
+    BorderPane mainContainer = new BorderPane();
 
     //SpeicherStrings
     String kategorieString = null;
@@ -247,7 +247,7 @@ public class SimpleLearnerGUI extends Application {
     String hString = null;
 
     void setTopMenu() {
-        hauptTop.setId("mainTopMenu");
+        menuContainer.setId("mainTopMenu");
         filter.setPromptText("Filter");
         filter.setFocusTraversable(false);
         filter.setOnKeyReleased(e -> {
@@ -259,16 +259,16 @@ public class SimpleLearnerGUI extends Application {
                 fillVerzeich();
             }
         });
-        Button btnAbmelden = new Button("Abmelden");
-        btnAbmelden.setId("btnLogout");
-        Button btnZurueck = new Button("Zurueck");
-        btnZurueck.setId("btnBack");
+        Button btnLogout = new Button("Abmelden");
+        btnLogout.setId("btnLogout");
+        Button btnBack = new Button("Zurueck");
+        btnBack.setId("btnBack");
         HBox hbButtons = new HBox();
-        hbButtons.getChildren().addAll(btnZurueck, btnAbmelden);
-        hauptTop.setLeft(filter);
-        hauptTop.setCenter(label);
-        hauptTop.setRight(hbButtons);
-        btnAbmelden.setOnAction((ActionEvent e) -> {
+        hbButtons.getChildren().addAll(btnBack, btnLogout);
+        menuContainer.setLeft(filter);
+        menuContainer.setCenter(labelDirectory);
+        menuContainer.setRight(hbButtons);
+        btnLogout.setOnAction((ActionEvent e) -> {
             //DislogFenster für Namenseingabe
             //-> Erstellung einer neuen Aufgabe
             System.out.println("-----------------");
@@ -279,12 +279,12 @@ public class SimpleLearnerGUI extends Application {
             loginPassword.setText("");
             scene.setRoot(getLoginPane());
 
-            Stage tempStage = TestStage;
+            Stage tempStage = mainStage;
             tempStage.setTitle("SimpleTest - Anmeldung");
             tempStage.setScene(scene);
             tempStage.show();
         });
-        btnZurueck.setOnAction((ActionEvent e) -> {
+        btnBack.setOnAction((ActionEvent e) -> {
             if (hString.equals("Modul")) {
                 fillKategorie();
             } else if (hString.equals("Verzeichnis")) {
@@ -323,24 +323,25 @@ public class SimpleLearnerGUI extends Application {
         hauptCenter.setCenter(centerListe);
     }
 
-    class BtnNeuesElement {
+    class BtnNewElement {
 
-        Button btnNeuesElement;
+        Button btnNewElement;
 
-        BtnNeuesElement(String input) {
-            btnNeuesElement = new Button();
+        BtnNewElement(String input) {
+            btnNewElement = new Button();
             if (input.equals("Modul")) {
-                btnNeuesElement.setText("Neue Kategorie");
+                btnNewElement.setText("Neue Kategorie");
             }
             if (input.equals("Verzeich")) {
-                btnNeuesElement.setText("Neuer Aufgabenblock");
+                btnNewElement.setText("Neuer Aufgabenblock");
             }
-            setBtnNeuesElement(input);
+            setBtnNewElement(input);
         }
 
-        void setBtnNeuesElement(String input) {
-            btnNeuesElement.setPrefWidth(scene.getWidth());
-            btnNeuesElement.setOnAction(new EventHandler<ActionEvent>() {
+        void setBtnNewElement(String input) {
+            btnNewElement.setPrefWidth(scene.getWidth());
+            btnNewElement.setId("btnNewElement");
+            btnNewElement.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
                     //DislogFenster für Namenseingabe
@@ -354,26 +355,26 @@ public class SimpleLearnerGUI extends Application {
                         tempStage.setTitle("Neue Kategorie");
 
                         BorderPane borderPane = new BorderPane();
-                        TextField tf = new TextField();
-                        tf.setPromptText("Hier Kategorienamen eintragen");
-                        Button btnAbbrechen = new Button("Abbrechen");
-                        Button btnBestaetigen = new Button("Bestaetigen");
+                        TextField textFieldNewCategory = new TextField();
+                        textFieldNewCategory.setPromptText("Hier Kategorienamen eintragen");
+                        Button btnCancelCategory = new Button("Abbrechen");
+                        Button btnConfirmCategory = new Button("Bestaetigen");
 
-                        btnAbbrechen.setOnAction(e2 -> {
+                        btnCancelCategory.setOnAction(e2 -> {
                             tempStage.close();
                         });
-                        btnBestaetigen.setOnAction(e3 -> {
+                        btnConfirmCategory.setOnAction(e3 -> {
                             try {
-                                sql.createKategorie(tf.getText(), kategorieString);
+                                sql.createKategorie(textFieldNewCategory.getText(), kategorieString);
                                 fillModul(kategorieString);
                             } catch (SQLException exc) {
                                 System.out.println(exc.getMessage());
                             }
                             tempStage.close();
                         });
-                        borderPane.setTop(tf);
-                        borderPane.setLeft(btnAbbrechen);
-                        borderPane.setRight(btnBestaetigen);
+                        borderPane.setTop(textFieldNewCategory);
+                        borderPane.setLeft(btnCancelCategory);
+                        borderPane.setRight(btnConfirmCategory);
 
                         Scene tempScene = new Scene(borderPane, 300, 300);
 
@@ -385,26 +386,26 @@ public class SimpleLearnerGUI extends Application {
                         tempStage.setTitle("Neuer Block");
 
                         BorderPane borderPane = new BorderPane();
-                        TextField tf = new TextField();
-                        tf.setPromptText("Hier Blocknamen eintragen");
-                        Button btnAbbrechen = new Button("Abbrechen");
-                        Button btnBestaetigen = new Button("Bestaetigen");
+                        TextField textFieldNewQuiz = new TextField();
+                        textFieldNewQuiz.setPromptText("Hier Blocknamen eintragen");
+                        Button btnCancelQuiz = new Button("Abbrechen");
+                        Button btnConfirmNewQuiz = new Button("Bestaetigen");
 
-                        btnAbbrechen.setOnAction(e2 -> {
+                        btnCancelQuiz.setOnAction(e2 -> {
                             tempStage.close();
                         });
-                        btnBestaetigen.setOnAction(e3 -> {
+                        btnConfirmNewQuiz.setOnAction(e3 -> {
                             try {
-                                sql.createBlock(tf.getText(), loginName.getText(), modulString);
+                                sql.createBlock(textFieldNewQuiz.getText(), loginName.getText(), modulString);
                                 fillVerzeich();
                             } catch (SQLException exc) {
                                 System.out.println(exc.getMessage());
                             }
                             tempStage.close();
                         });
-                        borderPane.setTop(tf);
-                        borderPane.setLeft(btnAbbrechen);
-                        borderPane.setRight(btnBestaetigen);
+                        borderPane.setTop(textFieldNewQuiz);
+                        borderPane.setLeft(btnCancelQuiz);
+                        borderPane.setRight(btnConfirmNewQuiz);
 
                         Scene tempScene = new Scene(borderPane, 300, 300);
 
@@ -419,16 +420,16 @@ public class SimpleLearnerGUI extends Application {
         }
 
         Button getBtnNeuesElement() {
-            return btnNeuesElement;
+            return btnNewElement;
         }
     }
 
     void buildMainPane() {
-        HauptPane.setTop(hauptTop);
-        HauptPane.setLeft(hauptLeft);
-        HauptPane.setRight(hauptRight);
-        HauptPane.setBottom(hauptBottom);
-        HauptPane.setCenter(hauptCenter);
+        mainContainer.setTop(menuContainer);
+        mainContainer.setLeft(hauptLeft);
+        mainContainer.setRight(hauptRight);
+        mainContainer.setBottom(hauptBottom);
+        mainContainer.setCenter(hauptCenter);
 
         fillKategorie();
     }
@@ -455,7 +456,7 @@ public class SimpleLearnerGUI extends Application {
                 }
             }
             for (int i = 0; i < sql.faecher.size(); i++) {
-                centerListe.getChildren().add(new KategorieButton(sql.faecher.get(i), i).getKategorieButton());
+                centerListe.getChildren().add(new SubjectButton(sql.faecher.get(i), i).getKategorieButton());
             }
         } else {
             if (this.filter.getText().isEmpty()) {
@@ -472,12 +473,12 @@ public class SimpleLearnerGUI extends Application {
                 }
             }
             for (int i = 0; i < sql.faecher.size(); i++) {
-                centerListe.getChildren().add(new KategorieButton(sql.faecher.get(i), i).getKategorieButton());
+                centerListe.getChildren().add(new SubjectButton(sql.faecher.get(i), i).getKategorieButton());
             }
         }
 
-        //centerListe.getChildren().add(new KategorieButton("Kategorie 0", 0).getKategorieButton());
-        //centerListe.getChildren().add(new BtnNeuesElement("Kategorie").getBtnNeuesElement());
+        //centerListe.getChildren().add(new SubjectButton("Kategorie 0", 0).getKategorieButton());
+        //centerListe.getChildren().add(new BtnNewElement("Kategorie").getBtnNeuesElement());
     }
 
     void fillVerzeich() { //Parameterübergabe für Anzahl der Aufgaben
@@ -501,9 +502,9 @@ public class SimpleLearnerGUI extends Application {
                 }
             }
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
-                centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
+                centerListe.getChildren().add(new QuizButton(sql.aufgabenbloecke.get(i), i).getQuizButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
-            centerListe.getChildren().add(new BtnNeuesElement("Verzeich").getBtnNeuesElement());
+            centerListe.getChildren().add(new BtnNewElement("Verzeich").getBtnNeuesElement());
         } else {
             if (filter.getText().isEmpty()) {
                 try {
@@ -519,7 +520,7 @@ public class SimpleLearnerGUI extends Application {
                 }
             }
             for (int i = 0; i < sql.aufgabenbloecke.size(); i++) {
-                centerListe.getChildren().add(new VerzeichnisButton(sql.aufgabenbloecke.get(i), i).getVerzeichnisButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
+                centerListe.getChildren().add(new QuizButton(sql.aufgabenbloecke.get(i), i).getQuizButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
             }
         }
 
@@ -548,19 +549,19 @@ public class SimpleLearnerGUI extends Application {
         }
         for (int i = 0; i < sql.kategorien.size(); i++) {
             System.out.println("sdgvhsklgga" + sql.kategorien.get(i) + " " + i);
-            centerListe.getChildren().add(new ModulButton(sql.kategorien.get(i), i).getModulButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
+            centerListe.getChildren().add(new CategoryButton(sql.kategorien.get(i), i).getCategoryButton()); // ersetze ("SimpleLearnerGUI "+i) mit Aufgabenname
         }
-        //centerListe.getChildren().add(new ModulButton("Modul 0", 0).getModulButton());
-        //centerListe.getChildren().add(new ModulButton("Modul 1", 1).getModulButton());
-        //centerListe.getChildren().add(new ModulButton("Modul 2", 2).getModulButton());
+        //centerListe.getChildren().add(new CategoryButton("Modul 0", 0).getCategoryButton());
+        //centerListe.getChildren().add(new CategoryButton("Modul 1", 1).getCategoryButton());
+        //centerListe.getChildren().add(new CategoryButton("Modul 2", 2).getCategoryButton());
 
         if (isTeacher) {
-            centerListe.getChildren().add(new BtnNeuesElement("Modul").getBtnNeuesElement());
+            centerListe.getChildren().add(new BtnNewElement("Modul").getBtnNeuesElement());
         }
     }
 
-    BorderPane getHauptPane() {
-        return HauptPane;
+    BorderPane getMainContainer() {
+        return mainContainer;
 
     }
 
@@ -568,24 +569,23 @@ public class SimpleLearnerGUI extends Application {
 //
 //
 //
-    class VerzeichnisButton {
+    class QuizButton {
 
-        String btnLabel;
-        Button btnName;
-        Button btnLoeschen;
-        int aufgabenNummer;
+        String btnQuizName;
+        Button btnQuiz;
+        int taskNumber;
 
-        VerzeichnisButton(String input, int nummer) {
+        QuizButton(String input, int nummer) {
             System.out.println("Verzeichnis: Lehrer angemeldet? " + isTeacher());
-            btnLabel = input;
-            aufgabenNummer = nummer;
-            System.out.println("Aufgabennummer " + aufgabenNummer);
-            btnName = new Button(input);
-            btnName.getStyleClass().add("VerzeichnisButton");
-            System.out.println(btnName.getStyleClass());
-            btnName.setPrefWidth(scene.getWidth());
-            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
-            setBtnName(TestStage);
+            btnQuizName = input;
+            taskNumber = nummer;
+            System.out.println("Aufgabennummer " + taskNumber);
+            btnQuiz = new Button(input);
+            btnQuiz.getStyleClass().add("VerzeichnisButton");
+            System.out.println(btnQuiz.getStyleClass());
+            btnQuiz.setPrefWidth(scene.getWidth());
+            btnQuiz.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
+            setBtnName(mainStage);
         }
 
         void setBtnName(Stage tempStage) {
@@ -596,8 +596,8 @@ public class SimpleLearnerGUI extends Application {
 
             itemDelete.setOnAction(ae -> {
                 try {
-                    System.out.println(btnLabel + loginName.getText() + modulString);
-                    sql.deleteBlock(btnLabel, loginName.getText(), modulString);
+                    System.out.println(btnQuizName + loginName.getText() + modulString);
+                    sql.deleteBlock(btnQuizName, loginName.getText(), modulString);
                     fillVerzeich();
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
@@ -606,17 +606,17 @@ public class SimpleLearnerGUI extends Application {
             itemShow.setOnAction(ae2 -> {
                 Stage pdfStage = new Stage();
                 BorderPane bp = new BorderPane();
-                VBox vbSchueler = new VBox();
-                bp.setCenter(vbSchueler);
-                VBox vbMehr = new VBox();
-                bp.setLeft(vbMehr);
+                VBox vbStudents = new VBox();
+                bp.setCenter(vbStudents);
+                //VBox vbMehr = new VBox();
+                //bp.setLeft(vbMehr);
                 try {
-                    System.out.println(btnLabel + loginName.getText());
-                    sql.loadAbsolvierteSchueler(btnLabel, loginName.getText());
+                    System.out.println(btnQuizName + loginName.getText());
+                    sql.loadAbsolvierteSchueler(btnQuizName, loginName.getText());
                     for (int i = 0; i < sql.absolvierteSchueler.size(); i++) {
-                        Button b = new Button(sql.absolvierteSchueler.get(i));
-                        b.setPrefWidth(100);
-                        b.setOnAction(e -> {
+                        Button btnStudentName = new Button(sql.absolvierteSchueler.get(i));
+                        btnStudentName.setPrefWidth(100);
+                        btnStudentName.setOnAction(e -> {
                             FileChooser fc = new FileChooser();
                             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
                             File f = fc.showSaveDialog(new Stage());
@@ -627,13 +627,13 @@ public class SimpleLearnerGUI extends Application {
                             if (f != null) {
                                 try {
                                     EvaluationsPdf pdf = new EvaluationsPdf(sql, f);
-                                    pdf.createTable(btnLabel, loginName.getText(), b.getText());
+                                    pdf.createTable(btnQuizName, loginName.getText(), btnStudentName.getText());
                                 } catch (IOException | DocumentException | SQLException exc) {
                                     System.out.println(exc.getMessage());
                                 }
                             }
                         });
-                        vbSchueler.getChildren().add(b);
+                        vbStudents.getChildren().add(btnStudentName);
                     }
                     Scene scene = new Scene(bp);
                     pdfStage.setScene(scene);
@@ -642,29 +642,29 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println(exc.getMessage());
                 }
             });
-            btnName.setOnMousePressed((MouseEvent e) -> {
+            btnQuiz.setOnMousePressed((MouseEvent e) -> {
                 if (isTeacher && e.isSecondaryButtonDown()) {
                     cMenu.show(tempStage, e.getScreenX(), e.getScreenY());
                 } else {
                     System.out.println("Aufgabeneinheit wird geöffnet:");
-                    System.out.println("    gewählte Einheit: " + btnLabel);
+                    System.out.println("    gewählte Einheit: " + btnQuizName);
                     System.out.println("------------------------------");
                     start = System.currentTimeMillis();
-                    aufgabenNummer = 0;
+                    taskNumber = 0;
                     try {
-                        sql.loadFragen(btnLabel);
+                        sql.loadFragen(btnQuizName);
                     } catch (SQLException exc) {
                         System.out.println(exc.getMessage());
                     }
                     if (sql.fragen.size() > 0) {
-                        setBlockPar(btnLabel);
-                        setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer)));
-                        blockName.setText(btnLabel);
-                        fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
-                        aufgabeText.setText(sql.fragen.get(aufgabenNummer));
+                        setBlockPar(btnQuizName);
+                        setFragePar(sql.fragen.indexOf(sql.fragen.get(taskNumber)));
+                        blockName.setText(btnQuizName);
+                        fillAntwortAuswahl(btnQuizName, sql.fragen.get(taskNumber));
+                        aufgabeText.setText(sql.fragen.get(taskNumber));
                     } else {
-                        setBlockPar(btnLabel);
-                        blockName.setText(btnLabel);
+                        setBlockPar(btnQuizName);
+                        blockName.setText(btnQuizName);
                         aufgabeText.setText(null);
                         fillAntwortAuswahl(null, null);
                     }
@@ -679,10 +679,10 @@ public class SimpleLearnerGUI extends Application {
             });
         }
 
-        BorderPane getVerzeichnisButton() {
+        BorderPane getQuizButton() {
             BorderPane temp = new BorderPane();
-            btnName.setPrefWidth(scene.getWidth());
-            temp.setLeft(btnName);
+            btnQuiz.setPrefWidth(scene.getWidth());
+            temp.setLeft(btnQuiz);
             return temp;
         }
     }
@@ -691,52 +691,37 @@ public class SimpleLearnerGUI extends Application {
 //
 //
 //
-    class KategorieButton {
+    class SubjectButton {
 
-        String btnLabel;
-        Button btnName;
-        Button btnLoeschen;
-        int aufgabenNummer;
+        String btnSubjectName;
+        Button btnSubject;
+        int taskNumber;
 
-        KategorieButton(String input, int nummer) {
+        SubjectButton(String input, int nummer) {
             System.out.println("Modul: Lehrer angemeldet? " + isTeacher());
-            btnLabel = input;
-            aufgabenNummer = nummer;
-            System.out.println("Kategorie " + aufgabenNummer);
-            btnName = new Button(input);
-            btnName.getStyleClass().add("KategorieButton");
-            System.out.println(btnName.getStyleClass());
-            setBtnName(TestStage);
+            btnSubjectName = input;
+            taskNumber = nummer;
+            System.out.println("Kategorie " + taskNumber);
+            btnSubject = new Button(input);
+            btnSubject.getStyleClass().add("KategorieButton");
+            System.out.println(btnSubject.getStyleClass());
+            setBtnName(mainStage);
 
-            btnLoeschen = new Button("Loeschen");
-            btnLoeschen.setStyle("-fx-background-color:rgb(255,50,50)");
             //btnLoeschen.setPrefWidth(100);
-            setBtnLoeschen(TestStage);
-        }
-
-        void setBtnLoeschen(Stage tempStage) {
-            btnLoeschen.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    //
-                    System.out.println("Element \"" + btnLabel + "\" wird gelöscht");
-                    //
-                }
-            });
         }
 
         void setBtnName(Stage tempStage) {
-            btnName.setOnAction(new EventHandler<ActionEvent>() {
+            btnSubject.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
                     System.out.println("Modul wird geöffnet:");
-                    System.out.println("    gewählte Einheit: " + btnLabel);
+                    System.out.println("    gewählte Einheit: " + btnSubjectName);
                     System.out.println("------------------------------");
 
-                    aufgabenNummer = 0;
-                    setGName(btnLabel);
-                    label.setText(btnLabel);
-                    kategorieString = btnLabel;
+                    taskNumber = 0;
+                    setGName(btnSubjectName);
+                    labelDirectory.setText(btnSubjectName);
+                    kategorieString = btnSubjectName;
                     hString = "Modul";
                     fillModul(kategorieString);
                     tempStage.setTitle("SimpleLearner - Modul - " + "***");
@@ -747,16 +732,16 @@ public class SimpleLearnerGUI extends Application {
 
         BorderPane getKategorieButton() {
             BorderPane temp = new BorderPane();
-            //temp.setLeft(btnName);
+            //temp.setLeft(btnQuiz);
 
             /*if (isTeacher()) {
-                btnName.setPrefWidth(scene.getWidth() - 100);
-                btnAbmelden.setLeft(btnName);
+                btnQuiz.setPrefWidth(scene.getWidth() - 100);
+                btnLogout.setLeft(btnQuiz);
                 btnLoeschen.setPrefWidth(100);
-                btnAbmelden.setRight(btnLoeschen);
+                btnLogout.setRight(btnLoeschen);
             } else {*/
-            btnName.setPrefWidth(scene.getWidth());
-            temp.setLeft(btnName);
+            btnSubject.setPrefWidth(scene.getWidth());
+            temp.setLeft(btnSubject);
             //}
             return temp;
         }
@@ -766,23 +751,22 @@ public class SimpleLearnerGUI extends Application {
 //
 //
 //
-    class ModulButton {
+    class CategoryButton {
 
-        String btnLabel;
-        Button btnName;
-        Button btnLöschen;
+        String btnCategoryName;
+        Button btnCategory;
         int aufgabenNummer;
 
-        ModulButton(String input, int nummer) {
-            btnLabel = input;
+        CategoryButton(String input, int nummer) {
+            btnCategoryName = input;
             aufgabenNummer = nummer;
             System.out.println("Modulummer " + aufgabenNummer);
-            btnName = new Button(input);
-            btnName.getStyleClass().add("ModulButton");
-            System.out.println(btnName.getStyleClass());
-            btnName.setPrefWidth(scene.getWidth());
-            btnName.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
-            setBtnName(TestStage);
+            btnCategory = new Button(input);
+            btnCategory.getStyleClass().add("ModulButton");
+            System.out.println(btnCategory.getStyleClass());
+            btnCategory.setPrefWidth(scene.getWidth());
+            btnCategory.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
+            setBtnName(mainStage);
 
             //btnLöschen = new Button("Loeschen");
             //btnLöschen.setStyle("-fx-background-color:rgb(255,50,50)");
@@ -801,36 +785,36 @@ public class SimpleLearnerGUI extends Application {
         }
 
         String getBtnName() {
-            return btnName.getText();
+            return btnCategory.getText();
         }
 
         void setBtnName(Stage tempStage) {
-            btnName.setOnAction(new EventHandler<ActionEvent>() {
+            btnCategory.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
                     System.out.println("Modul wird geöffnet:");
-                    System.out.println("    gewählte Einheit: " + btnLabel);
+                    System.out.println("    gewählte Einheit: " + btnCategoryName);
                     System.out.println("------------------------------");
 
                     aufgabenNummer = 0;
                     /*
                     try {
-                        sql.loadFragen(btnLabel);
+                        sql.loadFragen(btnQuizName);
                     } catch (SQLException exc) {
                         System.out.println(exc.getMessage());
                     }
 
                     
-                    setBlockPar(btnLabel);
-                    setFragePar(sql.fragen.indexOf(sql.fragen.get(aufgabenNummer))); //aufgabenNummer -> modulNummer
-                    fillAntwortAuswahl(btnLabel, sql.fragen.get(aufgabenNummer));
-                    aufgabeText.setText(sql.fragen.get(aufgabenNummer));
+                    setBlockPar(btnQuizName);
+                    setFragePar(sql.fragen.indexOf(sql.fragen.get(taskNumber))); //aufgabenNummer -> modulNummer
+                    fillAntwortAuswahl(btnQuizName, sql.fragen.get(taskNumber));
+                    aufgabeText.setText(sql.fragen.get(taskNumber));
                      */
 
                     //buildAufgabenPane();// Parameter
-                    setGName(btnLabel);
-                    label.setText(btnLabel);
-                    modulString = btnLabel;
+                    setGName(btnCategoryName);
+                    labelDirectory.setText(btnCategoryName);
+                    modulString = btnCategoryName;
                     hString = "Verzeichnis";
                     fillVerzeich();
                     System.out.println("label : " + getGName());
@@ -842,15 +826,15 @@ public class SimpleLearnerGUI extends Application {
             });
         }
 
-        BorderPane getModulButton() {
+        BorderPane getCategoryButton() {
             BorderPane temp = new BorderPane();
-            temp.setLeft(btnName);
+            temp.setLeft(btnCategory);
             /*
             if(isStudent){
-                btnAbmelden.setLeft(btnName);
+                btnLogout.setLeft(btnQuiz);
             }else{
-                btnAbmelden.setLeft(btnName);
-                btnAbmelden.setRight(btnLöschen);
+                btnLogout.setLeft(btnQuiz);
+                btnLogout.setRight(btnLöschen);
             }
              */
             return temp;
@@ -866,7 +850,7 @@ public class SimpleLearnerGUI extends Application {
     long start;
     long end;
 
-    BorderPane AufgabenKopf = new BorderPane();
+    BorderPane topContainerTask = new BorderPane();
     HBox hbBlockName = new HBox();
     Label blockName = new Label("");
     Button btnBlockName = new Button("Blocknamen ändern");
@@ -875,12 +859,12 @@ public class SimpleLearnerGUI extends Application {
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
     Label aufgabeText = new Label();
-    Button btnAufgabeText = new Button("Aufgabentext hier");
+    Button btnAufgabeText = new Button("Fragetext ändern");
     VBox vbAufgabeText = new VBox();
 
     BorderPane AntwortPane = new BorderPane();
     VBox antwortAuswahl = new VBox();
-    Button btnAntwortenAuswahl = new Button("Antwortenauswahl hier");
+    Button btnAntwortenAuswahl = new Button("Antwortenauswahl ändern");
     ToggleGroup AntwortGroup = new ToggleGroup();
     Button btnNeueAntwort = new Button("Neue Aufgabe");
     GridPane navigator = new GridPane();
@@ -910,17 +894,17 @@ public class SimpleLearnerGUI extends Application {
     void buildTaskPane() {
         tempPane.setId("aufgabePane");
         AntwortPane.setId("antwortPane");
-        AufgabenKopf.setId("aufgabenKopf");
+        topContainerTask.setId("aufgabenKopf");
 
         hbBlockName.getChildren().clear();
         hbBlockName.getChildren().add(blockName);
         if (isTeacher) {
             hbBlockName.getChildren().add(btnBlockName);
         }
-        AufgabenKopf.getChildren().clear();
-        AufgabenKopf.setLeft(hbBlockName);
+        topContainerTask.getChildren().clear();
+        topContainerTask.setLeft(hbBlockName);
         if (isTeacher) {
-            AufgabenKopf.setRight(btnBlockZurueck);
+            topContainerTask.setRight(btnBlockZurueck);
         }
 
         tempPane.setPrefWidth(scene.getWidth() - 150);
@@ -932,7 +916,7 @@ public class SimpleLearnerGUI extends Application {
 
         AufgabenPane.setLeft(tempPane);
         AufgabenPane.setRight(AntwortPane);
-        AufgabenPane.setTop(AufgabenKopf);
+        AufgabenPane.setTop(topContainerTask);
 
         //AntwortPane.setStyle("-fx-background-color:rgb(200,200,200);");
         AntwortPane.setPrefWidth(150);
@@ -1060,6 +1044,7 @@ public class SimpleLearnerGUI extends Application {
                         try {
                             sql.updateAnswers(blockPar, aufgabeText.getText(), loginName.getText(), vBox);
                             setBtnLoadAnswerChoice();
+                            fillAntwortAuswahl(blockPar, aufgabeText.getText());
                             //hier die Antworten direkt neu Laden in der VBox
                         } catch (SQLException exc) {
                             System.out.println(exc.getMessage());
@@ -1091,8 +1076,8 @@ public class SimpleLearnerGUI extends Application {
                         System.out.println(nrSelectedToggle);
                          */
                         //Antworten neuladen und Fenster schliessen
-                        //btnLabel und aufgabenNummer sind unbekannt 
-                        //fillAntwortAuswahl(*btnLabel*, sql.fragen.get(*aufgabenNummer*));
+                        //btnLabel und taskNumber sind unbekannt 
+                        //fillAntwortAuswahl(*btnQuizName*, sql.fragen.get(*taskNumber*));
                         tempStage.close();
                     }
                 });
@@ -1141,7 +1126,7 @@ public class SimpleLearnerGUI extends Application {
             System.out.println("aufgabe beendet");
             //sql.endAufgabe();
             fillVerzeich();
-            scene.setRoot(getHauptPane());
+            scene.setRoot(getMainContainer());
             tempStage.setScene(scene);
             tempStage.setTitle("SimpleLearner - Kategorie");
             tempStage.show();
@@ -1259,11 +1244,11 @@ public class SimpleLearnerGUI extends Application {
                 }
                 /*else {
                     Stage stage = new Stage();
-                    Label label = new Label("Sie haben das Quiz vollständig bearbeitet.");
-                    Button b = new Button("Zurück zu den Aufgaben");
-                    VBox vbSchueler = new VBox();
-                    vbSchueler.getChildren().addAll(label, b);
-                    Scene scene = new Scene(vbSchueler);
+                    Label labelDirectory = new Label("Sie haben das Quiz vollständig bearbeitet.");
+                    Button btnStudentName = new Button("Zurück zu den Aufgaben");
+                    VBox vbStudents = new VBox();
+                    vbStudents.getChildren().addAll(labelDirectory, btnStudentName);
+                    Scene scene = new Scene(vbStudents);
                     stage.setScene(scene);
                     stage.show();
                 }*/
@@ -1315,7 +1300,7 @@ public class SimpleLearnerGUI extends Application {
                 navigator.getChildren().remove(1, 3);
                 navigator.add(btnBestaetigen, 0, 1);
                 fillVerzeich();
-                scene.setRoot(getHauptPane());
+                scene.setRoot(getMainContainer());
                 tempStage.setScene(scene);
                 tempStage.setTitle("SimpleLearner - Kategorie");
                 tempStage.show();
@@ -1354,7 +1339,7 @@ public class SimpleLearnerGUI extends Application {
         }
     }
 // Scene    
-// getHauptPane();
+// getMainContainer();
 // getAufgabenPane();
 //Scene scene = new Scene(changeMeldungPane(getLoginPane()), 600, 600);
     Scene scene = new Scene(getLoginPane(), 600, 600);
@@ -1363,9 +1348,9 @@ public class SimpleLearnerGUI extends Application {
         scene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
     }
 
-    Stage TestStage = new Stage();
+    Stage mainStage = new Stage();
 
     void setPrimaryStage() {
-        TestStage.setScene(scene);
+        mainStage.setScene(scene);
     }
 }

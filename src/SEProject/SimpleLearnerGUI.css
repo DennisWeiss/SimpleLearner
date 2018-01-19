@@ -84,7 +84,7 @@
 .VerzeichnisButton{
     -fx-background-color: rgb(255,255,255);
 }
-#btnNeuesElement{
+#btnNewElement{
     -fx-background-color: rgb(150,255,150);
 }
 #loginContainer{
