@@ -286,8 +286,10 @@ public class SimpleLearnerGUI extends Application {
         });
         btnBack.setOnAction((ActionEvent e) -> {
             if (hString.equals("Modul")) {
+                labelDirectory.setText(null); //Label zurücksetzen
                 fillKategorie();
             } else if (hString.equals("Verzeichnis")) {
+                labelDirectory.setText(kategorieString); //Label zurücksetzen
                 fillModul(kategorieString);
                 hString = "Modul";
             } else {
