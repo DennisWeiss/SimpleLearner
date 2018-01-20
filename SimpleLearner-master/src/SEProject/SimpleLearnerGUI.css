@@ -74,27 +74,63 @@
 }
 
 #mainTopMenu{
-    -fx-background-color: #f2f2f2;
+    -fx-background-color: #595959;
+    -fx-perf-height: 50px;
 }
 #btnLogout, #btnBack{
     -fx-font-weight: bold;
     -fx-pref-height: 30px;
     -fx-pref-width: 150px;
+    -fx-text-fill:#808080;
 }
+.btn{
+    -fx-font-weight: bold;
+    -fx-pref-height: 30px;
+    -fx-text-fill:#808080;
+}
+
 .VerzeichnisButton{
     -fx-background-color: rgb(255,255,255);
 }
 #btnNewElement{
-    -fx-background-color: rgb(150,255,150);
+    -fx-background-color: #f2f2f2;
+    -fx-font-size: 16px;
+    -fx-text-fill:#008000;
+}
+#btnNewElement:hover{
+    -fx-font-weight: bold;
 }
 #loginContainer{
    -fx-background-color: rgb(255,255,255);
    -fx-padding: 0 30px 30px 30px;
    -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.8), 20, 0, 0, 0);
 }
-#eingabeTop{
-	 
+#labelDirectory, #blockNameLabel{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#f2f2f2;
 }
+#taskText{
+    -fx-font-size: 16px;
+    -fx-text-fill:#808080;
+}
+#answerPane{
+    -fx-background-color: #FFFF99;
+}
+#tempPaneTest{
+    -fx-background-color: yellowgreen;
+}
+#listContainer{
+    -fx-background-color: #f2f2f2;
+}
+.subjectButton{
+    -fx-background-color: #e6e6e6;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#595959;
+}
+
+
 #MeldungPane{
     -fx-background-color: rgb(216,216,216);
 }
@@ -114,8 +150,8 @@
     -fx-background-color: rgb(100,100,100);
 }
 #AufgabenPane{
-    -fx-background-color:rgb(220,220,220);
+    -fx-background-color:#f2f2f2;
 }
 #AntwortPane{
-    -fx-background-color:rgb(200,150,200);
+    -fx-background-color:#f2f2f2;
 } 
