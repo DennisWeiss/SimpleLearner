@@ -248,8 +248,14 @@ public class SimpleLearnerGUI extends Application {
 
     void setTopMenu() {
         menuContainer.setId("mainTopMenu");
+        menuContainer.setPrefHeight(50);
+        
+        labelDirectory.setId("labelDirectory");
+        
         filter.setPromptText("Filter");
+        filter.setPrefHeight(30);
         filter.setFocusTraversable(false);
+        
         filter.setOnKeyReleased(e -> {
             if (hString.equals("Kategorie")) {
                 fillKategorie();
@@ -261,13 +267,17 @@ public class SimpleLearnerGUI extends Application {
         });
         Button btnLogout = new Button("Abmelden");
         btnLogout.setId("btnLogout");
-        Button btnBack = new Button("Zurueck");
+        
+        Button btnBack = new Button("Zurück");
         btnBack.setId("btnBack");
-        HBox hbButtons = new HBox();
-        hbButtons.getChildren().addAll(btnBack, btnLogout);
-        menuContainer.setLeft(filter);
+        btnBack.setAlignment(Pos.CENTER);
+        HBox hBoxRight = new HBox(8);
+        hBoxRight.getChildren().addAll(filter, btnLogout);
+        menuContainer.setLeft(btnBack);
         menuContainer.setCenter(labelDirectory);
-        menuContainer.setRight(hbButtons);
+        menuContainer.setRight(hBoxRight);
+        menuContainer.setMargin(hBoxRight, new Insets(10, 10, 10, 10));
+        menuContainer.setMargin(btnBack, new Insets(10, 10, 10, 10));
         btnLogout.setOnAction((ActionEvent e) -> {
             //DislogFenster für Namenseingabe
             //-> Erstellung einer neuen Aufgabe
@@ -297,26 +307,7 @@ public class SimpleLearnerGUI extends Application {
         });
     }
 
-    /*
-    // Funktion auskommentiert
-    void setHauptLeft() {
-        hauptLeft.setId("hauptLeft");
-        hauptLeft.setPrefWidth(50);
-    }
 
-    // Funktion auskommentiert
-    void setHauptRight() {
-        hauptRight.setId("hauptRight");
-        hauptRight.setPrefWidth(50);
-    }
-
-    // Funktion auskommentiert
-    void setHauptBottom() {
-        hauptBottom.setId("hauptBottom");
-        hauptBottom.setStyle("-fx-background-color: rgb(100,100,100);");
-        hauptBottom.setPrefHeight(50);
-    }
-     */
     void setMainContainer() {
         hauptCenter.setId("hauptCenter");
         centerListe.setSpacing(5);
@@ -581,7 +572,7 @@ public class SimpleLearnerGUI extends Application {
             taskNumber = nummer;
             System.out.println("Aufgabennummer " + taskNumber);
             btnQuiz = new Button(input);
-            btnQuiz.getStyleClass().add("VerzeichnisButton");
+            btnQuiz.getStyleClass().add("btnQuiz");
             System.out.println(btnQuiz.getStyleClass());
             btnQuiz.setPrefWidth(scene.getWidth());
             btnQuiz.setMinWidth(hauptCenter.getWidth()/*-btnLöschen.getPrefWidth()*/);
@@ -661,11 +652,11 @@ public class SimpleLearnerGUI extends Application {
                         setFragePar(sql.fragen.indexOf(sql.fragen.get(taskNumber)));
                         blockName.setText(btnQuizName);
                         fillAntwortAuswahl(btnQuizName, sql.fragen.get(taskNumber));
-                        aufgabeText.setText(sql.fragen.get(taskNumber));
+                        taskText.setText(sql.fragen.get(taskNumber));
                     } else {
                         setBlockPar(btnQuizName);
                         blockName.setText(btnQuizName);
-                        aufgabeText.setText(null);
+                        taskText.setText(null);
                         fillAntwortAuswahl(null, null);
                     }
                     //buildAufgabenPane();// Parameter
@@ -853,16 +844,16 @@ public class SimpleLearnerGUI extends Application {
     BorderPane topContainerTask = new BorderPane();
     HBox hbBlockName = new HBox();
     Label blockName = new Label("");
-    Button btnBlockName = new Button("Blocknamen ändern");
-    Button btnBlockZurueck = new Button("Zurueck");
+    Button btnChangeBlockName = new Button("Blocknamen ändern");
+    Button btnBlockZurueck = new Button("Zurück");
 
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
-    Label aufgabeText = new Label();
-    Button btnAufgabeText = new Button("Fragetext ändern");
-    VBox vbAufgabeText = new VBox();
+    Label taskText = new Label();
+    Button btnChangeTaskText = new Button("Fragetext ändern");
+    VBox vBoxTaskText = new VBox();
 
-    BorderPane AntwortPane = new BorderPane();
+    BorderPane AnswerPane = new BorderPane();
     VBox antwortAuswahl = new VBox();
     Button btnAntwortenAuswahl = new Button("Antwortenauswahl ändern");
     ToggleGroup AntwortGroup = new ToggleGroup();
@@ -876,10 +867,12 @@ public class SimpleLearnerGUI extends Application {
     Button btnBeenden = new Button("Beenden");
 
     void setVBoxTaskContainer() {
-        vbAufgabeText.getChildren().clear();
-        vbAufgabeText.getChildren().add(aufgabeText);
+        vBoxTaskText.setMargin(btnChangeTaskText, new Insets(5,5,5,5));
+        vBoxTaskText.setMargin(taskText, new Insets(5,5,5,5));
+        vBoxTaskText.getChildren().clear();
+        vBoxTaskText.getChildren().add(taskText);
         if (isTeacher) {
-            vbAufgabeText.getChildren().add(btnAufgabeText);
+            vBoxTaskText.getChildren().add(btnChangeTaskText);
         }
     }
 
@@ -892,14 +885,23 @@ public class SimpleLearnerGUI extends Application {
     }
 
     void buildTaskPane() {
+        btnBlockZurueck.getStyleClass().add("btn");
+        btnChangeBlockName.getStyleClass().add("btn");
+        btnChangeTaskText.getStyleClass().add("btn");
+        btnAntwortenAuswahl.getStyleClass().add("btn");
+        btnBestaetigen.getStyleClass().add("btn");
+        
         tempPane.setId("aufgabePane");
-        AntwortPane.setId("antwortPane");
-        topContainerTask.setId("aufgabenKopf");
+        AnswerPane.setId("answerPane");
+        topContainerTask.setId("topContainerTask");
+        topContainerTask.setPrefHeight(50);
 
+        blockName.setId("blockNameLabel");
         hbBlockName.getChildren().clear();
         hbBlockName.getChildren().add(blockName);
         if (isTeacher) {
-            hbBlockName.getChildren().add(btnBlockName);
+            hbBlockName.getChildren().add(btnChangeBlockName);
+            btnChangeBlockName.setAlignment(Pos.CENTER_RIGHT);
         }
         topContainerTask.getChildren().clear();
         topContainerTask.setLeft(hbBlockName);
@@ -907,34 +909,39 @@ public class SimpleLearnerGUI extends Application {
             topContainerTask.setRight(btnBlockZurueck);
         }
 
-        tempPane.setPrefWidth(scene.getWidth() - 150);
+        tempPane.setPrefWidth(scene.getWidth() - 250);
+        
+        tempPane.setPrefHeight(250);
+        tempPane.setId("tempPaneTest");
+        
+        taskText.setWrapText(true);
+        taskText.setId("taskText");
+        taskText.setAlignment(Pos.CENTER);
+        taskText.setFont(Font.font(16)); //aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
+        tempPane.setCenter(vBoxTaskText);
+        tempPane.setMaxWidth(400);
 
-        aufgabeText.setWrapText(true);
-        aufgabeText.setFont(Font.font(16));
-        //aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
-        tempPane.setCenter(vbAufgabeText);//aufgabeText
-
-        AufgabenPane.setLeft(tempPane);
-        AufgabenPane.setRight(AntwortPane);
+        AufgabenPane.setCenter(tempPane);
+        AufgabenPane.setRight(AnswerPane);
         AufgabenPane.setTop(topContainerTask);
 
-        //AntwortPane.setStyle("-fx-background-color:rgb(200,200,200);");
-        AntwortPane.setPrefWidth(150);
-        //fillAntwortAuswahl();
+        
+        AnswerPane.setPrefWidth(250);
         antwortAuswahl.setSpacing(5);
 
-        //antwortAuswahl.getChildren().add(btnNeueAntwort);
-        AntwortPane.setAlignment(antwortAuswahl, Pos.CENTER);
-        VBox antworten = new VBox();
+        AnswerPane.setAlignment(antwortAuswahl, Pos.CENTER);
+        VBox antworten = new VBox(8);
+        antworten.setMargin(btnAntwortenAuswahl, new Insets(10,10,10,10));
+        antworten.setMargin(antwortAuswahl, new Insets(15,15,15,15));
         antworten.getChildren().add(antwortAuswahl);
         if (isTeacher) {
             antworten.getChildren().add(btnAntwortenAuswahl);
         }
-        AntwortPane.setCenter(antworten);//antwortAuswahl
+        AnswerPane.setCenter(antworten);//antwortAuswahl
         //setBtnNeueAufgabe();    //Funktion auskommentiert (Z.338)
         //antwortAuswahl.setBottom(btnNeueAntwort);
-        AntwortPane.setAlignment(navigator, Pos.CENTER);
-        AntwortPane.setBottom(navigator);
+        AnswerPane.setAlignment(navigator, Pos.CENTER);
+        AnswerPane.setBottom(navigator);
         auswertungAntwort.setFont(Font.font(20));
         navigator.getChildren().clear();
         navigator.add(auswertungAntwort, 0, 0);
@@ -1042,9 +1049,9 @@ public class SimpleLearnerGUI extends Application {
                         System.out.println("Eingabe wird gespeichert");
 
                         try {
-                            sql.updateAnswers(blockPar, aufgabeText.getText(), loginName.getText(), vBox);
+                            sql.updateAnswers(blockPar, taskText.getText(), loginName.getText(), vBox);
                             setBtnLoadAnswerChoice();
-                            fillAntwortAuswahl(blockPar, aufgabeText.getText());
+                            fillAntwortAuswahl(blockPar, taskText.getText());
                             //hier die Antworten direkt neu Laden in der VBox
                         } catch (SQLException exc) {
                             System.out.println(exc.getMessage());
@@ -1087,7 +1094,7 @@ public class SimpleLearnerGUI extends Application {
     }
 
     void setBtnBlockName() {
-        btnBlockName.setOnAction(e -> {
+        btnChangeBlockName.setOnAction(e -> {
             Stage tempStage = new Stage();
             tempStage.setTitle("Neuer Quizname");
 
@@ -1135,7 +1142,7 @@ public class SimpleLearnerGUI extends Application {
 
     void setBtnNewQuestionText() {
 
-        btnAufgabeText.setOnAction(new EventHandler<ActionEvent>() {
+        btnChangeTaskText.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
 
@@ -1185,10 +1192,10 @@ public class SimpleLearnerGUI extends Application {
                 - TextArea auslesen
                 - String übergeben
                          */
-                        System.out.println(">> String-Ausgabe >> " + tempTextArea.getText() + blockPar + " bla" + aufgabeText.getText());
+                        System.out.println(">> String-Ausgabe >> " + tempTextArea.getText() + blockPar + " bla" + taskText.getText());
                         try {
-                            sql.updateTask(blockPar, aufgabeText.getText(), tempTextArea.getText());
-                            aufgabeText.setText(tempTextArea.getText());
+                            sql.updateTask(blockPar, taskText.getText(), tempTextArea.getText());
+                            taskText.setText(tempTextArea.getText());
                         } catch (SQLException e2) {
                             System.out.println(e2.getMessage());
                         }
@@ -1273,10 +1280,10 @@ public class SimpleLearnerGUI extends Application {
                 navigator.add(btnBestaetigen, 0, 1); // btnBestätigen ein
                 System.out.println("    >Bestätigen-Button eingefügt");
                 if (isTeacher && (nummerFragePar + 1 >= sql.fragen.size())) {
-                    aufgabeText.setText(null);
+                    taskText.setText(null);
                     fillAntwortAuswahl(null, null);
                 } else {
-                    aufgabeText.setText(sql.fragen.get(nummerFragePar + 1));
+                    taskText.setText(sql.fragen.get(nummerFragePar + 1));
                     nummerFragePar++;
                     System.out.println("    >AufgabenText geändert");
                     fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
