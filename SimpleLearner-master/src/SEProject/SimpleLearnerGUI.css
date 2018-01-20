@@ -1,0 +1,121 @@
+/*
+.VerzeichnisButton{
+    -fx-background-color: rgb(255,255,255);
+}
+.ModulButton{
+    -fx-background-color: rgb(150,200,100);
+}
+.KategorieButton{
+    -fx-background-color: rgb(200,100,150);
+}
+#btnNeuesElement{
+    -fx-background-color: rgb(150,255,150);
+}
+#anmeldPane{
+    -fx-background-color: rgb(255,255,255);
+}
+#eingabeTop{
+    -fx-background-color:rgb(100,100,100);
+}
+#hauptTop{
+    -fx-background-color: rgb(150,150,200);
+}
+#hauptLeft{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptRight{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(150,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(100,100,100);
+}
+#aufgabePane{
+    -fx-background-color:rgb(220,220,220);
+}
+#antwortPane{
+    -fx-background-color:rgb(200,150,200);
+}*/
+.button{
+    -fx-text-fill:rgb(50,100,150);
+}
+#btnLogin{
+    -fx-background-color: #009933;
+    -fx-background-radius: 3,2,1;
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: #f2f2f2;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 30px;
+    -fx-pref-width: 235px;
+}
+#btnLogin:pressed{
+    -fx-background-color: #00cc44;
+}
+#nameTextField, #passTextField{
+/*   -fx-line-spacing: 30px;
+    -fx-margin: 5px;
+    -fx-background-color: #f2f2f2;
+   -fx-border-color: #C8C8C8;
+    -fx-background-radius: 3,2,1;*/
+    
+}
+#nameLabel, #passLabel{
+    -fx-font-weight: bold;
+    -fx-text-fill:#808080;
+}
+#loginLabel{
+    -fx-font-size:18px;
+    -fx-font-weight: bold;
+    -fx-margin: 20px;
+    -fx-text-fill:#808080;
+}
+
+#mainTopMenu{
+    -fx-background-color: #f2f2f2;
+}
+#btnLogout, #btnBack{
+    -fx-font-weight: bold;
+    -fx-pref-height: 30px;
+    -fx-pref-width: 150px;
+}
+.VerzeichnisButton{
+    -fx-background-color: rgb(255,255,255);
+}
+#btnNewElement{
+    -fx-background-color: rgb(150,255,150);
+}
+#loginContainer{
+   -fx-background-color: rgb(255,255,255);
+   -fx-padding: 0 30px 30px 30px;
+   -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.8), 20, 0, 0, 0);
+}
+#eingabeTop{
+	 
+}
+#MeldungPane{
+    -fx-background-color: rgb(216,216,216);
+}
+#hauptTop{
+    -fx-background-color: rgb(100,100,100);
+}
+#hauptLeft{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptRight{
+    -fx-background-color: rgb(200,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(150,200,200);
+}
+#hauptCenter{
+    -fx-background-color: rgb(100,100,100);
+}
+#AufgabenPane{
+    -fx-background-color:rgb(220,220,220);
+}
+#AntwortPane{
+    -fx-background-color:rgb(200,150,200);
+} 
