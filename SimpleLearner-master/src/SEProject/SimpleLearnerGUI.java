@@ -661,12 +661,12 @@ public class SimpleLearnerGUI extends Application {
                     if (sql.fragen.size() > 0) {
                         setBlockPar(btnQuizName);
                         setFragePar(sql.fragen.indexOf(sql.fragen.get(taskNumber)));
-                        blockName.setText(btnQuizName);
+                        blockNameLabel.setText(btnQuizName);
                         fillAntwortAuswahl(btnQuizName, sql.fragen.get(taskNumber));
                         taskText.setText(sql.fragen.get(taskNumber));
                     } else {
                         setBlockPar(btnQuizName);
-                        blockName.setText(btnQuizName);
+                        blockNameLabel.setText(btnQuizName);
                         taskText.setText(null);
                         fillAntwortAuswahl(null, null);
                     }
@@ -854,7 +854,7 @@ public class SimpleLearnerGUI extends Application {
 
     BorderPane topContainerTask = new BorderPane();
     HBox hbBlockName = new HBox();
-    Label blockName = new Label("");
+    Label blockNameLabel = new Label("");
     Button btnChangeBlockName = new Button("Blocknamen ändern");
     Button btnBlockZurueck = new Button("Zurück");
 
@@ -906,18 +906,24 @@ public class SimpleLearnerGUI extends Application {
         AnswerPane.setId("answerPane");
         topContainerTask.setId("topContainerTask");
         topContainerTask.setPrefHeight(50);
+        topContainerTask.setMargin(btnBlockZurueck, new Insets(10,10,10,10));
 
-        blockName.setId("blockNameLabel");
+        blockNameLabel.setId("blockNameLabel");
         hbBlockName.getChildren().clear();
-        hbBlockName.getChildren().add(blockName);
+        hbBlockName.getChildren().add(blockNameLabel);
+        hbBlockName.setAlignment(Pos.CENTER_RIGHT);
+        
+        hbBlockName.setMargin(btnChangeBlockName, new Insets(10,10,10,10));
+        hbBlockName.setMargin(blockNameLabel, new Insets(10,10,10,10));
+        
         if (isTeacher) {
             hbBlockName.getChildren().add(btnChangeBlockName);
             btnChangeBlockName.setAlignment(Pos.CENTER_RIGHT);
         }
         topContainerTask.getChildren().clear();
-        topContainerTask.setLeft(hbBlockName);
+        topContainerTask.setRight(hbBlockName);
         if (isTeacher) {
-            topContainerTask.setRight(btnBlockZurueck);
+            topContainerTask.setLeft(btnBlockZurueck);
         }
 
         tempPane.setPrefWidth(scene.getWidth() - 250);
@@ -990,10 +996,16 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.setTitle("Neuer Aufgabentext");
 
                 ToggleGroup tempToggleGroup = new ToggleGroup();
-                VBox vBox = new VBox();
-                HBox hBox = new HBox();
-                Button btnAbbr = new Button("Abbrechen");
-                Button btnBestaet = new Button("Bestätigen");
+                VBox vBox = new VBox(8);
+                HBox hBoxButtonsBottom = new HBox(8);
+                hBoxButtonsBottom.setPrefHeight(50);
+                Button btnCancel = new Button("Abbrechen");
+                btnCancel.getStyleClass().add("btn");
+                hBoxButtonsBottom.setMargin(btnCancel, new Insets(10,10,10,10));
+                
+                Button btnConfirm = new Button("Bestätigen");
+                btnConfirm.getStyleClass().add("btn");
+                hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10,10,10,10));
                 // vBox füllen
                 //HBox h1 = new HBox();
                 //    h1.getChildren().add(new Button());
@@ -1014,17 +1026,19 @@ public class SimpleLearnerGUI extends Application {
                 vBox2.getChildren().add(vBox);
                 vBox2.getChildren().add(btnNeueAntwort);
 
-                hBox.getChildren().add(btnAbbr);
-                hBox.getChildren().add(btnBestaet);
+                hBoxButtonsBottom.getChildren().add(btnCancel);
+                hBoxButtonsBottom.getChildren().add(btnConfirm);
 
                 BorderPane tempPane = new BorderPane();
                 tempPane.setCenter(vBox2);
-                tempPane.setBottom(hBox);
+                tempPane.setBottom(hBoxButtonsBottom);
 
                 Scene tempScene = new Scene(tempPane, 300, 300);
-
+                
                 tempStage.setScene(tempScene);
+  //              tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                 tempStage.show();
+                
 
                 // btnNeueAntwort definieren
                 btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
@@ -1044,7 +1058,7 @@ public class SimpleLearnerGUI extends Application {
                 });
 
                 // btnAbbr definieren
-                btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
+                btnCancel.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
 
@@ -1053,7 +1067,7 @@ public class SimpleLearnerGUI extends Application {
                     }
                 });
 
-                btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
+                btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
 
@@ -1122,7 +1136,7 @@ public class SimpleLearnerGUI extends Application {
                 try {
                     sql.updateQuiz(blockPar, loginName.getText(), tf.getText());
                     blockPar = tf.getText();
-                    blockName.setText(tf.getText());
+                    blockNameLabel.setText(tf.getText());
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
