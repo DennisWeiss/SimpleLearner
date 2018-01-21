@@ -942,7 +942,7 @@ public class SimpleLearnerGUI extends Application {
         auswertungAntwort.setFont(Font.font(20));
         navigator.getChildren().clear();
         navigator.add(auswertungAntwort, 0, 0);
-        if(!isTeacher){
+        if (!isTeacher) {
             navigator.add(btnBestaetigen, 0, 1);
         } else {
             navigator.add(btnNaechsteAufgabe, 0, 1);
@@ -1279,12 +1279,14 @@ public class SimpleLearnerGUI extends Application {
                 // exception durch erneutes Einfügen von btnBestätigen
                 // -> btnBestätigen löschen und erneut einfügen
                 navigator.getChildren().removeAll(btnBestaetigen, btnNaechsteAufgabe, btnZurueck); // btnBestätigen und btnNächsteAufgabe löschen
-                if(!isTeacher){
+                if (!isTeacher) {
                     navigator.add(btnBestaetigen, 0, 1);
                 } else {
                     navigator.add(btnNaechsteAufgabe, 0, 1);
                 }
-                if(isTeacher)navigator.add(btnZurueck, 1, 1);
+                if (isTeacher) {
+                    navigator.add(btnZurueck, 1, 1);
+                }
                 System.out.println("    >Bestätigen-Button eingefügt");
                 if (isTeacher && (nummerFragePar + 1 >= sql.fragen.size())) {
                     aufgabeText.setText(null);
@@ -1320,11 +1322,13 @@ public class SimpleLearnerGUI extends Application {
                 navigator.add(btnNaechsteAufgabe, 0, 1); // btnBestätigen ein
                 navigator.add(btnZurueck, 1, 1);
                 System.out.println("    >Bestätigen-Button eingefügt");
-                aufgabeText.setText(sql.fragen.get(nummerFragePar - 1));
-                nummerFragePar--;
-                System.out.println("    >AufgabenText geändert");
-                fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
-                auswertungAntwort.setText("");
+                if (nummerFragePar - 1 >= 0) {
+                    aufgabeText.setText(sql.fragen.get(nummerFragePar - 1));
+                    nummerFragePar--;
+                    System.out.println("    >AufgabenText geändert");
+                    fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
+                    auswertungAntwort.setText("");
+                }
                 System.out.println("    >AntwortAuswahl erneuert");
                 System.out.println("------------------------------");
 
