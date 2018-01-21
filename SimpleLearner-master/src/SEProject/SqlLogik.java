@@ -49,7 +49,7 @@ public class SqlLogik {
     public SqlLogik() {
         userInfo = new Properties();
         userInfo.put("user", "root"); //"root" für stefan
-        userInfo.put("password", "databasemarcel"); //"stefan" für stefan
+        userInfo.put("password", "admin"); //"stefan" für stefan
         faecher = new ArrayList<>();
         kategorien = new ArrayList<>();
         aufgabenbloecke = new ArrayList<>();
