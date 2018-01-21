@@ -190,6 +190,7 @@ public class SimpleLearnerGUI extends Application {
                         // initialisiere AufgabenPane
                         setBtnConfirmAnswer();
                         setBtnNextTask(mainStage);
+                        setBtnLastTask(mainStage);
                         setBtnConfirmQuiz(mainStage);
                         buildTaskPane();
                         setBtnBlockName();
@@ -856,7 +857,7 @@ public class SimpleLearnerGUI extends Application {
     HBox hbBlockName = new HBox();
     Label blockName = new Label("");
     Button btnBlockName = new Button("Blocknamen ändern");
-    Button btnBlockZurueck = new Button("Zurueck");
+    Button btnBlockZurueck = new Button("Abbrechen");
 
     BorderPane AufgabenPane = new BorderPane();
     BorderPane tempPane = new BorderPane(); // Ausgabe des Aufgabentextes
@@ -866,7 +867,7 @@ public class SimpleLearnerGUI extends Application {
 
     BorderPane AntwortPane = new BorderPane();
     VBox antwortAuswahl = new VBox();
-    Button btnAntwortenAuswahl = new Button("Antwortenauswahl ändern");
+    Button btnAntwortenAuswahl = new Button("Ändern");
     ToggleGroup AntwortGroup = new ToggleGroup();
     Button btnNeueAntwort = new Button("Neue Aufgabe");
     GridPane navigator = new GridPane();
@@ -876,6 +877,7 @@ public class SimpleLearnerGUI extends Application {
     Button btnBestaetigen = new Button("Bestätigen");
     Button btnNaechsteAufgabe = new Button("Nächste");
     Button btnBeenden = new Button("Beenden");
+    Button btnZurueck = new Button("Zurück");
 
     void setVBoxTaskContainer() {
         vbAufgabeText.getChildren().clear();
@@ -940,7 +942,14 @@ public class SimpleLearnerGUI extends Application {
         auswertungAntwort.setFont(Font.font(20));
         navigator.getChildren().clear();
         navigator.add(auswertungAntwort, 0, 0);
-        navigator.add(btnBestaetigen, 0, 1);
+        if(!isTeacher){
+            navigator.add(btnBestaetigen, 0, 1);
+        } else {
+            navigator.add(btnNaechsteAufgabe, 0, 1);
+        }
+        if (isTeacher) {
+            navigator.add(btnZurueck, 1, 1);
+        }
     }
 
     void fillAntwortAuswahl(String block, String frage) {
@@ -1241,8 +1250,6 @@ public class SimpleLearnerGUI extends Application {
                     } else {
                         navigator.add(btnBeenden, 0, 1);
                     }
-                } else {
-                    navigator.add(btnNaechsteAufgabe, 0, 1);
                 }
                 /*else {
                     Stage stage = new Stage();
@@ -1271,8 +1278,13 @@ public class SimpleLearnerGUI extends Application {
                 start = System.currentTimeMillis();
                 // exception durch erneutes Einfügen von btnBestätigen
                 // -> btnBestätigen löschen und erneut einfügen
-                navigator.getChildren().remove(1, 3); // btnBestätigen und btnNächsteAufgabe löschen
-                navigator.add(btnBestaetigen, 0, 1); // btnBestätigen ein
+                navigator.getChildren().removeAll(btnBestaetigen, btnNaechsteAufgabe, btnZurueck); // btnBestätigen und btnNächsteAufgabe löschen
+                if(!isTeacher){
+                    navigator.add(btnBestaetigen, 0, 1);
+                } else {
+                    navigator.add(btnNaechsteAufgabe, 0, 1);
+                }
+                if(isTeacher)navigator.add(btnZurueck, 1, 1);
                 System.out.println("    >Bestätigen-Button eingefügt");
                 if (isTeacher && (nummerFragePar + 1 >= sql.fragen.size())) {
                     aufgabeText.setText(null);
@@ -1283,6 +1295,35 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println("    >AufgabenText geändert");
                     fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
                 }
+                auswertungAntwort.setText("");
+                System.out.println("    >AntwortAuswahl erneuert");
+                System.out.println("------------------------------");
+
+                tempStage.show();
+            }
+        });
+    }
+
+    void setBtnLastTask(Stage tempStage) {//öffnet nächste Aufgabe
+        btnZurueck.setPrefWidth(75);
+        btnZurueck.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("Nächste Aufgabe wird geöffnet");
+                System.out.println("    Neue Aufgabe: ");
+                System.out.println("------------------------------");
+
+                start = System.currentTimeMillis();
+                // exception durch erneutes Einfügen von btnBestätigen
+                // -> btnBestätigen löschen und erneut einfügen
+                navigator.getChildren().removeAll(btnBestaetigen, btnNaechsteAufgabe, btnZurueck); // btnBestätigen und btnNächsteAufgabe löschen
+                navigator.add(btnNaechsteAufgabe, 0, 1); // btnBestätigen ein
+                navigator.add(btnZurueck, 1, 1);
+                System.out.println("    >Bestätigen-Button eingefügt");
+                aufgabeText.setText(sql.fragen.get(nummerFragePar - 1));
+                nummerFragePar--;
+                System.out.println("    >AufgabenText geändert");
+                fillAntwortAuswahl(blockPar, sql.fragen.get(nummerFragePar));
                 auswertungAntwort.setText("");
                 System.out.println("    >AntwortAuswahl erneuert");
                 System.out.println("------------------------------");
