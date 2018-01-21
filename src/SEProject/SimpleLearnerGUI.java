@@ -258,6 +258,7 @@ public class SimpleLearnerGUI extends Application {
 
     void setTopMenu() {
         menuContainer.setId("mainTopMenu");
+        labelDirectory.setId("labelDirectory");
         filter.setPromptText("Filter");
         filter.setFocusTraversable(false);
         filter.setOnKeyReleased(e -> {
