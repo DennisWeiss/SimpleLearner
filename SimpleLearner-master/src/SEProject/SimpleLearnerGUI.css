@@ -110,6 +110,9 @@
     -fx-font-weight: bold;
     -fx-text-fill:#f2f2f2;
 }
+#labelDirectory{
+    -fx-text-fill:Yellowgreen;
+}
 #taskText{
     -fx-font-size: 16px;
     -fx-text-fill:#808080;
@@ -123,13 +126,28 @@
 #listContainer{
     -fx-background-color: #f2f2f2;
 }
-.subjectButton{
+.subjectButton, .btnQuiz{
     -fx-background-color: #e6e6e6;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill:#595959;
 }
-
+.subjectButton:hover{
+    -fx-background-color: yellowgreen;
+    -fx-text-fill:#f2f2f2;
+}
+.subjectButton:pressed{
+    -fx-text-fill:#595959;
+}
+.btnCategory{
+    -fx-background-color: #e6e6e6;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#595959;
+}
+.btnCategory:hover{
+    -fx-background-color: #ffff80;
+}
 
 #MeldungPane{
     -fx-background-color: rgb(216,216,216);
