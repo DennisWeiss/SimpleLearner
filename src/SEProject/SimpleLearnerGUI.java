@@ -422,7 +422,7 @@ public class SimpleLearnerGUI extends Application {
                         borderPane.setRight(btnConfirmNewQuiz);
 
                         Scene tempScene = new Scene(borderPane, 300, 300);
-
+                        tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                         tempStage.setScene(tempScene);
                         tempStage.show();
                     }
@@ -1026,7 +1026,7 @@ public class SimpleLearnerGUI extends Application {
                 tempPane.setBottom(hBox);
 
                 Scene tempScene = new Scene(tempPane, 300, 300);
-
+                tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                 tempStage.setScene(tempScene);
                 tempStage.show();
 
@@ -1137,7 +1137,7 @@ public class SimpleLearnerGUI extends Application {
             borderPane.setRight(btnBestaetigen);
 
             Scene tempScene = new Scene(borderPane, 300, 300);
-
+            tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
             tempStage.setScene(tempScene);
             tempStage.show();
         });
@@ -1182,6 +1182,7 @@ public class SimpleLearnerGUI extends Application {
                 tempPane.setBottom(hBox);
 
                 Scene tempScene = new Scene(tempPane, 300, 300);
+                tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
 
                 tempStage.setScene(tempScene);
                 tempStage.show();
