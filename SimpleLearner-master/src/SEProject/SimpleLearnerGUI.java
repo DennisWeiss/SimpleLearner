@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
@@ -139,8 +140,10 @@ public class SimpleLearnerGUI extends Application {
         loginContainer.setPadding(new Insets(10, 50, 50, 50));
         loginContainer.setId("loginContainer");
         loginContainer.getChildren().addAll(loginLabel, nameLabel, loginName, passLabel, loginPassword, btnLogin);
-        loginContainer.setMinSize(300, 250);
-        loginContainer.setMaxSize(300, 250);
+        loginContainer.setMinSize(300, 300);
+        loginContainer.setMaxSize(300, 300);
+        loginContainer.setMargin(loginLabel, new Insets(20, 0, 0, 65));
+        loginContainer.setMargin(btnLogin, new Insets(20, 0, 0, 0));
 
         temp.setTop(loginTop);
         temp.setCenter(loginContainer);
@@ -880,6 +883,10 @@ public class SimpleLearnerGUI extends Application {
     void setVBoxTaskContainer() {
         vBoxTaskText.setMargin(btnChangeTaskText, new Insets(5,5,5,5));
         vBoxTaskText.setMargin(taskText, new Insets(5,5,5,5));
+        vBoxTaskText.setId("vBoxTaskText");
+        vBoxTaskText.setMaxHeight(250);
+        vBoxTaskText.setAlignment(Pos.TOP_CENTER);
+ //       vBoxTaskText.setAlignment(Pos.BOTTOM_CENTER);
         vBoxTaskText.getChildren().clear();
         vBoxTaskText.getChildren().add(taskText);
         if (isTeacher) {
@@ -936,11 +943,15 @@ public class SimpleLearnerGUI extends Application {
         taskText.setAlignment(Pos.CENTER);
         taskText.setFont(Font.font(16)); //aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
         tempPane.setCenter(vBoxTaskText);
-        tempPane.setMaxWidth(400);
+        tempPane.setMargin(vBoxTaskText, new Insets(20, 30, 20, 30));
+        tempPane.setMaxWidth(450);
+        tempPane.setAlignment(vBoxTaskText, Pos.TOP_CENTER);
+          
 
         AufgabenPane.setCenter(tempPane);
         AufgabenPane.setRight(AnswerPane);
         AufgabenPane.setTop(topContainerTask);
+        AufgabenPane.setId("createTaskPane");
 
         
         AnswerPane.setPrefWidth(250);
