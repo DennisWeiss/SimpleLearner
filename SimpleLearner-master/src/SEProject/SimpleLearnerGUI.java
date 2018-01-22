@@ -1177,14 +1177,23 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.setTitle("Neuer Aufgabentext");
 
                 HBox hBox = new HBox();
-                Button btnAbbr = new Button("Abbrechen");
-                Button btnBestaet = new Button("Bestätigen");
-                hBox.getChildren().add(btnAbbr);
-                hBox.getChildren().add(btnBestaet);
+                Button btnCancel = new Button("Abbrechen");
+                Button btnConfirm = new Button("Bestätigen");
+                btnCancel.setId("newTaskTextCancelButton");
+                btnCancel.getStyleClass().add("btn");
+                btnConfirm.getStyleClass().add("btn");
+                btnConfirm.setId("newTaskTextConfirmButton");
+                
+                hBox.setMargin(btnCancel, new Insets(10,10,10,10));
+                hBox.setMargin(btnConfirm, new Insets(10,10,10,10));
+                hBox.setPrefHeight(80);
+                hBox.setId("newTaskTextHBox");
+                hBox.getChildren().add(btnCancel);
+                hBox.getChildren().add(btnConfirm);
 
                 TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
                 tempTextArea.setMinWidth(300);
-                tempTextArea.setMinHeight(250);
+                tempTextArea.setMinHeight(200);
                 tempTextArea.setWrapText(true);
 
                 BorderPane tempPane = new BorderPane();
@@ -1197,7 +1206,7 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.show();
 
                 // btnAbbr definieren
-                btnAbbr.setOnAction(new EventHandler<ActionEvent>() {
+                btnCancel.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
 
@@ -1206,7 +1215,7 @@ public class SimpleLearnerGUI extends Application {
                     }
                 });
 
-                btnBestaet.setOnAction(new EventHandler<ActionEvent>() {
+                btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
 

@@ -38,9 +38,7 @@
 #antwortPane{
     -fx-background-color:rgb(200,150,200);
 }*/
-.button{
-    -fx-text-fill:rgb(50,100,150);
-}
+
 #btnLogin{
     -fx-background-color: #009933;
     -fx-background-radius: 3,2,1;
@@ -152,6 +150,19 @@
     -fx-background-color: #ffff80;
 }
 
+/*-----New Task Text------*/
+
+#newTaskTextHBox{
+    -fx-background-color: #595959;
+}
+#newTaskTextCancelButton, #newTaskTextConfirmButton{
+    -fx-font-weight: bold;
+    -fx-pref-height: 30px;
+    -fx-text-fill:#808080;
+}
+#newTaskTextConfirmButton{
+    
+}
 #MeldungPane{
     -fx-background-color: rgb(216,216,216);
 }
