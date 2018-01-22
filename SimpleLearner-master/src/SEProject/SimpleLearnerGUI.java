@@ -1212,6 +1212,8 @@ public class SimpleLearnerGUI extends Application {
                 tempPane.setBottom(hBox);
 
                 Scene tempScene = new Scene(tempPane, 300, 300);
+                
+                tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
 
                 tempStage.setScene(tempScene);
                 tempStage.show();
