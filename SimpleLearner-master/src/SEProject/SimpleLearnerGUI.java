@@ -34,6 +34,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.scene.text.TextAlignment;
@@ -267,6 +269,7 @@ public class SimpleLearnerGUI extends Application {
         
         filter.setPromptText("Filter");
         filter.setPrefHeight(30);
+        filter.setPrefWidth(200);
         filter.setFocusTraversable(false);
         
         filter.setOnKeyReleased(e -> {
@@ -278,11 +281,16 @@ public class SimpleLearnerGUI extends Application {
                 fillVerzeich();
             }
         });
-        Button btnLogout = new Button("Abmelden");
+        Image logoutImage = new Image(getClass().getResourceAsStream("logout20.png"));
+        Button btnLogout = new Button("Abmelden", new ImageView(logoutImage));
         btnLogout.setId("btnLogout");
+        btnLogout.getStyleClass().add("btn");
         
-        Button btnBack = new Button("Zurück");
+
+        Image back = new Image(getClass().getResourceAsStream("back20.png"));
+        Button btnBack = new Button("Zurück", new ImageView(back));
         btnBack.setId("btnBack");
+        btnBack.getStyleClass().add("btn");
         btnBack.setAlignment(Pos.CENTER);
         HBox hBoxRight = new HBox(8);
         hBoxRight.getChildren().addAll(filter, btnLogout);
@@ -1004,19 +1012,19 @@ public class SimpleLearnerGUI extends Application {
                 System.out.println("Neue Antwortauswahl");
 
                 Stage tempStage = new Stage();
-                tempStage.setTitle("Neuer Aufgabentext");
+                tempStage.setTitle("Neuer Antwortauswahl");
 
                 ToggleGroup tempToggleGroup = new ToggleGroup();
                 VBox vBox = new VBox(8);
                 HBox hBoxButtonsBottom = new HBox(8);
-                hBoxButtonsBottom.setPrefHeight(50);
+                hBoxButtonsBottom.setPrefHeight(40);
                 Button btnCancel = new Button("Abbrechen");
                 btnCancel.getStyleClass().add("btn");
-                hBoxButtonsBottom.setMargin(btnCancel, new Insets(10,10,10,10));
+                hBoxButtonsBottom.setMargin(btnCancel, new Insets(10,10,10,50));
                 
                 Button btnConfirm = new Button("Bestätigen");
                 btnConfirm.getStyleClass().add("btn");
-                hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10,10,10,10));
+                hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10,10,10,50));
                 // vBox füllen
                 //HBox h1 = new HBox();
                 //    h1.getChildren().add(new Button());
@@ -1036,18 +1044,17 @@ public class SimpleLearnerGUI extends Application {
                 Button btnNeueAnwort = new Button("Neue Antwort");
                 vBox2.getChildren().add(vBox);
                 vBox2.getChildren().add(btnNeueAntwort);
-
-                hBoxButtonsBottom.getChildren().add(btnCancel);
-                hBoxButtonsBottom.getChildren().add(btnConfirm);
-
+                
+                hBoxButtonsBottom.getChildren().addAll(btnConfirm, btnCancel);
+                
                 BorderPane tempPane = new BorderPane();
                 tempPane.setCenter(vBox2);
                 tempPane.setBottom(hBoxButtonsBottom);
 
-                Scene tempScene = new Scene(tempPane, 300, 300);
-                
+                Scene tempScene = new Scene(tempPane, 350, 250);
+                tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                 tempStage.setScene(tempScene);
-  //              tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
+
                 tempStage.show();
                 
 
@@ -1136,9 +1143,14 @@ public class SimpleLearnerGUI extends Application {
 
             BorderPane borderPane = new BorderPane();
             TextField tf = new TextField();
+            tf.setPrefHeight(30);
             tf.setPromptText("Hier Blocknamen eintragen");
             Button btnAbbrechen = new Button("Abbrechen");
             Button btnBestaetigen = new Button("Bestaetigen");
+            btnAbbrechen.getStyleClass().add("cancelButton");
+            btnBestaetigen.getStyleClass().add("okButton");
+            btnAbbrechen.setPrefWidth(120);
+            btnBestaetigen.setPrefWidth(120);
 
             btnAbbrechen.setOnAction(e2 -> {
                 tempStage.close();
@@ -1154,11 +1166,14 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.close();
             });
             borderPane.setTop(tf);
-            borderPane.setLeft(btnAbbrechen);
-            borderPane.setRight(btnBestaetigen);
-
-            Scene tempScene = new Scene(borderPane, 300, 300);
-
+            borderPane.setLeft(btnBestaetigen);
+            borderPane.setRight(btnAbbrechen);
+            borderPane.getStyleClass().add("popupPane");
+            borderPane.setMargin(btnAbbrechen, new Insets(10,10,10,20));
+            borderPane.setMargin(btnBestaetigen, new Insets(10,20,10,10));
+            
+            Scene tempScene = new Scene(borderPane, 300, 80);
+            tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");       
             tempStage.setScene(tempScene);
             tempStage.show();
         });
@@ -1192,17 +1207,21 @@ public class SimpleLearnerGUI extends Application {
                 Button btnConfirm = new Button("Bestätigen");
                 btnCancel.setId("newTaskTextCancelButton");
                 btnCancel.getStyleClass().add("btn");
+                btnCancel.setPrefWidth(120);
                 btnConfirm.getStyleClass().add("btn");
                 btnConfirm.setId("newTaskTextConfirmButton");
-                
+                btnConfirm.setPrefWidth(120);
+                btnCancel.getStyleClass().add("cancelButton");
+                btnConfirm.getStyleClass().add("okButton");
+            
                 hBox.setMargin(btnCancel, new Insets(10,10,10,10));
-                hBox.setMargin(btnConfirm, new Insets(10,10,10,10));
-                hBox.setPrefHeight(80);
+                hBox.setMargin(btnConfirm, new Insets(10,10,10,50));
+                hBox.setPrefHeight(50);
                 hBox.setId("newTaskTextHBox");
-                hBox.getChildren().add(btnCancel);
-                hBox.getChildren().add(btnConfirm);
+                hBox.getChildren().addAll(btnConfirm, btnCancel);
 
                 TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
+                tempTextArea.setId("newTaskTextArea");
                 tempTextArea.setMinWidth(300);
                 tempTextArea.setMinHeight(200);
                 tempTextArea.setWrapText(true);
@@ -1211,7 +1230,7 @@ public class SimpleLearnerGUI extends Application {
                 tempPane.setCenter(tempTextArea);
                 tempPane.setBottom(hBox);
 
-                Scene tempScene = new Scene(tempPane, 300, 300);
+                Scene tempScene = new Scene(tempPane, 350, 250);
                 
                 tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
 

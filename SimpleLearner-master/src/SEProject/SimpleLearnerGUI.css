@@ -73,15 +73,12 @@
     -fx-perf-height: 50px;
 }
 #btnLogout, #btnBack{
-    -fx-font-weight: bold;
-    -fx-pref-height: 30px;
     -fx-pref-width: 150px;
-    -fx-text-fill:#808080;
 }
 .btn{
-    -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-pref-height: 30px;
-    -fx-text-fill:#808080;
+    -fx-text-fill:#595959;
 }
 
 .VerzeichnisButton{
@@ -133,8 +130,13 @@
     -fx-font-weight: bold;
     -fx-text-fill:#595959;
 }
-.subjectButton:hover, .btnQuiz:hover{
-    -fx-background-color: yellowgreen;
+.subjectButton:hover{
+   -fx-background-color:yellowgreen;
+   -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.6), 10, 0, 0, 0);
+}
+.btnQuiz:hover{
+     -fx-background-color:#f4f4a4;
+     -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.6), 10, 0, 0, 0);
 }
 .btnQuiz:pressed{
     -fx-text-fill:#f2f2f2;
@@ -149,43 +151,39 @@
     -fx-text-fill:#595959;
 }
 .btnCategory:hover{
-    -fx-background-color: #ffffb3;
+    -fx-background-color: #b8dc6f;
+    -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.6), 10, 0, 0, 0);
 }
 
-/*-----New Task Text------*/
+/*-----New Task Text popup------*/
 
 #newTaskTextHBox{
     -fx-background-color: #595959;
 }
-#newTaskTextCancelButton, #newTaskTextConfirmButton{
-    -fx-font-weight: bold;
+#newTaskTextArea{
+    /*#009933;*/
+}
+.cancelButton, .okButton{
+-fx-font-size: 14px;
     -fx-pref-height: 30px;
-    -fx-text-fill:#808080;
+    -fx-text-fill:#595959;
 }
-#newTaskTextConfirmButton{
-    
+.okButton:hover{
+    -fx-font-weight: bold;
+    -fx-text-fill:#009933;
 }
-#MeldungPane{
-    -fx-background-color: rgb(216,216,216);
+.okButton:pressed{
+    -fx-background-color: #f2f2f2;
+    -fx-text-fill:#595959;
 }
-#hauptTop{
-    -fx-background-color: rgb(100,100,100);
+.cancelButton:hover{
+    -fx-font-weight: bold;
+    -fx-text-fill:#ff471a;
 }
-#hauptLeft{
-    -fx-background-color: rgb(200,200,200);
+.cancelButton:pressed{
+-fx-background-color: #f2f2f2;
+    -fx-text-fill:#595959;
 }
-#hauptRight{
-    -fx-background-color: rgb(200,200,200);
+.popupPane{
+    -fx-background-color: #595959;
 }
-#hauptCenter{
-    -fx-background-color: rgb(150,200,200);
-}
-#hauptCenter{
-    -fx-background-color: rgb(100,100,100);
-}
-#AufgabenPane{
-    -fx-background-color:#f2f2f2;
-}
-#AntwortPane{
-    -fx-background-color:#f2f2f2;
-} 
