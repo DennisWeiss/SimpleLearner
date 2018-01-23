@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- *
+ * Erzeugt eine PDF-Datei die zur Evaluation der Antworten für den Lehrer gedacht ist
  * @author Marcel
  */
 public class EvaluationsPdf {
@@ -36,6 +36,16 @@ public class EvaluationsPdf {
         this.document = new Document();
     }
     
+    /**
+     * Erzeugt die notwendigen Informationen für den Lehrer.
+     * 
+     * @param block - Der Name des Aufgabenblocks
+     * @param lehrer - Der Name des zuständigen Lehrers
+     * @param schueler - Der Name des jeweiligen Schülers
+     * @throws DocumentException
+     * @throws IOException 
+     * @throws SQLException 
+     */
     public void createTable(String block, String lehrer, String schueler) throws DocumentException, IOException, SQLException {
         if (document.isOpen() == false) {
             document = new Document();
@@ -54,13 +64,13 @@ public class EvaluationsPdf {
             tableTitel.setHorizontalAlignment(Element.ALIGN_LEFT);
             tableTitel.setWidthPercentage(100);
             tableTitel.setSpacingAfter(20f);
-            Chunk chunk1 = new Chunk("Ergebnisse: " + sql.tempAntwortenSchueler.get(0).getVorname() + " " + sql.tempAntwortenSchueler.get(0).getNachname(), chapterFont);
+            Chunk chunk1 = new Chunk("Ergebnisse: " + sql.getTempAntwortenSchueler().get(0).getVorname() + " " + sql.getTempAntwortenSchueler().get(0).getNachname(), chapterFont);
             Paragraph paragraph1 = new Paragraph(chunk1);
             PdfPCell titleC1 = new PdfPCell(paragraph1);
             Font infoFont = FontFactory.getFont(FontFactory.HELVETICA, 7);
             PdfPCell titleC2 = new PdfPCell(new Paragraph("Aufgabenblock: " + block, chapterFont2));
-            PdfPCell titleC3 = new PdfPCell(new Paragraph("in Kategorie: " + sql.tempAntwortenSchueler.get(0).getKategorieName(), chapterFont3));
-            PdfPCell titleC4 = new PdfPCell(new Paragraph("im Fach: " + sql.tempAntwortenSchueler.get(0).getFachKuerzel() + " - " + sql.tempAntwortenSchueler.get(0).getFachName(), chapterFont3));
+            PdfPCell titleC3 = new PdfPCell(new Paragraph("in Kategorie: " + sql.getTempAntwortenSchueler().get(0).getKategorieName(), chapterFont3));
+            PdfPCell titleC4 = new PdfPCell(new Paragraph("im Fach: " + sql.getTempAntwortenSchueler().get(0).getFachKuerzel() + " - " + sql.getTempAntwortenSchueler().get(0).getFachName(), chapterFont3));
 
             titleC1.setBorderColor(BaseColor.WHITE);
             titleC2.setBorderColor(BaseColor.WHITE);
@@ -72,7 +82,7 @@ public class EvaluationsPdf {
             tableTitel.addCell(titleC4);
             document.add(tableTitel);
             
-            document.add(new Paragraph("Zuständiger Lehrer: " + sql.tempAntwortenSchueler.get(0).getZustLehrerVorname() + " " + sql.tempAntwortenSchueler.get(0).getZustLehrerNachname()));
+            document.add(new Paragraph("Zuständiger Lehrer: " + sql.getTempAntwortenSchueler().get(0).getZustLehrerVorname() + " " + sql.getTempAntwortenSchueler().get(0).getZustLehrerNachname()));
             
             float[] est = {3, 3, 3};
             PdfPTable tableErgebnisse = new PdfPTable(est);
@@ -93,7 +103,7 @@ public class EvaluationsPdf {
             tableErgebnisse.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             tableErgebnisse.getDefaultCell().setPadding(5);
             
-            for(AntwortPdfObjekt apo: sql.tempAntwortenSchueler){
+            for(AntwortPdfObjekt apo: sql.getTempAntwortenSchueler()){
                 tableErgebnisse.addCell(apo.getFrage());
                 if(apo.getAntwortS().equals(apo.getRichtigeAntwort())){
                     tableErgebnisse.getDefaultCell().setBackgroundColor(new BaseColor(0x00,0xFF, 0x7F)); //Hexcode

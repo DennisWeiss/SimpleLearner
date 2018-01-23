@@ -19,24 +19,67 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
+ * Stellt die Methoden für das Laden der Daten aus der Datenbank zur Verfügung
  *
  * @author Marcel
  */
 public class SqlLogik {
 
-    Properties userInfo;
-    ArrayList<String> faecher;
-    ArrayList<String> kategorien;
-    ArrayList<String> aufgabenbloecke;
-    ArrayList<String> aufgabenbloeckeTemp;
-    ArrayList<String> fragen;
-    ArrayList<String> antwortenTemp;
-    ArrayList<String> absolvierteSchueler;
-    ArrayList<AntwortPdfObjekt> tempAntwortenSchueler;
-    String loginLehrer;
-    String loginSchueler;
+    private final Properties userInfo;
+    private final ArrayList<String> faecher;
+    private final ArrayList<String> kategorien;
+    private ArrayList<String> aufgabenbloecke;
+    private final ArrayList<String> aufgabenbloeckeTemp;
+    private final ArrayList<String> fragen;
+    private final ArrayList<String> antwortenTemp;
+    private final ArrayList<String> absolvierteSchueler;
+    private final ArrayList<AntwortPdfObjekt> tempAntwortenSchueler;
     private String currentUser;
-    boolean isFertig;
+    private boolean isFertig;
+
+    public Properties getUserInfo() {
+        return userInfo;
+    }
+
+    public ArrayList<String> getFaecher() {
+        return faecher;
+    }
+
+    public ArrayList<String> getKategorien() {
+        return kategorien;
+    }
+
+    public ArrayList<String> getAufgabenbloecke() {
+        return aufgabenbloecke;
+    }
+
+    public ArrayList<String> getAufgabenbloeckeTemp() {
+        return aufgabenbloeckeTemp;
+    }
+
+    public ArrayList<String> getFragen() {
+        return fragen;
+    }
+
+    public ArrayList<String> getAntwortenTemp() {
+        return antwortenTemp;
+    }
+
+    public ArrayList<String> getAbsolvierteSchueler() {
+        return absolvierteSchueler;
+    }
+
+    public ArrayList<AntwortPdfObjekt> getTempAntwortenSchueler() {
+        return tempAntwortenSchueler;
+    }
+
+    public boolean isIsFertig() {
+        return isFertig;
+    }
+
+    public void setIsFertig(boolean isFertig) {
+        this.isFertig = isFertig;
+    }
 
     public String getCurrentUser() {
         return currentUser;
@@ -48,8 +91,8 @@ public class SqlLogik {
 
     public SqlLogik() {
         userInfo = new Properties();
-        userInfo.put("user", "root"); //"root" für stefan
-        userInfo.put("password", "databasemarcel"); //"stefan" für stefan
+        userInfo.put("user", "root"); //Username der MySql-Datenbank
+        userInfo.put("password", "databasemarcel"); //Passwort der MySql-Datenbank
         faecher = new ArrayList<>();
         kategorien = new ArrayList<>();
         aufgabenbloecke = new ArrayList<>();
@@ -58,11 +101,15 @@ public class SqlLogik {
         antwortenTemp = new ArrayList<>();
         absolvierteSchueler = new ArrayList<>();
         tempAntwortenSchueler = new ArrayList<>();
-        loginLehrer = null;
-        loginSchueler = null;
         currentUser = null;
     }
 
+    /**
+     * Initialisiert eine Tabelle, welche dazu dient, später zu überprüfen ob der Schüler das jeweilige Quiz schon gelöst hat
+     * @param blockBez - Der Name des jeweiligen Aufgabenblocks
+     * @param aSchueler - Der Name des lösenden Schülers
+     * @throws SQLException 
+     */
     public void startBlock(String blockBez, String aSchueler) throws SQLException {
         String startString = "insert into schuelerloestblock(schueler, block) values(?, ?);";
         String suchString = "select block, schueler from schuelerloestblock;";
@@ -93,21 +140,15 @@ public class SqlLogik {
             }
         }
     }
-
-    /*
-    public void endBlock(String blockBez, String aSchueler) throws SQLException {
-        String endString = "update schuelerloestblock set fertig = ? where schueler = ? and block = ?;";
-
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtStart = myConn.prepareStatement(endString)) {
-
-            stmtStart.setBoolean(1, true);
-            stmtStart.setString(2, aSchueler);
-            stmtStart.setString(3, blockBez);
-
-            stmtStart.executeUpdate();
-        }
-    }
+    
+    /**
+     * Überprüft die Antwort des Schülers zur jeweiligen Aufgabenstellung
+     * @param blockBez - Der Name des Aufgabenblocks
+     * @param aSchueler - Der Name(Username) des aktiven Schülers
+     * @param aFrage - Der Fragetext der aktuellen Aufgabe
+     * @param aAntwort - Die Antwort des Schülers
+     * @return Gibt einen boolean zur Anzeige zurück
+     * @throws SQLException 
      */
     public boolean checkAntwort(String blockBez, String aSchueler, String aFrage, String aAntwort) throws SQLException {
 
@@ -156,6 +197,14 @@ public class SqlLogik {
         return check;
     }
 
+    /**
+     * Überprüft den Login des Users
+     * @param user - der Nutzername
+     * @param password - das Nutzerpasswort
+     * @return Gibt einen Zweistelligen Boolean-Array zurück. Boolean[0] gibt an, ob die eingegebenen Daten korrekt sind. Boolean[1] gibt an ob es ein Schüler oder ein Lehrer
+     * ist um die jeweilige Oberfläche zu laden.
+     * @throws SQLException 
+     */
     public boolean[] checkLogin(String user, String password) throws SQLException {
 
         String stringCheck = "select * from lehrer, schueler";
@@ -187,36 +236,10 @@ public class SqlLogik {
         }
     }
 
-    public void loadLehrer(String lid) throws SQLException {
-        String stringLehrer = "select vorname, nachname from lehrer where lid = ?";
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtLehrer = myConn.prepareStatement(stringLehrer);
-                ResultSet rsLehrer = stmtLehrer.executeQuery()) {
-
-            while (rsLehrer.next()) {
-                loginLehrer = rsLehrer.getString("vorname") + " " + rsLehrer.getString("nachname");
-            }
-
-        } catch (SQLException exc) {
-            throw exc;
-        }
-    }
-
-    public void loadSchueler(String sid) throws SQLException {
-        String stringSchüler = "select vorname, nachname from schueler where sid = ?";
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtSchueler = myConn.prepareStatement(stringSchüler);
-                ResultSet rsSchueler = stmtSchueler.executeQuery()) {
-
-            while (rsSchueler.next()) {
-                loginSchueler = rsSchueler.getString("vorname") + " " + rsSchueler.getString("nachname");
-            }
-
-        } catch (SQLException exc) {
-            throw exc;
-        }
-    }
-
+    /**
+     * Lädt alle vorhandenen Fächer für die Schüler
+     * @throws SQLException 
+     */
     public void loadFaecher() throws SQLException {
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
                 Statement stmtFach = myConn.createStatement();
@@ -235,6 +258,11 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt nur Fächer, für welche der Lehrer eine Qualifikation besitzt, für den Lehrer
+     * @param lehrer
+     * @throws SQLException 
+     */
     public void loadFaecher(String lehrer) throws SQLException {
         String faecherString = "select fach from lehrerunterrichtet where lehrer = ?";
         ResultSet rsFach = null;
@@ -261,6 +289,11 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Filtert alle Fächer für die Schüler
+     * @param filter - der zu filternde String
+     * @throws SQLException 
+     */
     public void loadFilteredFaecher(String filter) throws SQLException {
         String faecherString = "select fid from fach where fid like ?";
         ResultSet rsFach = null;
@@ -287,6 +320,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Filtert alle Fächer für den Lehrer
+     * @param lehrer - der jeweilige Lehrer
+     * @param filter - der zu filternde String
+     * @throws SQLException 
+     */
     public void loadFilteredFaecher(String lehrer, String filter) throws SQLException {
         String faecherString = "select fach from lehrerunterrichtet where lehrer = ? and fach like ?;";
         ResultSet rsFach = null;
@@ -314,6 +353,11 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle vorhandenen Kategorien für das aufgerufene Fach
+     * @param fach - das spezifische Fach
+     * @throws SQLException 
+     */
     public void loadKategorien(String fach) throws SQLException {
         String kategorieString = "select kid from kategorie where fach = ?";
         ResultSet rsFach = null;
@@ -340,6 +384,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Filtert alle Kategorien
+     * @param fach - das ausgewählte Fach (benötigt, da Liste komplett neu aus der Datenbank geladen wird)
+     * @param filter - der zu filternde String
+     * @throws SQLException 
+     */
     public void loadFilteredKategorien(String fach, String filter) throws SQLException {
         String kategorieString = "select kid from kategorie where fach = ? and kid like ?";
         ResultSet rsFach = null;
@@ -367,6 +417,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle Blöcke, die der Lehrer selbst erstellt hat
+     * @param kategorie - die aktive Kategorie
+     * @param lehrer - der aktive Lehrer
+     * @throws SQLException 
+     */
     public void loadBloeckeLehrer(String kategorie, String lehrer) throws SQLException {
         String blockString = "select bid from block where kategorie = ? and lehrer = ?;";
         ResultSet rsBlock = null;
@@ -392,6 +448,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle vorhandenen Blöcke der aktiven Kategorie
+     * @param kategorie - aktive Kategorie
+     * @param schueler - aktiver Schüler
+     * @throws SQLException 
+     */
     public void loadBloeckeSchueler(String kategorie, String schueler) throws SQLException {
         String blockString = "select bid from block where kategorie = ?";
         String blockStringTwo = "select block.bid, schuelerloestblock.block from block "
@@ -449,6 +511,13 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Filtert die Blöcke des Lehrers
+     * @param kategorie - die aktive Kategorie
+     * @param lehrer - der aktive Lehrer
+     * @param filter - der zu filternde String
+     * @throws SQLException 
+     */
     public void loadFilteredBloeckeLehrer(String kategorie, String lehrer, String filter) throws SQLException {
         String blockString = "select bid from block where kategorie = ? and lehrer = ? and bid like ?;";
         ResultSet rsBlock = null;
@@ -475,6 +544,13 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Filtert alle Blöcke der aktiven Kategorie für den Schüler
+     * @param kategorie - die aktive Kategorie
+     * @param schueler - der aktive Schüler
+     * @param filter - der zu filternde String
+     * @throws SQLException 
+     */
     public void loadFilteredBloeckeSchueler(String kategorie, String schueler, String filter) throws SQLException {
         /*String blockString = "select bid from block where kategorie = ? and bid like ?;";
         ResultSet rsBlock = null;
@@ -561,6 +637,11 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle Fragen innerhalb eines Aufgabenblocks in eine Liste
+     * @param block - der spezifizierte Block
+     * @throws SQLException 
+     */
     public void loadFragen(String block) throws SQLException {
         String stringFrage = "select frage from aufgabe join block on aufgabe.block = block.bid where block.bid = ?";
         ResultSet rsFrage = null;
@@ -587,6 +668,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle Antwortmöglichkeiten der jeweiligen Frage temporär in eine Liste
+     * @param block - der aktuelle Block
+     * @param frage - die aktuelle Frage
+     * @throws SQLException 
+     */
     public void loadAntworten(String block, String frage) throws SQLException {
         String stringAntworten = "select antworttext from antwort join aufgabe on antwort.aufgabe = aufgabe.aid "
                 + "join block on aufgabe.block = block.bid where block.bid = ? and aufgabe.frage = ?";
@@ -612,6 +699,13 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Löscht den gewünschten Aufgabenblock
+     * @param blockname - der ausgewählte Aufgabenblock
+     * @param lehrer - der durchführende Lehrer
+     * @param kategorie - die Kategorie, in welcher sich der Aufgabenblock befindet
+     * @throws SQLException 
+     */
     public void deleteBlock(String blockname, String lehrer, String kategorie) throws SQLException {
         String loeschenString = "delete from block where bid = ? and lehrer = ? and kategorie = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
@@ -628,36 +722,13 @@ public class SqlLogik {
         }
     }
 
-    /*public void deleteAufgabe(String blockname, String frage) throws SQLException {
-        String loeschenString = "delete from aufgabe where block = ? and frage = ?;";
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtLoeschen = myConn.prepareStatement(loeschenString)) {
-            
-            stmtLoeschen.setString(1, blockname);
-            stmtLoeschen.setString(2, frage);
-            
-            stmtLoeschen.executeUpdate();
-
-        } catch (SQLException exc) {
-            throw exc;
-        }
-    }*/
-    public void updateAntworttext(String block, String frage, String alteAntwort, String neueAntwort) throws SQLException {
-        String updateString = "update antwort set antworttext = ? "
-                + "join aufgabe on antwort.aufgabe = aufgabe.aid"
-                + "join block on aufgabe.block = block.bid"
-                + "where aufgabe.frage = ? and antwort.antworttext = ?";
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtUpdate = myConn.prepareStatement(updateString)) {
-
-            stmtUpdate.setString(1, neueAntwort);
-            stmtUpdate.setString(2, frage);
-            stmtUpdate.setString(3, alteAntwort);
-
-            stmtUpdate.executeUpdate();
-        }
-    }
-
+    /**
+     * Erzeugt einen neuen Aufgabenblock für den Lehrer
+     * @param block - der Name des neuen Blocks
+     * @param lehrer - der aktive Lehrer
+     * @param kategorie - die Kategorie, in welcher sich der Aufgabenblock befindet
+     * @throws SQLException 
+     */
     public void createBlock(String block, String lehrer, String kategorie) throws SQLException {
         String createString = "insert into block(bid, lehrer, kategorie) values(?, ?, ?);";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
@@ -673,6 +744,12 @@ public class SqlLogik {
 
     }
 
+    /**
+     * Erzeugt eine neue Kategorie im aktiven Fach des Lehrers
+     * @param katName - der Name der neuen Kategorie
+     * @param fachName - der Name des aktiven Fachs
+     * @throws SQLException 
+     */
     public void createKategorie(String katName, String fachName) throws SQLException {
         String createString = "insert into kategorie(kid, fach) values(?,?);";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
@@ -683,21 +760,6 @@ public class SqlLogik {
 
             stmtUpdate.executeUpdate();
         }
-    }
-
-    public void createAufgabeInBlock(String block, String frage, VBox vb) throws SQLException {
-        String insertString = "insert into aufabe(block, frage) values(?, ?);";
-
-        try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
-                PreparedStatement stmtNewAufgabe = myConn.prepareStatement(insertString)) {
-
-            stmtNewAufgabe.setString(1, block);
-            stmtNewAufgabe.setString(2, frage);
-
-            stmtNewAufgabe.executeUpdate();
-
-        }
-
     }
 
     private void createAntwortenInAufgabe(String block, String frage, VBox vb) throws SQLException {
@@ -736,6 +798,13 @@ public class SqlLogik {
 
     }
 
+    /**
+     * Ändert den Namen des aktiven Blocks
+     * @param blockAlt - alter Blockname
+     * @param lehrer - bearbeitender Lehrer
+     * @param blockNeu - neuer Blockname
+     * @throws SQLException 
+     */
     public void updateQuiz(String blockAlt, String lehrer, String blockNeu) throws SQLException {
         String updateString = "update block set block.bid = ? where block.bid = ? and block.lehrer = ?;";
         try (Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SimpleLearner?useSSL=true", userInfo);
@@ -748,6 +817,13 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Ändert den Fragetext der aktuellen Aufgabe
+     * @param block - der aktuelle Block
+     * @param frageAlt - der alte Fragetext
+     * @param frageNeu - der neue Fragetext
+     * @throws SQLException 
+     */
     public void updateTask(String block, String frageAlt, String frageNeu) throws SQLException {
         String updateString;
         if (frageAlt != null) {
@@ -761,7 +837,7 @@ public class SqlLogik {
                 stmtNewQuestion.setString(1, frageNeu);
                 stmtNewQuestion.setString(2, block);
                 stmtNewQuestion.setString(3, frageAlt);
-            } else{
+            } else {
                 stmtNewQuestion.setString(1, block);
                 stmtNewQuestion.setString(2, frageNeu);
             }
@@ -770,6 +846,14 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Aktualisiert die Antwortmöglichkeiten einer Aufgabe
+     * @param block - der aktuelle Block
+     * @param frage - die Frage der Aufgabe
+     * @param lehrer - der bearbeitende Lehrer
+     * @param neueAntworten - die Liste mit den neuen Antwortmöglichkeiten
+     * @throws SQLException 
+     */
     public void updateAnswers(String block, String frage, String lehrer, VBox neueAntworten) throws SQLException {
         String deleteString = "delete from antwort where antwort.aufgabe = (select aufgabe.aid from aufgabe where aufgabe.frage = ? "
                 + "and aufgabe.block = (select block.bid from block where block.bid = ? and block.lehrer = ?));";
@@ -787,6 +871,12 @@ public class SqlLogik {
         }
     }
 
+    /**
+     * Lädt alle Schüler, welche den spezifizierten Aufgabenblock bereits gelöst haben
+     * @param blockName - der gewählte Block
+     * @param lehrer - der zuständige Lehrer
+     * @throws SQLException 
+     */
     public void loadAbsolvierteSchueler(String blockName, String lehrer) throws SQLException {
         String searchString = "select * from schueler join schuelerloestblock on schueler.sid = schuelerloestblock.schueler "
                 + "join block on schuelerloestblock.block = block.bid "
@@ -805,11 +895,18 @@ public class SqlLogik {
 
             absolvierteSchueler.clear();
             while (rsSearchSchueler.next()) {
-                absolvierteSchueler.add(rsSearchSchueler.getString("sid"));
+                absolvierteSchueler.add(rsSearchSchueler.getString("vorname") + " " + rsSearchSchueler.getString("nachname"));
             }
         }
     }
 
+    /**
+     * Lädt alle Antworten eines Schülers zu dem spezifizierten Block
+     * @param block - der spezifizierte Block
+     * @param lehrer - der zuständige Lehrer
+     * @param schueler - der abgefragte Schüler
+     * @throws SQLException 
+     */
     public void loadAbsolvierteAntworten(String block, String lehrer, String schueler) throws SQLException {
         String loadString = "select lehrer.vorname, lehrer.nachname, schueler.vorname, schueler.nachname, aufgabe.frage, schuelerloestaufgabe.antwortS, antwort.antworttext, fach.kuerzel, fach.fid, kategorie.kid "
                 + "from schueler "
@@ -855,7 +952,7 @@ public class SqlLogik {
         }
     }
 
-    public ArrayList<String> filterList(ArrayList<String> inputList, String filter) {
+    private ArrayList<String> filterList(ArrayList<String> inputList, String filter) {
         ArrayList<String> outputList = new ArrayList<>();
         for (int index = 0; index < inputList.size(); index++) {
             String filteredString = inputList.get(index);
