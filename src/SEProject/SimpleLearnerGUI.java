@@ -33,6 +33,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.scene.text.TextAlignment;
@@ -265,6 +267,7 @@ public class SimpleLearnerGUI extends Application {
 
         filter.setPromptText("Filter");
         filter.setPrefHeight(30);
+        filter.setPrefWidth(200);
         filter.setFocusTraversable(false);
 
         filter.setOnKeyReleased(e -> {
@@ -276,11 +279,15 @@ public class SimpleLearnerGUI extends Application {
                 fillVerzeich();
             }
         });
-        Button btnLogout = new Button("Abmelden");
+        Image logoutImage = new Image(getClass().getResourceAsStream("logout20.png"));
+        Button btnLogout = new Button("Abmelden", new ImageView(logoutImage));
         btnLogout.setId("btnLogout");
+        btnLogout.getStyleClass().add("btn");
 
-        Button btnBack = new Button("Zurück");
+        Image back = new Image(getClass().getResourceAsStream("back20.png"));
+        Button btnBack = new Button("Zurück", new ImageView(back));
         btnBack.setId("btnBack");
+        btnBack.getStyleClass().add("btn");
         btnBack.setAlignment(Pos.CENTER);
         HBox hBoxRight = new HBox(8);
         hBoxRight.getChildren().addAll(filter, btnLogout);
@@ -997,112 +1004,111 @@ public class SimpleLearnerGUI extends Application {
         btnAntwortenAuswahl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                if (taskText.getText() != null) {
+                    System.out.println("Neue Antwortauswahl");
 
-                System.out.println("Neue Antwortauswahl");
+                    Stage tempStage = new Stage();
+                    tempStage.setTitle("Neue Antwortauswahl");
 
-                Stage tempStage = new Stage();
-                tempStage.setTitle("Neuer Aufgabentext");
+                    ToggleGroup tempToggleGroup = new ToggleGroup();
+                    VBox vBox = new VBox(8);
+                    HBox hBoxButtonsBottom = new HBox(8);
+                    hBoxButtonsBottom.setPrefHeight(40);
+                    Button btnCancel = new Button("Abbrechen");
+                    btnCancel.getStyleClass().add("btn");
+                    hBoxButtonsBottom.setMargin(btnCancel, new Insets(10, 10, 10, 50));
 
-                ToggleGroup tempToggleGroup = new ToggleGroup();
-                VBox vBox = new VBox(8);
-                HBox hBoxButtonsBottom = new HBox(8);
-                hBoxButtonsBottom.setPrefHeight(50);
-                Button btnCancel = new Button("Abbrechen");
-                btnCancel.getStyleClass().add("btn");
-                hBoxButtonsBottom.setMargin(btnCancel, new Insets(10, 10, 10, 10));
-
-                Button btnConfirm = new Button("Bestätigen");
-                btnConfirm.getStyleClass().add("btn");
-                hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10, 10, 10, 10));
-                // vBox füllen
-                //HBox h1 = new HBox();
-                //    h1.getChildren().add(new Button());
-                //    h1.getChildren().add(new TextField());
-                //    vBox.getChildren().add(h1);
-                for (int i = 0; i < antwortAuswahl.getChildren().size(); i++) {
-                    RadioButton rb = (RadioButton) antwortAuswahl.getChildren().get(i);
-                    String text = rb.getText();
-                    RadioButton neuRb = new RadioButton();
-                    neuRb.setToggleGroup(tempToggleGroup);
-                    TextField neuTf = new TextField(text);
-                    HBox hb = new HBox();
-                    hb.getChildren().addAll(neuRb, neuTf);
-                    vBox.getChildren().add(hb);
-                }
-                VBox vBox2 = new VBox();
-                Button btnNeueAnwort = new Button("Neue Antwort");
-                vBox2.getChildren().add(vBox);
-                vBox2.getChildren().add(btnNeueAntwort);
-
-                hBoxButtonsBottom.getChildren().add(btnCancel);
-                hBoxButtonsBottom.getChildren().add(btnConfirm);
-
-                BorderPane tempPane = new BorderPane();
-                tempPane.setCenter(vBox2);
-                tempPane.setBottom(hBoxButtonsBottom);
-
-                Scene tempScene = new Scene(tempPane, 300, 300);
-
-                tempStage.setScene(tempScene);
-                //              tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
-                tempStage.show();
-
-                // btnNeueAntwort definieren
-                btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        System.out.println("Neue Antwort wird erstellt");
-
-                        RadioButton radioBtn = new RadioButton();
-                        radioBtn.setToggleGroup(tempToggleGroup);
-
-                        HBox h = new HBox();
-                        h.getChildren().add(radioBtn);
-                        h.getChildren().add(new TextField());
-                        vBox.getChildren().add(h);
-
+                    Button btnConfirm = new Button("Bestätigen");
+                    btnConfirm.getStyleClass().add("btn");
+                    hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10, 10, 10, 50));
+                    // vBox füllen
+                    //HBox h1 = new HBox();
+                    //    h1.getChildren().add(new Button());
+                    //    h1.getChildren().add(new TextField());
+                    //    vBox.getChildren().add(h1);
+                    for (int i = 0; i < antwortAuswahl.getChildren().size(); i++) {
+                        RadioButton rb = (RadioButton) antwortAuswahl.getChildren().get(i);
+                        String text = rb.getText();
+                        RadioButton neuRb = new RadioButton();
+                        neuRb.setToggleGroup(tempToggleGroup);
+                        TextField neuTf = new TextField(text);
+                        HBox hb = new HBox();
+                        hb.getChildren().addAll(neuRb, neuTf);
+                        vBox.getChildren().add(hb);
                     }
-                });
+                    VBox vBox2 = new VBox();
+                    Button btnNeueAnwort = new Button("Neue Antwort");
+                    vBox2.getChildren().add(vBox);
+                    vBox2.getChildren().add(btnNeueAntwort);
 
-                // btnAbbr definieren
-                btnCancel.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
+                    hBoxButtonsBottom.getChildren().addAll(btnConfirm, btnCancel);
 
-                        System.out.println("Eingabe abgebrochen");
-                        tempStage.close();
-                    }
-                });
+                    BorderPane tempPane = new BorderPane();
+                    tempPane.setCenter(vBox2);
+                    tempPane.setBottom(hBoxButtonsBottom);
 
-                btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
+                    Scene tempScene = new Scene(tempPane, 300, 300);
+                    tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
+                    tempStage.setScene(tempScene);
 
-                        System.out.println("Eingabe wird gespeichert");
+                    tempStage.show();
 
-                        try {
-                            sql.updateAnswers(blockPar, taskText.getText(), loginName.getText(), vBox);
-                            setBtnLoadAnswerChoice();
-                            fillAntwortAuswahl(blockPar, taskText.getText());
-                            //hier die Antworten direkt neu Laden in der VBox
-                        } catch (SQLException exc) {
-                            System.out.println(exc.getMessage());
+                    // btnNeueAntwort definieren
+                    btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            System.out.println("Neue Antwort wird erstellt");
+
+                            RadioButton radioBtn = new RadioButton();
+                            radioBtn.setToggleGroup(tempToggleGroup);
+
+                            HBox h = new HBox();
+                            h.getChildren().add(radioBtn);
+                            h.getChildren().add(new TextField());
+                            vBox.getChildren().add(h);
+
                         }
-                        /*
+                    });
+
+                    // btnAbbr definieren
+                    btnCancel.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+
+                            System.out.println("Eingabe abgebrochen");
+                            tempStage.close();
+                        }
+                    });
+
+                    btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+
+                            System.out.println("Eingabe wird gespeichert");
+
+                            try {
+                                sql.updateAnswers(blockPar, taskText.getText(), loginName.getText(), vBox);
+                                setBtnLoadAnswerChoice();
+                                fillAntwortAuswahl(blockPar, taskText.getText());
+                                //hier die Antworten direkt neu Laden in der VBox
+                            } catch (SQLException exc) {
+                                System.out.println(exc.getMessage());
+                            }
+                            /*
                            Anweisungen hier
-                         */
-                        // Auslesen aller TextFelder
-                        for (int i = 0; i < vBox.getChildren().size(); i++) {
-                            HBox hb = (HBox) vBox.getChildren().get(i);
-                            for (int j = 0; j < hb.getChildren().size(); j++) {
-                                if (hb.getChildren().get(j) instanceof TextField) {
-                                    TextField tf = (TextField) hb.getChildren().get(j);
-                                    String ausgabeString = tf.getText();
-                                    System.out.println(ausgabeString + "ausgabeString");
+                             */
+                            // Auslesen aller TextFelder
+                            for (int i = 0; i < vBox.getChildren().size(); i++) {
+                                HBox hb = (HBox) vBox.getChildren().get(i);
+                                for (int j = 0; j < hb.getChildren().size(); j++) {
+                                    if (hb.getChildren().get(j) instanceof TextField) {
+                                        TextField tf = (TextField) hb.getChildren().get(j);
+                                        String ausgabeString = tf.getText();
+                                        System.out.println(ausgabeString + "ausgabeString");
+                                    }
                                 }
                             }
-                        }
-                        /*
+                            /*
                         // vergleiche toggles mit gewählten toggle zur feststellung der wievielte er ist.            
                         int nrSelectedToggle = -1;
                         for (int i = 0; i < tempToggleGroup.getToggles().size(); i++) {
@@ -1112,14 +1118,15 @@ public class SimpleLearnerGUI extends Application {
                             }
                         }
                         System.out.println(nrSelectedToggle);
-                         */
-                        //Antworten neuladen und Fenster schliessen
-                        //btnLabel und taskNumber sind unbekannt 
-                        //fillAntwortAuswahl(*btnQuizName*, sql.fragen.get(*taskNumber*));
-                        tempStage.close();
-                    }
-                });
+                             */
+                            //Antworten neuladen und Fenster schliessen
+                            //btnLabel und taskNumber sind unbekannt 
+                            //fillAntwortAuswahl(*btnQuizName*, sql.fragen.get(*taskNumber*));
+                            tempStage.close();
+                        }
+                    });
 
+                }
             }
         });
     }
@@ -1131,10 +1138,14 @@ public class SimpleLearnerGUI extends Application {
 
             BorderPane borderPane = new BorderPane();
             TextField tf = new TextField();
+            tf.setPrefHeight(30);
             tf.setPromptText("Hier Blocknamen eintragen");
             Button btnAbbrechen = new Button("Abbrechen");
             Button btnBestaetigen = new Button("Bestaetigen");
-
+            btnAbbrechen.getStyleClass().add("cancelButton");
+            btnBestaetigen.getStyleClass().add("okButton");
+            btnAbbrechen.setPrefWidth(120);
+            btnBestaetigen.setPrefWidth(120);
             btnAbbrechen.setOnAction(e2 -> {
                 tempStage.close();
             });
@@ -1149,10 +1160,13 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.close();
             });
             borderPane.setTop(tf);
-            borderPane.setLeft(btnAbbrechen);
-            borderPane.setRight(btnBestaetigen);
-
-            Scene tempScene = new Scene(borderPane, 300, 300);
+            borderPane.setLeft(btnBestaetigen);
+            borderPane.setRight(btnAbbrechen);
+            borderPane.getStyleClass().add("popupPane");
+            borderPane.setMargin(btnAbbrechen, new Insets(10, 10, 10, 20));
+            borderPane.setMargin(btnBestaetigen, new Insets(10, 20, 10, 10));
+            Scene tempScene = new Scene(borderPane, 300, 80);
+            tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
 
             tempStage.setScene(tempScene);
             tempStage.show();
@@ -1187,16 +1201,22 @@ public class SimpleLearnerGUI extends Application {
                 Button btnConfirm = new Button("Bestätigen");
                 btnCancel.setId("newTaskTextCancelButton");
                 btnCancel.getStyleClass().add("btn");
+                btnCancel.setPrefWidth(120);
                 btnConfirm.getStyleClass().add("btn");
                 btnConfirm.setId("newTaskTextConfirmButton");
 
+                btnConfirm.setPrefWidth(120);
+                btnCancel.getStyleClass().add("cancelButton");
+                btnConfirm.getStyleClass().add("okButton");
+
                 hBox.setMargin(btnCancel, new Insets(10, 10, 10, 10));
-                hBox.setMargin(btnConfirm, new Insets(10, 10, 10, 10));
-                hBox.setPrefHeight(80);
+                hBox.setMargin(btnConfirm, new Insets(10, 10, 10, 50));
+                hBox.setPrefHeight(50);
                 hBox.setId("newTaskTextHBox");
-                hBox.getChildren().add(btnCancel);
-                hBox.getChildren().add(btnConfirm);
+                hBox.getChildren().addAll(btnConfirm, btnCancel);
+
                 TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
+                tempTextArea.setId("newTaskTextArea");
                 tempTextArea.setMinWidth(300);
                 tempTextArea.setMinHeight(200);
                 tempTextArea.setWrapText(true);
@@ -1205,7 +1225,7 @@ public class SimpleLearnerGUI extends Application {
                 tempPane.setCenter(tempTextArea);
                 tempPane.setBottom(hBox);
 
-                Scene tempScene = new Scene(tempPane, 300, 300);
+                Scene tempScene = new Scene(tempPane, 350, 250);
                 tempScene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                 tempStage.setScene(tempScene);
                 tempStage.show();
