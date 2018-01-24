@@ -949,7 +949,7 @@ public class SimpleLearnerGUI extends Application {
         taskText.setWrapText(true);
         taskText.setId("taskText");
         taskText.setAlignment(Pos.CENTER);
-        taskText.setFont(Font.font(16)); //aufgabeText.setText("ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
+        taskText.setFont(Font.font(16)); 
         tempPane.setCenter(vBoxTaskText);
         tempPane.setMargin(vBoxTaskText, new Insets(20, 30, 20, 30));
         tempPane.setMaxWidth(450);
