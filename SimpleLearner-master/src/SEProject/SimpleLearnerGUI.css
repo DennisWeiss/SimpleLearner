@@ -79,7 +79,8 @@
     -fx-background-color: #e6e6e6;
 }
 #vBoxTaskText{
-    -fx-background-color: yellowgreen;
+    -fx-background-color: #ffffcc;
+    -fx-effect: dropshadow(three-pass-box, rgb(255, 255, 204), 20, 0, 0, 0);
 }
 #listContainer{
     -fx-background-color: #f2f2f2;
@@ -115,10 +116,10 @@
     -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.6), 10, 0, 0, 0);
 }
 
-/*-----New Task Text popup------*/
+/*-----Popups------*/
 
 #newTaskTextHBox{
-    -fx-background-color: #595959;
+    -fx-background-color: #ffffcc;
 }
 #newTaskTextArea{
     /*#009933; TeST*/
@@ -126,23 +127,24 @@
 .cancelButton, .okButton{
 -fx-font-size: 14px;
     -fx-pref-height: 30px;
+    -fx-pref-width: 120px;
     -fx-text-fill:#595959;
 }
 .okButton:hover{
     -fx-font-weight: bold;
-    -fx-text-fill:#009933;
+     -fx-background-color:#8ab92d;
 }
 .okButton:pressed{
     -fx-background-color: #f2f2f2;
-    -fx-text-fill:#595959;
+    -fx-text-fill:#009933;
 }
 .cancelButton:hover{
     -fx-font-weight: bold;
-    -fx-text-fill:#ff471a;
+    -fx-background-color:#ff4d4d;
 }
 .cancelButton:pressed{
--fx-background-color: #f2f2f2;
-    -fx-text-fill:#595959;
+    -fx-background-color: #f2f2f2;
+    -fx-text-fill:#ff471a;
 }
 .popupPane{
     -fx-background-color: #595959;
