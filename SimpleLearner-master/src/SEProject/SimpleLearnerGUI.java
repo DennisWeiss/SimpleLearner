@@ -914,7 +914,6 @@ public class SimpleLearnerGUI extends Application {
         vBoxTaskText.setId("vBoxTaskText");
         vBoxTaskText.setMaxHeight(250);
         vBoxTaskText.setAlignment(Pos.TOP_CENTER);
- //       vBoxTaskText.setAlignment(Pos.BOTTOM_CENTER);
         vBoxTaskText.getChildren().clear();
         vBoxTaskText.getChildren().add(taskText);
         if (isTeacher) {
@@ -936,7 +935,9 @@ public class SimpleLearnerGUI extends Application {
         btnChangeTaskText.getStyleClass().add("btn");
         btnAntwortenAuswahl.getStyleClass().add("btn");
         btnBestaetigen.getStyleClass().add("btn");
-        
+        btnBestaetigen.setPrefWidth(120);
+        btnNaechsteAufgabe.getStyleClass().add("btn");
+        btnNaechsteAufgabe.setPrefWidth(120);
         
         tempPane.setId("aufgabePane");
         AnswerPane.setId("answerPane");
@@ -981,7 +982,6 @@ public class SimpleLearnerGUI extends Application {
         AufgabenPane.setRight(AnswerPane);
         AufgabenPane.setTop(topContainerTask);
         AufgabenPane.setId("createTaskPane");
-
         
         AnswerPane.setPrefWidth(250);
         antwortAuswahl.setSpacing(5);
@@ -1003,6 +1003,8 @@ public class SimpleLearnerGUI extends Application {
         navigator.getChildren().clear();
         navigator.add(auswertungAntwort, 0, 0);
         navigator.add(btnBestaetigen, 0, 1);
+        navigator.setMargin(btnNaechsteAufgabe, new Insets(10,10,10,10));
+        navigator.setMargin(btnBestaetigen, new Insets(10,10,10,10));
     }
 
     void fillAntwortAuswahl(String block, String frage) {
