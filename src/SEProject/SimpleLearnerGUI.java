@@ -142,8 +142,10 @@ public class SimpleLearnerGUI extends Application {
         loginContainer.setPadding(new Insets(10, 50, 50, 50));
         loginContainer.setId("loginContainer");
         loginContainer.getChildren().addAll(loginLabel, nameLabel, loginName, passLabel, loginPassword, btnLogin);
-        loginContainer.setMinSize(300, 250);
-        loginContainer.setMaxSize(300, 250);
+        loginContainer.setMinSize(300, 300);
+        loginContainer.setMaxSize(300, 300);
+        loginContainer.setMargin(loginLabel, new Insets(20, 0, 0, 65));
+        loginContainer.setMargin(btnLogin, new Insets(20, 0, 0, 0));
 
         temp.setTop(loginTop);
         temp.setCenter(loginContainer);
@@ -894,6 +896,9 @@ public class SimpleLearnerGUI extends Application {
     void setVBoxTaskContainer() {
         vBoxTaskText.setMargin(btnChangeTaskText, new Insets(5, 5, 5, 5));
         vBoxTaskText.setMargin(taskText, new Insets(5, 5, 5, 5));
+        vBoxTaskText.setId("vBoxTaskText");
+        vBoxTaskText.setMaxHeight(250);
+        vBoxTaskText.setAlignment(Pos.TOP_CENTER);
         vBoxTaskText.getChildren().clear();
         vBoxTaskText.getChildren().add(taskText);
         if (isTeacher) {
