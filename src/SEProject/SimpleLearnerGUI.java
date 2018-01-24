@@ -883,6 +883,7 @@ public class SimpleLearnerGUI extends Application {
     VBox antwortAuswahl = new VBox();
     Button btnAntwortenAuswahl = new Button("Antwortenauswahl ändern");
     ToggleGroup AntwortGroup = new ToggleGroup();
+    Button btnDeleteAntwort = new Button("Lösche Aufgabe");
     Button btnNeueAntwort = new Button("Neue Aufgabe");
     GridPane navigator = new GridPane();
     //Button btnZurück = new Button("Zurück");
@@ -1044,9 +1045,11 @@ public class SimpleLearnerGUI extends Application {
                     }
                     
                     VBox vBox2 = new VBox();
+                    HBox hBoxFunc = new HBox();
                     Button btnNeueAnwort = new Button("Neue Antwort");
                     vBox2.getChildren().add(vBox);
-                    vBox2.getChildren().add(btnNeueAntwort);
+                    hBoxFunc.getChildren().addAll(btnDeleteAntwort, btnNeueAntwort);
+                    vBox2.getChildren().add(hBoxFunc);
 
                     hBoxButtonsBottom.getChildren().addAll(btnConfirm, btnCancel);
 
@@ -1060,6 +1063,10 @@ public class SimpleLearnerGUI extends Application {
 
                     tempStage.show();
 
+                    btnDeleteAntwort.setOnAction(e2 -> {
+                        vBox.getChildren().remove(vBox.getChildren().size() - 1);
+                        
+                    });
                     // btnNeueAntwort definieren
                     btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
