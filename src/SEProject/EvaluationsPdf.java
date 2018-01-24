@@ -46,7 +46,7 @@ public class EvaluationsPdf {
      * @throws IOException 
      * @throws SQLException 
      */
-    public void createTable(String block, String lehrer, String schueler) throws DocumentException, IOException, SQLException {
+    public void createTable(String block, String lehrer, String vSchueler, String nSchueler) throws DocumentException, IOException, SQLException {
         if (document.isOpen() == false) {
             document = new Document();
         }
@@ -55,7 +55,7 @@ public class EvaluationsPdf {
             //PdfWriter writer = PdfCreator.getInstance(document, new FileOutputStream(System.getProperty("user.home") + "/Desktop/blabla.pdf"));
             document.open();
             
-            sql.loadAbsolvierteAntworten(block, lehrer, schueler);
+            sql.loadAbsolvierteAntworten(block, lehrer, vSchueler, nSchueler);
             
             Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
             Font chapterFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
