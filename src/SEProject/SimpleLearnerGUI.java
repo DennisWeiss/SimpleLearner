@@ -1032,6 +1032,17 @@ public class SimpleLearnerGUI extends Application {
                     btnConfirm.getStyleClass().add("btn");
                     hBoxButtonsBottom.setMargin(btnConfirm, new Insets(10, 10, 10, 50));
 
+                    for (int i = 0; i < antwortAuswahl.getChildren().size(); i++) {
+                        RadioButton rb = (RadioButton) antwortAuswahl.getChildren().get(i);
+                        String text = rb.getText();
+                        RadioButton neuRb = new RadioButton();
+                        neuRb.setToggleGroup(tempToggleGroup);
+                        TextField neuTf = new TextField(text);
+                        HBox hb = new HBox();
+                        hb.getChildren().addAll(neuRb, neuTf);
+                        vBox.getChildren().add(hb);
+                    }
+                    
                     VBox vBox2 = new VBox();
                     Button btnNeueAnwort = new Button("Neue Antwort");
                     vBox2.getChildren().add(vBox);
