@@ -62,7 +62,7 @@ public class SimpleLearnerGUI extends Application {
         scene.setRoot(getLoginPane());
 
         primaryStage = mainStage;
-        primaryStage.setTitle("SimpleTest - Anmeldung");
+        primaryStage.setTitle("SimpleLearner");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -199,7 +199,7 @@ public class SimpleLearnerGUI extends Application {
                         hString = "Kategorie";
                         scene.setRoot(getMainContainer());
                         tempStage.setScene(scene);
-                        tempStage.setTitle("SimpleLearner - Kategorie");
+                        tempStage.setTitle("SimpleLearner - " + loginName.getText());
                         tempStage.show();
                         // initialisere MeldungPane
                         // initialisiere AufgabenPane
@@ -313,8 +313,9 @@ public class SimpleLearnerGUI extends Application {
             scene.setRoot(getLoginPane());
 
             Stage tempStage = mainStage;
-            tempStage.setTitle("SimpleTest - Anmeldung");
+            tempStage.setTitle("SimpleLearner - " + loginName.getText());
             tempStage.setScene(scene);
+            tempStage.setTitle("SimpleLearner");
             tempStage.show();
         });
         btnBack.setOnAction((ActionEvent e) -> {
@@ -382,13 +383,15 @@ public class SimpleLearnerGUI extends Application {
                             tempStage.close();
                         });
                         btnConfirmCategory.setOnAction(e3 -> {
-                            try {
-                                sql.createKategorie(textFieldNewCategory.getText(), kategorieString);
-                                fillModul(kategorieString);
-                            } catch (SQLException exc) {
-                                System.out.println(exc.getMessage());
+                            if (textFieldNewCategory.getText().trim().length() > 0) {
+                                try {
+                                    sql.createKategorie(textFieldNewCategory.getText(), kategorieString);
+                                    fillModul(kategorieString);
+                                } catch (SQLException exc) {
+                                    System.out.println(exc.getMessage());
+                                }
+                                tempStage.close();
                             }
-                            tempStage.close();
                         });
                         borderPane.setTop(textFieldNewCategory);
                         borderPane.setLeft(btnCancelCategory);
@@ -413,13 +416,15 @@ public class SimpleLearnerGUI extends Application {
                             tempStage.close();
                         });
                         btnConfirmNewQuiz.setOnAction(e3 -> {
-                            try {
-                                sql.createBlock(textFieldNewQuiz.getText(), loginName.getText(), modulString);
-                                fillVerzeich();
-                            } catch (SQLException exc) {
-                                System.out.println(exc.getMessage());
+                            if (textFieldNewQuiz.getText().trim().length() > 0) {
+                                try {
+                                    sql.createBlock(textFieldNewQuiz.getText(), loginName.getText(), modulString);
+                                    fillVerzeich();
+                                } catch (SQLException exc) {
+                                    System.out.println(exc.getMessage());
+                                }
+                                tempStage.close();
                             }
-                            tempStage.close();
                         });
                         borderPane.setTop(textFieldNewQuiz);
                         borderPane.setLeft(btnCancelQuiz);
@@ -631,31 +636,47 @@ public class SimpleLearnerGUI extends Application {
                 try {
                     System.out.println(btnQuizName + loginName.getText());
                     sql.loadAbsolvierteSchueler(btnQuizName, loginName.getText());
-                    for (int i = 0; i < sql.getAbsolvierteSchueler().size(); i++) {
-                        Button btnStudentName = new Button(sql.getAbsolvierteSchueler().get(i));
-                        btnStudentName.setPrefWidth(100);
-                        btnStudentName.setOnAction(e -> {
-                            FileChooser fc = new FileChooser();
-                            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
-                            File f = fc.showSaveDialog(new Stage());
-                            System.out.println(f);
-                            if (f != null && !f.getName().contains(".")) {
-                                f = new File(f.getAbsolutePath() + ".pdf");
-                            }
-                            if (f != null) {
-                                try {
-                                    EvaluationsPdf pdf = new EvaluationsPdf(sql, f);
-                                    pdf.createTable(btnQuizName, loginName.getText(), btnStudentName.getText());
-                                } catch (IOException | DocumentException | SQLException exc) {
-                                    System.out.println(exc.getMessage());
+                    if (sql.getAbsolvierteSchueler().size() > 0) {
+                        for (int i = 0; i < sql.getAbsolvierteSchueler().size(); i++) {
+                            Button btnStudentName = new Button(sql.getAbsolvierteSchueler().get(i));
+                            btnStudentName.setPrefWidth(100);
+                            btnStudentName.setOnAction(e -> {
+                                FileChooser fc = new FileChooser();
+                                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
+                                File f = fc.showSaveDialog(new Stage());
+                                System.out.println(f);
+                                if (f != null && !f.getName().contains(".")) {
+                                    f = new File(f.getAbsolutePath() + ".pdf");
                                 }
-                            }
-                        });
-                        vbStudents.getChildren().add(btnStudentName);
+                                if (f != null) {
+                                    try {
+                                        EvaluationsPdf pdf = new EvaluationsPdf(sql, f);
+                                        //Vor- und Nachname aus dem Button filtern
+                                        String vorname = "";
+                                        String nachname = "";
+                                        int j = 0;
+                                        for (int k = 0; k < btnStudentName.getText().length(); k++) {
+                                            if (Character.isWhitespace(btnStudentName.getText().charAt(k))) {
+                                                j = k + 1;
+                                                break;
+                                            }
+                                            vorname += btnStudentName.getText().charAt(k);
+                                        }
+                                        for (int l = j; l < btnStudentName.getText().length(); l++) {
+                                            nachname += btnStudentName.getText().charAt(l);
+                                        }
+                                        pdf.createTable(btnQuizName, loginName.getText(), vorname, nachname);
+                                    } catch (IOException | DocumentException | SQLException exc) {
+                                        System.out.println(exc.getMessage());
+                                    }
+                                }
+                            });
+                            vbStudents.getChildren().add(btnStudentName);
+                        }
+                        Scene scene = new Scene(bp);
+                        pdfStage.setScene(scene);
+                        pdfStage.show();
                     }
-                    Scene scene = new Scene(bp);
-                    pdfStage.setScene(scene);
-                    pdfStage.show();
                 } catch (SQLException exc) {
                     System.out.println(exc.getMessage());
                 }
@@ -690,7 +711,6 @@ public class SimpleLearnerGUI extends Application {
                     if (isTeacher || (!isTeacher && sql.getFragen().size() > 0)) {
                         scene.setRoot(getAufgabenPane());
                         tempStage.setScene(scene);
-                        tempStage.setTitle("SimpleLearner - Aufgabe-Nr. " + "***");
                         tempStage.show();
                     }
                 }
@@ -743,7 +763,6 @@ public class SimpleLearnerGUI extends Application {
                     kategorieString = btnSubjectName;
                     hString = "Modul";
                     fillModul(kategorieString);
-                    tempStage.setTitle("SimpleLearner - Modul - " + "***");
                     tempStage.show();
                 }
             });
@@ -837,7 +856,6 @@ public class SimpleLearnerGUI extends Application {
                     System.out.println("label : " + getGName());
                     //setScene(getAufgabenPane());
                     //tempStage.setScene(scene);
-                    tempStage.setTitle("SimpleLearner - Aufgabe");
                     tempStage.show();
                 }
             });
@@ -1043,7 +1061,7 @@ public class SimpleLearnerGUI extends Application {
                         hb.getChildren().addAll(neuRb, neuTf);
                         vBox.getChildren().add(hb);
                     }
-                    
+
                     VBox vBox2 = new VBox();
                     HBox hBoxFunc = new HBox();
                     Button btnNeueAnwort = new Button("Neue Antwort");
@@ -1064,8 +1082,9 @@ public class SimpleLearnerGUI extends Application {
                     tempStage.show();
 
                     btnDeleteAntwort.setOnAction(e2 -> {
-                        vBox.getChildren().remove(vBox.getChildren().size() - 1);
-                        
+                        if (vBox.getChildren().size() > 0) {
+                            vBox.getChildren().remove(vBox.getChildren().size() - 1);
+                        }
                     });
                     // btnNeueAntwort definieren
                     btnNeueAntwort.setOnAction(new EventHandler<ActionEvent>() {
@@ -1097,32 +1116,32 @@ public class SimpleLearnerGUI extends Application {
                     btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
+                            if (vBox.getChildren().size() > 0 && tempToggleGroup.getSelectedToggle() != null) {
+                                System.out.println("Eingabe wird gespeichert");
 
-                            System.out.println("Eingabe wird gespeichert");
-
-                            try {
-                                sql.updateAnswers(blockPar, taskText.getText(), loginName.getText(), vBox);
-                                setBtnLoadAnswerChoice();
-                                fillAntwortAuswahl(blockPar, taskText.getText());
-                                //hier die Antworten direkt neu Laden in der VBox
-                            } catch (SQLException exc) {
-                                System.out.println(exc.getMessage());
-                            }
-                            /*
+                                try {
+                                    sql.updateAnswers(blockPar, taskText.getText(), loginName.getText(), vBox);
+                                    setBtnLoadAnswerChoice();
+                                    fillAntwortAuswahl(blockPar, taskText.getText());
+                                    //hier die Antworten direkt neu Laden in der VBox
+                                } catch (SQLException exc) {
+                                    System.out.println(exc.getMessage());
+                                }
+                                /*
                            Anweisungen hier
-                             */
-                            // Auslesen aller TextFelder
-                            for (int i = 0; i < vBox.getChildren().size(); i++) {
-                                HBox hb = (HBox) vBox.getChildren().get(i);
-                                for (int j = 0; j < hb.getChildren().size(); j++) {
-                                    if (hb.getChildren().get(j) instanceof TextField) {
-                                        TextField tf = (TextField) hb.getChildren().get(j);
-                                        String ausgabeString = tf.getText();
-                                        System.out.println(ausgabeString + "ausgabeString");
+                                 */
+                                // Auslesen aller TextFelder
+                                for (int i = 0; i < vBox.getChildren().size(); i++) {
+                                    HBox hb = (HBox) vBox.getChildren().get(i);
+                                    for (int j = 0; j < hb.getChildren().size(); j++) {
+                                        if (hb.getChildren().get(j) instanceof TextField) {
+                                            TextField tf = (TextField) hb.getChildren().get(j);
+                                            String ausgabeString = tf.getText();
+                                            System.out.println(ausgabeString + "ausgabeString");
+                                        }
                                     }
                                 }
-                            }
-                            /*
+                                /*
                         // vergleiche toggles mit gewählten toggle zur feststellung der wievielte er ist.            
                         int nrSelectedToggle = -1;
                         for (int i = 0; i < tempToggleGroup.getToggles().size(); i++) {
@@ -1132,11 +1151,12 @@ public class SimpleLearnerGUI extends Application {
                             }
                         }
                         System.out.println(nrSelectedToggle);
-                             */
-                            //Antworten neuladen und Fenster schliessen
-                            //btnLabel und taskNumber sind unbekannt 
-                            //fillAntwortAuswahl(*btnQuizName*, sql.fragen.get(*taskNumber*));
-                            tempStage.close();
+                                 */
+                                //Antworten neuladen und Fenster schliessen
+                                //btnLabel und taskNumber sind unbekannt 
+                                //fillAntwortAuswahl(*btnQuizName*, sql.fragen.get(*taskNumber*));
+                                tempStage.close();
+                            }
                         }
                     });
 
@@ -1164,14 +1184,16 @@ public class SimpleLearnerGUI extends Application {
                 tempStage.close();
             });
             btnBestaetigen.setOnAction(e3 -> {
-                try {
-                    sql.updateQuiz(blockPar, loginName.getText(), tf.getText());
-                    blockPar = tf.getText();
-                    blockNameLabel.setText(tf.getText());
-                } catch (SQLException exc) {
-                    System.out.println(exc.getMessage());
+                if (tf.getText().trim().length() > 0) {
+                    try {
+                        sql.updateQuiz(blockPar, loginName.getText(), tf.getText());
+                        blockPar = tf.getText();
+                        blockNameLabel.setText(tf.getText());
+                    } catch (SQLException exc) {
+                        System.out.println(exc.getMessage());
+                    }
+                    tempStage.close();
                 }
-                tempStage.close();
             });
             borderPane.setTop(tf);
             borderPane.setLeft(btnBestaetigen);
@@ -1194,7 +1216,6 @@ public class SimpleLearnerGUI extends Application {
             fillVerzeich();
             scene.setRoot(getMainContainer());
             tempStage.setScene(scene);
-            tempStage.setTitle("SimpleLearner - Kategorie");
             tempStage.show();
         });
     }
@@ -1229,7 +1250,8 @@ public class SimpleLearnerGUI extends Application {
                 hBox.setId("newTaskTextHBox");
                 hBox.getChildren().addAll(btnConfirm, btnCancel);
 
-                TextArea tempTextArea = new TextArea("AufgabenText hier eingeben");
+                TextArea tempTextArea = new TextArea();
+                tempTextArea.setPromptText("Neuen Aufgabentext hier eintragen");
                 tempTextArea.setId("newTaskTextArea");
                 tempTextArea.setMinWidth(300);
                 tempTextArea.setMinHeight(200);
@@ -1257,22 +1279,17 @@ public class SimpleLearnerGUI extends Application {
                 btnConfirm.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
-
-                        System.out.println("Eingabe wird gespeichert");
-
-                        /*
-            Anweisungen hier
-                - TextArea auslesen
-                - String übergeben
-                         */
-                        System.out.println(">> String-Ausgabe >> " + tempTextArea.getText() + blockPar + " bla" + taskText.getText());
-                        try {
-                            sql.updateTask(blockPar, taskText.getText(), tempTextArea.getText());
-                            taskText.setText(tempTextArea.getText());
-                        } catch (SQLException e2) {
-                            System.out.println(e2.getMessage());
+                        if (tempTextArea.getText().trim().length() > 0) {
+                            System.out.println("Eingabe wird gespeichert");
+                            System.out.println(">> String-Ausgabe >> " + tempTextArea.getText() + blockPar + " bla" + taskText.getText());
+                            try {
+                                sql.updateTask(blockPar, taskText.getText(), tempTextArea.getText());
+                                taskText.setText(tempTextArea.getText());
+                            } catch (SQLException e2) {
+                                System.out.println(e2.getMessage());
+                            }
+                            tempStage.close();
                         }
-                        tempStage.close();
                     }
                 });
 
@@ -1420,7 +1437,6 @@ public class SimpleLearnerGUI extends Application {
                 fillVerzeich();
                 scene.setRoot(getMainContainer());
                 tempStage.setScene(scene);
-                tempStage.setTitle("SimpleLearner - Kategorie");
                 tempStage.show();
             }
         });
