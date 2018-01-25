@@ -637,6 +637,7 @@ public class SimpleLearnerGUI extends Application {
             itemShow.setOnAction(ae2 -> {
                 Stage pdfStage = new Stage();
                 BorderPane bp = new BorderPane();
+                bp.getStyleClass().add("popupPane");
                 VBox vbStudents = new VBox();
                 bp.setCenter(vbStudents);
                 //VBox vbMehr = new VBox();
@@ -646,7 +647,9 @@ public class SimpleLearnerGUI extends Application {
                     sql.loadAbsolvierteSchueler(btnQuizName, loginName.getText());
                     for (int i = 0; i < sql.absolvierteSchueler.size(); i++) {
                         Button btnStudentName = new Button(sql.absolvierteSchueler.get(i));
-                        btnStudentName.setPrefWidth(100);
+                        btnStudentName.setPrefWidth(120);
+                        btnStudentName.getStyleClass().add("btn");
+                        vbStudents.setMargin(btnStudentName, new Insets(10, 10, 5, 10));
                         btnStudentName.setOnAction(e -> {
                             FileChooser fc = new FileChooser();
                             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF (*.pdf)", "*pdf"));
@@ -666,7 +669,8 @@ public class SimpleLearnerGUI extends Application {
                         });
                         vbStudents.getChildren().add(btnStudentName);
                     }
-                    Scene scene = new Scene(bp);
+                    Scene scene = new Scene(bp, 150, 250);
+                    scene.getStylesheets().add("SEProject/SimpleLearnerGUI.css");
                     pdfStage.setScene(scene);
                     pdfStage.show();
                 } catch (SQLException exc) {

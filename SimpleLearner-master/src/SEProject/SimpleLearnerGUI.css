@@ -2,12 +2,12 @@
 #btnLogin{
     -fx-background-color: #009900;
     -fx-background-radius: 3,2,1;
-    -fx-padding: 3 30 3 30;
-    -fx-text-fill: #f2f2f2;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
+    -fx-padding: 3 30 3 30;
     -fx-pref-height: 35px;
     -fx-pref-width: 235px;
+    -fx-text-fill: #f2f2f2;
 }
 #btnLogin:hover{
     -fx-background-color: #00cc00;
@@ -53,9 +53,9 @@
     -fx-font-weight: bold;
 }
 #loginContainer{
+   -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.8), 20, 0, 0, 0);
    -fx-background-color: rgb(255,255,255);
    -fx-padding: 0 30px 30px 30px;
-   -fx-effect: dropshadow(three-pass-box, rgba(80,80,80,0.8), 20, 0, 0, 0);
 }
 #labelDirectory, #blockNameLabel{
     -fx-font-size: 18px;
@@ -120,9 +120,6 @@
 
 #newTaskTextHBox{
     -fx-background-color: #595959;
-}
-#newTaskTextArea{
-    /*#009933; TeST*/
 }
 .cancelButton, .okButton{
 -fx-font-size: 14px;
